@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+
+# productie-output en geheimen
+out/
+build/
+# Lokale boekhouding hoort niet in git; de workflow schrijft de zijne
+# expliciet terug met 'git add -f state/episodes.db'.
+state/
+client_secret*.json
+token.json
+youtube_token.json
+assets/music/*.mp3
+assets/music/*.wav
+!assets/music/.gitkeep

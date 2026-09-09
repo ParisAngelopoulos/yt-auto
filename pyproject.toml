@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ytauto"
+version = "1.0.0"
+description = "Volautomatische productie van educatieve kindervideo's voor YouTube"
+requires-python = ">=3.10"
+dependencies = [
+    "Pillow>=10.0",
+    "numpy>=1.24",
+    "PyYAML>=6.0",
+    "requests>=2.31",
+    "anthropic>=1.0",
+    "google-api-python-client>=2.100",
+    "google-auth>=2.23",
+    "google-auth-oauthlib>=1.1",
+    "google-auth-httplib2>=0.1.1",
+]
+
+[project.scripts]
+ytauto = "ytauto.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"ytauto.ui" = ["*.html"]

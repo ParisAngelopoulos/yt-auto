@@ -1,0 +1,65 @@
+"""Spraak: tekst naar audiobestand.
+
+De pipeline vraagt alleen om 'zeg deze zin en geef me het bestand'. Welke
+dienst dat doet staat in channel.yaml. Elke zin wordt gecachet op een hash
+van tekst en steminstellingen, zodat opnieuw renderen van dezelfde
+aflevering niets extra kost.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+from ..config import Config
+
+
+class TTSError(RuntimeError):
+    pass
+
+
+def audio_duration(path: Path) -> float:
+    """Lengte van een audiobestand in seconden, via ffprobe."""
+    result = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+         "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
+        capture_output=True, text=True, check=True,
+    )
+    return float(result.stdout.strip())
+
+
+def _cache_key(text: str, settings: dict) -> str:
+    payload = json.dumps({"text": text, **settings}, sort_keys=True)
+    return hashlib.sha256(payload.encode()).hexdigest()[:20]
+
+
+def synthesize(cfg: Config, text: str, out_path: Path, cache_dir: Path | None = None) -> float:
+    """Spreekt één zin in en geeft de duur terug.
+
+    Bestaat het bestand al met dezelfde tekst en instellingen, dan wordt de
+    cache gebruikt en gebeurt er geen enkele API-aanroep.
+    """
+    provider = cfg.tts.get("provider", "elevenlabs")
+    settings = {k: v for k, v in cfg.tts.items()}
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    cache_dir = cache_dir or out_path.parent.parent / "voice-cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cached = cache_dir / f"{_cache_key(text, settings)}.mp3"
+
+    if cached.exists() and cached.stat().st_size > 512:
+        out_path.write_bytes(cached.read_bytes())
+        return audio_duration(out_path)
+
+    if provider == "elevenlabs":
+        from .elevenlabs import speak
+    elif provider == "offline":
+        from .offline import speak
+    else:
+        raise TTSError(f"Onbekende tts.provider: {provider!r}")
+
+    speak(cfg, text, out_path)
+    cached.write_bytes(out_path.read_bytes())
+    return audio_duration(out_path)

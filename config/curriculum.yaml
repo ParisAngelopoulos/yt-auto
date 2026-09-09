@@ -1,0 +1,164 @@
+# ============================================================
+#  CURRICULUM  --  de motor achter unieke afleveringen
+#
+#  Een aflevering = LES x THEMA.
+#  "Learn Colors" x "balloons"  ->  "Learn Colors with Balloons"
+#  "Learn Colors" x "fish"      ->  "Learn Colors with Fish"
+#
+#  Elke combinatie is een andere video: ander onderwerp, andere
+#  beelden, andere volgorde, andere zinnen. De planner houdt bij
+#  wat al gemaakt is en herhaalt nooit.
+#
+#  Meer afleveringen nodig? Voeg een thema toe. Elk nieuw thema
+#  in een les met 8 items levert direct een nieuwe aflevering op.
+# ============================================================
+
+lessons:
+
+  # ---------------- KLEUREN ----------------
+  - id: colors
+    kind: colors
+    title: "Learn Colors"
+    teach_word: "color"
+    items:
+      - {word: "red",    hex: "#E8483F"}
+      - {word: "orange", hex: "#F2913D"}
+      - {word: "yellow", hex: "#F4CE47"}
+      - {word: "green",  hex: "#5BB85C"}
+      - {word: "blue",   hex: "#4A90D9"}
+      - {word: "purple", hex: "#9B6DC4"}
+      - {word: "pink",   hex: "#F08BB4"}
+      - {word: "brown",  hex: "#A9764F"}
+    themes:
+      - {id: balloons,   label: "Balloons",   draw: balloon}
+      - {id: bubbles,    label: "Bubbles",    draw: bubble}
+      - {id: blocks,     label: "Blocks",     draw: block}
+      - {id: cars,       label: "Cars",       draw: car}
+      - {id: fish,       label: "Fish",       draw: fish}
+      - {id: flowers,    label: "Flowers",    draw: flower}
+      - {id: butterflies, label: "Butterflies", draw: butterfly}
+      - {id: kites,      label: "Kites",      draw: kite}
+      - {id: cupcakes,   label: "Cupcakes",   draw: cupcake}
+      - {id: umbrellas,  label: "Balls",      draw: ball}
+
+  # ---------------- TELLEN ----------------
+  - id: numbers
+    kind: counting
+    title: "Learn to Count"
+    teach_word: "number"
+    items:
+      - {word: "one",   value: 1}
+      - {word: "two",   value: 2}
+      - {word: "three", value: 3}
+      - {word: "four",  value: 4}
+      - {word: "five",  value: 5}
+      - {word: "six",   value: 6}
+      - {word: "seven", value: 7}
+      - {word: "eight", value: 8}
+      - {word: "nine",  value: 9}
+      - {word: "ten",   value: 10}
+    themes:
+      - {id: ducks,    label: "Ducks",    draw: duck}
+      - {id: apples,   label: "Apples",   draw: apple}
+      - {id: stars,    label: "Stars",    draw: star}
+      - {id: balloons, label: "Balloons", draw: balloon}
+      - {id: fish,     label: "Fish",     draw: fish}
+      - {id: bees,     label: "Bees",     draw: bee}
+      - {id: cars,     label: "Cars",     draw: car}
+      - {id: sheep,    label: "Sheep",    draw: sheep}
+      - {id: cookies,  label: "Cookies",  draw: cookie}
+      - {id: frogs,    label: "Frogs",    draw: frog}
+
+  # ---------------- VORMEN ----------------
+  - id: shapes
+    kind: shapes
+    title: "Learn Shapes"
+    teach_word: "shape"
+    items:
+      - {word: "circle",    draw: circle}
+      - {word: "square",    draw: square}
+      - {word: "triangle",  draw: triangle}
+      - {word: "star",      draw: star}
+      - {word: "heart",     draw: heart}
+      - {word: "rectangle", draw: rectangle}
+      - {word: "oval",      draw: oval}
+      - {word: "diamond",   draw: diamond}
+    themes:
+      - {id: blocks,   label: "Blocks",   accent: "#F4CE47"}
+      - {id: cookies,  label: "Cookies",  accent: "#C98A4B"}
+      - {id: balloons, label: "Balloons", accent: "#F08BB4"}
+      - {id: candy,    label: "Candy",    accent: "#9B6DC4"}
+
+  # ---------------- BOERDERIJDIEREN ----------------
+  - id: animals_farm
+    kind: naming
+    title: "Learn Farm Animals"
+    teach_word: "animal"
+    items:
+      - {word: "cow",     draw: cow,     sound: "Moo!"}
+      - {word: "pig",     draw: pig,     sound: "Oink!"}
+      - {word: "sheep",   draw: sheep,   sound: "Baa!"}
+      - {word: "duck",    draw: duck,    sound: "Quack!"}
+      - {word: "cat",     draw: cat,     sound: "Meow!"}
+      - {word: "dog",     draw: dog,     sound: "Woof!"}
+      - {word: "horse",   draw: horse,   sound: "Neigh!"}
+      - {word: "chicken", draw: chicken, sound: "Cluck!"}
+    themes:
+      - {id: farm, label: "the Farm", prep: "on"}
+      - {id: barn, label: "the Barn", prep: "in"}
+      - {id: meadow, label: "the Meadow", prep: "in"}
+
+  # ---------------- WILDE DIEREN ----------------
+  - id: animals_wild
+    kind: naming
+    title: "Learn Animals"
+    teach_word: "animal"
+    items:
+      - {word: "lion",     draw: lion,     sound: "Roar!"}
+      - {word: "elephant", draw: elephant, sound: "Toot!"}
+      - {word: "monkey",   draw: monkey,   sound: "Ooh ooh!"}
+      - {word: "bear",     draw: bear,     sound: "Growl!"}
+      - {word: "fox",      draw: fox,      sound: "Yip!"}
+      - {word: "frog",     draw: frog,     sound: "Ribbit!"}
+      - {word: "owl",      draw: owl,      sound: "Hoot!"}
+      - {word: "penguin",  draw: penguin,  sound: "Squawk!"}
+    themes:
+      - {id: jungle, label: "the Jungle", prep: "in"}
+      - {id: zoo, label: "the Zoo", prep: "at"}
+      - {id: forest, label: "the Forest", prep: "in"}
+
+  # ---------------- FRUIT ----------------
+  - id: fruits
+    kind: naming
+    title: "Learn Fruits"
+    teach_word: "fruit"
+    items:
+      - {word: "apple",      draw: apple}
+      - {word: "banana",     draw: banana}
+      - {word: "orange",     draw: orange}
+      - {word: "strawberry", draw: strawberry}
+      - {word: "grapes",     draw: grapes}
+      - {word: "pear",       draw: pear}
+      - {word: "watermelon", draw: watermelon}
+      - {word: "lemon",      draw: lemon}
+    themes:
+      - {id: basket, label: "the Fruit Basket", prep: "in"}
+      - {id: market, label: "the Market", prep: "at"}
+      - {id: garden, label: "the Garden", prep: "in"}
+
+  # ---------------- VOERTUIGEN ----------------
+  - id: vehicles
+    kind: naming
+    title: "Learn Vehicles"
+    teach_word: "vehicle"
+    items:
+      - {word: "car",    draw: car,    sound: "Beep beep!"}
+      - {word: "bus",    draw: bus,    sound: "Vroom!"}
+      - {word: "train",  draw: train,  sound: "Choo choo!"}
+      - {word: "boat",   draw: boat,   sound: "Toot toot!"}
+      - {word: "rocket", draw: rocket, sound: "Whoosh!"}
+      - {word: "plane",  draw: plane,  sound: "Zoom!"}
+    themes:
+      - {id: town, label: "the Town", prep: "in"}
+      - {id: road, label: "the Road", prep: "on"}
+      - {id: city, label: "the City", prep: "in"}

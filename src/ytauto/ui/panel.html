@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Videostudio</title>
+<style>
+  :root{
+    --bg:#f4f1ea; --card:#fffdf9; --ink:#33291f; --muted:#8a7c6d;
+    --line:#e6ded1; --accent:#e07a3f; --accent-ink:#fff;
+    --go:#4f9d69; --bad:#c4553f; --shadow:0 1px 2px rgba(60,45,30,.06),0 8px 24px rgba(60,45,30,.07);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#1b1815; --card:#252019; --ink:#f0e8dc; --muted:#a2947f;
+           --line:#39312a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.55 ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI",system-ui,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+
+  header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;margin-bottom:22px}
+  h1{font-size:25px;margin:0;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:14px}
+  .chips{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);
+        background:var(--card);color:var(--muted);white-space:nowrap}
+  .chip.on{color:var(--go);border-color:color-mix(in srgb,var(--go) 40%,var(--line))}
+  .chip.off{color:var(--muted);opacity:.75}
+
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+  @media (max-width:760px){.steps{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+        padding:20px;box-shadow:var(--shadow)}
+  .step-n{font-size:12px;color:var(--muted);letter-spacing:.10em;text-transform:uppercase}
+  .card h2{font-size:19px;margin:6px 0 6px}
+  .card p{margin:0 0 16px;color:var(--muted);font-size:14px}
+
+  button{font:inherit;font-weight:600;border:0;border-radius:11px;padding:13px 20px;
+         cursor:pointer;background:var(--accent);color:var(--accent-ink);width:100%;
+         transition:transform .08s ease,filter .15s ease}
+  button:hover:not(:disabled){filter:brightness(1.06)}
+  button:active:not(:disabled){transform:translateY(1px)}
+  button:disabled{opacity:.42;cursor:not-allowed}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+
+  input[type=text]{width:100%;font:inherit;padding:11px 13px;margin-bottom:10px;
+    border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+  input[type=text]::placeholder{color:var(--muted)}
+
+  .bar{height:7px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:14px}
+  .bar>i{display:block;height:100%;width:0;background:var(--accent);
+         transition:width .35s ease;border-radius:99px}
+  .jobline{font-size:13px;color:var(--muted);margin-top:9px;min-height:19px}
+  .jobline.err{color:var(--bad)}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;
+         padding:22px;box-shadow:var(--shadow);margin-bottom:16px}
+  .panel h3{margin:0 0 4px;font-size:18px}
+  .meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin:10px 0 16px}
+  .desc{white-space:pre-wrap;font-size:14px;color:var(--ink);opacity:.9}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .tag{font-size:12px;padding:3px 9px;border-radius:7px;background:var(--bg);
+       border:1px solid var(--line);color:var(--muted)}
+
+  .script{margin-top:18px;border-top:1px solid var(--line);padding-top:16px;
+          max-height:460px;overflow:auto}
+  .beat{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:6px 0;
+        border-bottom:1px dashed var(--line);font-size:14px}
+  .beat:last-child{border-bottom:0}
+  .beat .m{font-size:11px;color:var(--muted);text-transform:uppercase;
+           letter-spacing:.06em;padding-top:3px}
+  .beat.sec{background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:8px;
+            padding:8px 8px;margin:6px -8px}
+
+  video{width:100%;border-radius:12px;background:#000;display:block}
+  .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .row button{width:auto;flex:1;min-width:150px}
+  .hidden{display:none}
+  .empty{color:var(--muted);font-size:14px;text-align:center;padding:36px 12px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1 id="channel">Videostudio</h1>
+      <div class="sub" id="subline">verbinden…</div>
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="steps">
+    <div class="card">
+      <div class="step-n">Stap 1</div>
+      <h2>Schrijf het script</h2>
+      <p>Claude bedenkt zelf het onderwerp en schrijft de hele aflevering. Je hoeft niets in te vullen.</p>
+      <input type="text" id="hint" placeholder="Optioneel: een wens, bijvoorbeeld 'iets met tellen'">
+      <button id="btn-script">Schrijf het script</button>
+      <div class="bar hidden" id="bar-script"><i></i></div>
+      <div class="jobline" id="line-script"></div>
+    </div>
+
+    <div class="card">
+      <div class="step-n">Stap 2</div>
+      <h2>Maak de video</h2>
+      <p>Zet het script om in een complete video: beeld, stem via ElevenLabs, muziek en thumbnail.</p>
+      <button id="btn-video" disabled>Maak de video</button>
+      <div class="bar hidden" id="bar-video"><i></i></div>
+      <div class="jobline" id="line-video"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="script-panel">
+    <div class="empty">Nog geen script. Klik op <strong>Schrijf het script</strong>.</div>
+  </div>
+
+  <div class="panel hidden" id="video-panel">
+    <h3>De video</h3>
+    <div class="meta" id="video-meta"></div>
+    <video id="player" controls preload="metadata"></video>
+    <div class="row">
+      <button class="ghost" id="btn-thumb">Bekijk de thumbnail</button>
+      <button id="btn-publish">Publiceer op YouTube</button>
+    </div>
+    <div class="jobline" id="line-publish"></div>
+  </div>
+
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let state = null;
+let busy = null;
+
+const SECTION_MODES = new Set(['intro_title','card','outro_title']);
+
+async function api(path, body){
+  const options = body
+    ? {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}
+    : {};
+  const response = await fetch(path, options);
+  const data = await response.json().catch(() => ({}));
+  if(!response.ok) throw new Error(data.error || ('fout ' + response.status));
+  return data;
+}
+
+function chip(label, on){
+  return `<span class="chip ${on ? 'on' : 'off'}">${on ? '●' : '○'} ${label}</span>`;
+}
+
+function renderStatus(s){
+  $('channel').textContent = s.channel;
+  $('subline').textContent =
+    `${s.language} · streeflengte ${s.target_minutes} min · ` +
+    `deze week ${s.published_this_week}/${s.max_per_week} gepubliceerd`;
+  $('chips').innerHTML =
+    chip('Claude', s.keys.anthropic) +
+    chip('ElevenLabs', s.keys.elevenlabs) +
+    chip('YouTube', s.keys.youtube);
+}
+
+function renderEpisode(ep){
+  const panel = $('script-panel');
+  if(!ep){
+    panel.innerHTML = '<div class="empty">Nog geen script. Klik op <strong>Schrijf het script</strong>.</div>';
+    $('btn-video').disabled = true;
+    $('video-panel').classList.add('hidden');
+    return;
+  }
+
+  const beats = ep.beats.map(b => {
+    const section = SECTION_MODES.has(b.mode) ? ' sec' : '';
+    const text = b.narration.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+    return `<div class="beat${section}"><div class="m">${b.mode.replace(/_/g,' ')}</div><div>${text}</div></div>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <h3>${ep.title}</h3>
+    <div class="sub">${ep.idea}</div>
+    <div class="meta">
+      <span>${ep.beats.length} scenes</span>
+      <span>${ep.word_count} woorden</span>
+      <span>~${ep.estimated_minutes} min</span>
+      <span>${ep.items.length} items</span>
+      <span>geschreven door ${ep.source === 'claude' ? 'Claude' : 'sjabloon'}</span>
+    </div>
+    <div class="desc">${ep.description}</div>
+    <div class="tags">${ep.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    <div class="script">${beats}</div>`;
+
+  $('btn-video').disabled = false;
+
+  const videoPanel = $('video-panel');
+  if(ep.has_video){
+    videoPanel.classList.remove('hidden');
+    $('video-meta').innerHTML = `<span>${ep.video_size_mb} MB</span><span>klaar om te publiceren</span>`;
+    const player = $('player');
+    const src = '/api/video.mp4?v=' + encodeURIComponent(ep.key + ep.video_size_mb);
+    if(player.getAttribute('src') !== src) player.setAttribute('src', src);
+    $('btn-publish').disabled = !state?.keys.youtube;
+    $('btn-publish').textContent = state?.keys.youtube
+      ? 'Publiceer op YouTube' : 'Publiceren (YouTube nog niet gekoppeld)';
+  } else {
+    videoPanel.classList.add('hidden');
+  }
+}
+
+function renderJob(job){
+  const target = job.kind === 'video' ? 'video'
+               : job.kind === 'script' ? 'script' : 'publish';
+  ['script','video'].forEach(name => {
+    const active = job.running && job.kind === name;
+    $('bar-' + name).classList.toggle('hidden', !active && !(job.kind === name && job.error));
+    $('bar-' + name).firstElementChild.style.width = (job.fraction * 100) + '%';
+  });
+
+  const line = $('line-' + (target === 'publish' ? 'publish' : target));
+  ['line-script','line-video','line-publish'].forEach(id => {
+    if(id !== line.id) $(id).textContent = '';
+    $(id).classList.remove('err');
+  });
+
+  if(job.error){
+    line.textContent = job.error;
+    line.classList.add('err');
+  } else if(job.running){
+    line.textContent = job.message;
+  } else if(job.result && job.result.url){
+    line.innerHTML = `Staat online: <a href="${job.result.url}" target="_blank" rel="noopener">${job.result.url}</a>`;
+  } else {
+    line.textContent = '';
+  }
+
+  const running = job.running;
+  $('btn-script').disabled = running;
+  $('btn-video').disabled = running || !state?.episode;
+  $('btn-publish').disabled = running || !state?.keys.youtube;
+  $('btn-script').textContent = (running && job.kind === 'script')
+    ? 'Claude schrijft…' : 'Schrijf het script';
+  $('btn-video').textContent = (running && job.kind === 'video')
+    ? `Bezig… ${Math.round(job.fraction * 100)}%` : 'Maak de video';
+}
+
+async function refresh(){
+  try{
+    state = await api('/api/status');
+    renderStatus(state);
+    renderEpisode(state.episode);
+    renderJob(state.job);
+    busy = state.job.running;
+  }catch(err){
+    $('subline').textContent = 'geen verbinding met de server';
+  }
+}
+
+$('btn-script').onclick = async () => {
+  try{ await api('/api/script', {hint: $('hint').value}); await refresh(); }
+  catch(err){ $('line-script').textContent = err.message; $('line-script').classList.add('err'); }
+};
+$('btn-video').onclick = async () => {
+  try{ await api('/api/video', {}); await refresh(); }
+  catch(err){ $('line-video').textContent = err.message; $('line-video').classList.add('err'); }
+};
+$('btn-publish').onclick = async () => {
+  if(!confirm('De video wordt nu echt op je YouTube-kanaal gezet. Doorgaan?')) return;
+  try{ await api('/api/publish', {}); await refresh(); }
+  catch(err){ $('line-publish').textContent = err.message; $('line-publish').classList.add('err'); }
+};
+$('btn-thumb').onclick = () => window.open('/api/thumbnail.jpg', '_blank');
+
+refresh();
+setInterval(() => { refresh(); }, 1500);
+</script>
+</body>
+</html>
