@@ -100,8 +100,19 @@ def make_script(cfg: Config, hint: str | None = None, store: Store | None = None
 # ---------------------------------------------------------------------------
 
 
+def episode_seed(key: str) -> int:
+    """Vaste seed per aflevering.
+
+    Bewust niet hash(): die is per proces anders, waardoor dezelfde
+    aflevering twee keer renderen een ander resultaat gaf.
+    """
+    import hashlib
+
+    return int(hashlib.sha256(key.encode()).hexdigest()[:8], 16) % 100_000
+
+
 def make_video(cfg: Config, episode: Episode, progress: Progress = _noop) -> Episode:
-    seed = abs(hash(episode.blueprint.key)) % 100_000
+    seed = episode_seed(episode.blueprint.key)
     video, planned = assemble(cfg, episode.blueprint, episode.workdir,
                               seed=seed, progress=progress)
 

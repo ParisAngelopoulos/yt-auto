@@ -46,3 +46,20 @@ def test_mislukte_afleveringen_mogen_opnieuw(store):
     store.mark_planned("k", "colors", "t", "T")
     store.mark_failed("k", "ffmpeg kapot")
     assert "k" not in store.taken_keys()
+
+
+def test_seed_is_stabiel_over_processen_heen():
+    """hash() van een string verschilt per proces; dan zou dezelfde
+    aflevering twee keer renderen een ander beeld opleveren."""
+    import subprocess
+    import sys
+
+    code = ("import sys; sys.path.insert(0, 'src'); "
+            "from ytauto.pipeline import episode_seed; "
+            "print(episode_seed('colors:balloons'))")
+    uitkomsten = {
+        subprocess.run([sys.executable, "-c", code], capture_output=True,
+                       text=True, env={"PYTHONHASHSEED": str(n), "PATH": "/usr/bin:/bin"}).stdout.strip()
+        for n in (0, 1, 42)
+    }
+    assert len(uitkomsten) == 1

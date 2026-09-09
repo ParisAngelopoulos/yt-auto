@@ -133,7 +133,7 @@
 <script>
 const $ = (id) => document.getElementById(id);
 let state = null;
-let busy = null;
+let renderedEpisode = null;   // voorkomt dat je scrollpositie terugspringt
 
 const SECTION_MODES = new Set(['intro_title','card','outro_title']);
 
@@ -163,6 +163,12 @@ function renderStatus(s){
 }
 
 function renderEpisode(ep){
+  // Alleen opnieuw opbouwen als er echt iets veranderd is: anders verlies je
+  // je plek in het script terwijl je aan het lezen bent.
+  const stamp = ep ? `${ep.key}|${ep.beats.length}|${ep.has_video}|${ep.video_size_mb}` : '';
+  if(stamp === renderedEpisode) return;
+  renderedEpisode = stamp;
+
   const panel = $('script-panel');
   if(!ep){
     panel.innerHTML = '<div class="empty">Nog geen script. Klik op <strong>Schrijf het script</strong>.</div>';
