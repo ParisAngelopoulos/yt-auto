@@ -78,6 +78,10 @@
   .row button{width:auto;flex:1;min-width:150px}
   .hidden{display:none}
   .empty{color:var(--muted);font-size:14px;text-align:center;padding:36px 12px}
+  .notice{background:color-mix(in srgb,#e0a03f 16%,var(--card));border:1px solid
+          color-mix(in srgb,#e0a03f 40%,var(--line));border-radius:12px;padding:13px 16px;
+          font-size:14px;margin-bottom:18px}
+  code{background:var(--bg);padding:1px 6px;border-radius:5px;font-size:13px}
   a{color:var(--accent)}
 </style>
 </head>
@@ -91,6 +95,8 @@
     </div>
     <div class="chips" id="chips"></div>
   </header>
+
+  <div class="notice hidden" id="warn"></div>
 
   <div class="steps">
     <div class="card">
@@ -160,6 +166,11 @@ function renderStatus(s){
     chip('Claude', s.keys.anthropic) +
     chip('ElevenLabs', s.keys.elevenlabs) +
     chip('YouTube', s.keys.youtube);
+  $('warn').innerHTML = s.voice_provider === 'offline'
+    ? 'Geen ElevenLabs-sleutel gevonden, dus de video krijgt de gratis <strong>teststem</strong>. ' +
+      'Beeld en timing kloppen wel. Zet je sleutel in <code>.env</code> voor de echte stem.'
+    : '';
+  $('warn').classList.toggle('hidden', s.voice_provider !== 'offline');
 }
 
 function renderEpisode(ep){

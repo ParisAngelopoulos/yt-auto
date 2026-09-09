@@ -35,14 +35,28 @@ def _cache_key(text: str, settings: dict) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()[:20]
 
 
+def effective_provider(cfg: Config) -> str:
+    """Welke stem er werkelijk gebruikt wordt.
+
+    Staat ElevenLabs ingesteld maar ontbreekt de sleutel, dan wordt het de
+    offline teststem. Een knop die niets doet is erger dan een knop die een
+    robotstem oplevert met de melding erbij.
+    """
+    provider = cfg.tts.get("provider", "elevenlabs")
+    if provider == "elevenlabs" and not cfg.secrets.elevenlabs_api_key:
+        return "offline"
+    return provider
+
+
 def synthesize(cfg: Config, text: str, out_path: Path, cache_dir: Path | None = None) -> float:
     """Spreekt één zin in en geeft de duur terug.
 
     Bestaat het bestand al met dezelfde tekst en instellingen, dan wordt de
     cache gebruikt en gebeurt er geen enkele API-aanroep.
     """
-    provider = cfg.tts.get("provider", "elevenlabs")
-    settings = {k: v for k, v in cfg.tts.items()}
+    provider = effective_provider(cfg)
+    settings = dict(cfg.tts)
+    settings["_provider"] = provider          # cache per stem gescheiden houden
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     cache_dir = cache_dir or out_path.parent.parent / "voice-cache"

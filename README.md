@@ -17,28 +17,40 @@ Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
 
 ---
 
-## In vijf minuten draaiend
+## Beginnen
+
+Download het project één keer:
 
 ```bash
 git clone https://github.com/ParisAngelopoulos/yt-auto.git
-cd yt-auto
-
-python3 -m venv .venv && source .venv/bin/activate    # Windows: .venv\Scripts\activate
-pip install -e .
-
-sudo apt-get install ffmpeg        # macOS: brew install ffmpeg
-
-cp .env.example .env               # vul je sleutels in
-ytauto check                       # controleert of alles er is
-ytauto panel                       # opent de bedieningspagina
 ```
 
-De pagina opent vanzelf op <http://127.0.0.1:8765>.
+Daarna, elke keer dat je een video wilt maken:
 
-**Nog geen sleutels?** Draai `ytauto panel` gerust meteen. Zonder Anthropic-sleutel
-schrijft hij het script uit `config/curriculum.yaml` in plaats van met Claude, en
-met `tts.provider: offline` in `config/channel.yaml` maakt hij de video met een
-computerstem. Zo zie je de hele machine draaien zonder een cent uit te geven.
+| | |
+|---|---|
+| **macOS / Linux** | dubbelklik **`start.command`** |
+| **Windows** | dubbelklik **`start.bat`** |
+
+De eerste keer installeert hij zichzelf (paar minuten). Daarna opent de pagina
+binnen een paar seconden vanzelf in je browser, op <http://127.0.0.1:8765>.
+
+Het zwarte venster dat erbij opent mag open blijven staan. Sluiten stopt de studio.
+
+**ffmpeg heb je nodig.** De starter zegt het als het ontbreekt:
+
+```bash
+brew install ffmpeg                  # macOS
+sudo apt-get install ffmpeg          # Linux
+winget install Gyan.FFmpeg           # Windows
+```
+
+**Zonder sleutels werkt alles ook.** De pagina zegt het er dan bij: het script
+komt uit `config/curriculum.yaml` in plaats van van Claude, en de video krijgt
+een gratis robotstem. Beeld, muziek en timing zijn wel echt. Zo zie je de hele
+machine draaien voordat je iets uitgeeft.
+
+Liever de opdrachtregel? `ytauto panel` doet hetzelfde.
 
 ---
 
@@ -209,6 +221,8 @@ Tests draaien: `pytest -q`
 ## Mappen
 
 ```
+start.command    dubbelklikken op macOS/Linux
+start.bat        dubbelklikken op Windows
 config/          brief.md, channel.yaml, curriculum.yaml  ← hier stuur je
 src/ytauto/
   scripting/     Claude-schrijver, sjabloonschrijver, het blueprint-contract

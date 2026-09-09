@@ -22,6 +22,7 @@ from urllib.parse import urlparse
 from ..config import Config, load_config
 from ..pipeline import Episode, load_current, make_script, make_video, publish
 from ..state import Store
+from ..tts import effective_provider
 
 PANEL = Path(__file__).parent / "panel.html"
 
@@ -124,7 +125,7 @@ def status_payload(cfg: Config) -> dict:
             "elevenlabs": bool(secrets.elevenlabs_api_key),
             "youtube": secrets.can_upload(),
         },
-        "voice_provider": cfg.tts.get("provider", "elevenlabs"),
+        "voice_provider": effective_provider(cfg),
         "published_this_week": store.published_since(7),
         "max_per_week": cfg.publish.get("max_per_week", 4),
         "episode": episode_payload(load_current(cfg)),
