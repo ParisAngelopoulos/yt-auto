@@ -22,16 +22,23 @@ Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
 De studio draait op je eigen computer. Er is geen website om naartoe te gaan:
 je haalt het project één keer binnen en start het daarna met een dubbelklik.
 
+### Snelste weg (macOS en Linux)
+
+Plak deze regel in Terminal. Hij haalt alles op, installeert zichzelf en opent
+de pagina:
+
+```bash
+git clone https://github.com/ParisAngelopoulos/yt-auto.git && cd yt-auto && ./start.command
+```
+
+De volgende keer hoef je alleen nog te dubbelklikken op `start.command`.
+
+Liever klikken dan typen, of zit je op Windows? Dan de weg hieronder.
+
 ### 1. Het project downloaden
 
 Ga naar de repository, klik op de groene knop **Code**, dan **Download ZIP**.
 Pak het uit en open de map.
-
-Heb je git? Dan is dit hetzelfde:
-
-```bash
-git clone https://github.com/ParisAngelopoulos/yt-auto.git
-```
 
 ### 2. Python (alleen op Windows)
 
