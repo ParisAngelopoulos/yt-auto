@@ -22,6 +22,8 @@ import numpy as np
 
 from ..audio.music import SAMPLE_RATE, build_music, pick_library_track, write_wav
 from ..config import ROOT, Config
+from ..media import duration as media_duration
+from ..media import ffmpeg_bin
 from ..render.scene import render_scene
 from ..script_builder import Scene
 from ..scripting.blueprint import Blueprint, to_scenes
@@ -98,7 +100,7 @@ def prepare_assets(
 def decode_audio(path: Path) -> np.ndarray:
     """Leest een audiobestand als mono float32 op 44,1 kHz."""
     result = subprocess.run(
-        ["ffmpeg", "-v", "error", "-i", str(path), "-f", "f32le",
+        [ffmpeg_bin(), "-v", "error", "-i", str(path), "-f", "f32le",
          "-ar", str(SAMPLE_RATE), "-ac", "1", "-"],
         capture_output=True, check=True,
     )
@@ -198,7 +200,7 @@ def build_video(
 
     loudness = float(cfg.safety.get("loudness_lufs", -14))
     command = (
-        ["ffmpeg", "-y"] + inputs
+        [ffmpeg_bin(), "-y"] + inputs
         + ["-i", str(audio_path),
            "-filter_complex", ";".join(chain),
            "-map", f"[{label}]", "-map", f"{len(timeline.scenes)}:a",
@@ -241,9 +243,4 @@ def assemble(
 
 
 def probe_duration(path: Path) -> float:
-    result = subprocess.run(
-        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
-         "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
-        capture_output=True, text=True, check=True,
-    )
-    return float(result.stdout.strip())
+    return media_duration(path)

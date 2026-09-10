@@ -4,6 +4,10 @@ numpy>=1.24
 PyYAML>=6.0
 requests>=2.31
 
+# ffmpeg wordt meegeleverd, zodat je hem niet zelf hoeft te installeren.
+# Staat er al een op je systeem, dan krijgt die voorrang.
+imageio-ffmpeg>=0.5
+
 # --- YouTube upload (Data API v3) ---
 google-api-python-client>=2.100
 google-auth>=2.23

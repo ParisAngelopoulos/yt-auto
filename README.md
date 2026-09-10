@@ -19,36 +19,54 @@ Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
 
 ## Beginnen
 
-Download het project één keer:
+De studio draait op je eigen computer. Er is geen website om naartoe te gaan:
+je haalt het project één keer binnen en start het daarna met een dubbelklik.
+
+### 1. Het project downloaden
+
+Ga naar de repository, klik op de groene knop **Code**, dan **Download ZIP**.
+Pak het uit en open de map.
+
+Heb je git? Dan is dit hetzelfde:
 
 ```bash
 git clone https://github.com/ParisAngelopoulos/yt-auto.git
 ```
 
-Daarna, elke keer dat je een video wilt maken:
+### 2. Python (alleen op Windows)
+
+macOS heeft Python al. Op Windows haal je het eenmalig op bij
+[python.org/downloads](https://www.python.org/downloads/). Zet bij het
+installeren een vinkje bij **Add Python to PATH**, anders vindt Windows het niet.
+
+**ffmpeg hoef je niet te installeren.** Dat komt automatisch mee.
+
+### 3. Starten
 
 | | |
 |---|---|
-| **macOS / Linux** | dubbelklik **`start.command`** |
-| **Windows** | dubbelklik **`start.bat`** |
+| **macOS** | **rechtermuisknop** op `start.command` → **Open** → nog een keer **Open** |
+| **Windows** | dubbelklik `start.bat` |
+| **Linux** | dubbelklik `start.command`, of `./start.command` in een terminal |
 
-De eerste keer installeert hij zichzelf (paar minuten). Daarna opent de pagina
-binnen een paar seconden vanzelf in je browser, op <http://127.0.0.1:8765>.
+Die rechtermuisknop op de Mac is alleen de eerste keer nodig. macOS blokkeert
+gedownloade startbestanden bij een gewone dubbelklik, met de melding dat het
+van een onbekende ontwikkelaar komt. Via rechtermuisknop → Open krijg je een
+knop om het toch te openen. Daarna werkt dubbelklikken gewoon.
 
-Het zwarte venster dat erbij opent mag open blijven staan. Sluiten stopt de studio.
+De eerste keer installeert hij zichzelf; dat duurt een paar minuten. Daarna
+opent je browser binnen een paar seconden vanzelf op
+<http://127.0.0.1:8765>.
 
-**ffmpeg heb je nodig.** De starter zegt het als het ontbreekt:
+Het zwarte venster dat erbij opent mag open blijven staan. Sluiten stopt de
+studio. De volgende keer: weer dubbelklikken.
 
-```bash
-brew install ffmpeg                  # macOS
-sudo apt-get install ffmpeg          # Linux
-winget install Gyan.FFmpeg           # Windows
-```
+### 4. Meteen proberen
 
-**Zonder sleutels werkt alles ook.** De pagina zegt het er dan bij: het script
-komt uit `config/curriculum.yaml` in plaats van van Claude, en de video krijgt
-een gratis robotstem. Beeld, muziek en timing zijn wel echt. Zo zie je de hele
-machine draaien voordat je iets uitgeeft.
+Klik op **Schrijf het script** en daarna op **Maak de video**. Zonder sleutels
+werkt dat ook: het script komt dan uit `config/curriculum.yaml` en de video
+krijgt een gratis robotstem. Beeld, muziek en timing zijn wel echt. Zo zie je
+de hele machine draaien voordat je iets uitgeeft.
 
 Liever de opdrachtregel? `ytauto panel` doet hetzelfde.
 
@@ -223,7 +241,9 @@ Zet ze niet uit.
 
 | Wat je ziet | Wat het is |
 |---|---|
-| `ffmpeg: ONTBREEKT` | `sudo apt-get install ffmpeg` of `brew install ffmpeg` |
+| `ffmpeg: ONTBREEKT` | `pip install imageio-ffmpeg`, of via brew, apt of winget |
+| macOS: "kan niet worden geopend" | Rechtermuisknop op `start.command` → Open → Open |
+| Windows: Python niet gevonden | Opnieuw installeren met het vinkje bij "Add Python to PATH" |
 | `Claude niet beschikbaar` | Geen `ANTHROPIC_API_KEY`; hij gebruikt nu het sjabloon |
 | `ElevenLabs weigert de sleutel (401)` | Sleutel verlopen of verkeerd gekopieerd |
 | `Weeklimiet bereikt` | Werkt zoals bedoeld. Verhoog `publish.max_per_week` als je echt sneller wilt |

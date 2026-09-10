@@ -173,8 +173,12 @@ def cmd_check(args) -> int:
         info = yt_check(cfg)
         print(f"  YouTube-kanaal: {info.get('channel') or info.get('reason')}")
 
-    import shutil
-    print(f"  ffmpeg      : {shutil.which('ffmpeg') or 'ONTBREEKT'}")
+    from .media import MediaError, describe
+
+    try:
+        print(f"  ffmpeg      : {describe()}")
+    except MediaError as exc:
+        print(f"  ffmpeg      : ONTBREEKT — {exc}")
     return 0
 
 

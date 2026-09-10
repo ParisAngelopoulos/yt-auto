@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 
 from ..config import Config
+from ..media import run as ffmpeg
 
 
 def speak(cfg: Config, text: str, out_path: Path) -> None:
@@ -28,14 +29,9 @@ def speak(cfg: Config, text: str, out_path: Path) -> None:
         # timing van de video klopt en je het beeld kunt beoordelen.
         from ..script_builder import estimate_speech_seconds
         seconds = max(1.0, estimate_speech_seconds(text))
-        subprocess.run(
-            ["ffmpeg", "-y", "-f", "lavfi", "-i",
-             f"anullsrc=r=44100:cl=mono:d={seconds:.2f}", str(wav)],
-            check=True, capture_output=True,
-        )
+        ffmpeg(["-y", "-f", "lavfi", "-i",
+                f"anullsrc=r=44100:cl=mono:d={seconds:.2f}", str(wav)], check=True)
 
-    subprocess.run(
-        ["ffmpeg", "-y", "-i", str(wav), "-codec:a", "libmp3lame", "-b:a", "128k", str(out_path)],
-        check=True, capture_output=True,
-    )
+    ffmpeg(["-y", "-i", str(wav), "-codec:a", "libmp3lame",
+            "-b:a", "128k", str(out_path)], check=True)
     wav.unlink(missing_ok=True)

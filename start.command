@@ -26,28 +26,13 @@ else
   exit 1
 fi
 
-# --- ffmpeg ---
-if ! command -v ffmpeg >/dev/null 2>&1; then
-  echo "  ffmpeg ontbreekt. Dat heeft de studio nodig om video te maken."
-  echo ""
-  if [ "$(uname)" = "Darwin" ]; then
-    echo "    macOS:  brew install ffmpeg"
-    echo "    (geen brew? installeer die eerst via https://brew.sh)"
-  else
-    echo "    Linux:  sudo apt-get install ffmpeg"
-  fi
-  echo ""
-  read -p "  Druk op Enter om te sluiten." _
-  exit 1
-fi
-
 # --- Eigen omgeving, zodat dit project niets op je systeem verandert ---
 if [ ! -d .venv ]; then
   echo "  Eerste keer opstarten. Even installeren, dit duurt een paar minuten..."
   "$PY" -m venv .venv
   ./.venv/bin/python -m pip install --upgrade pip --quiet
   ./.venv/bin/python -m pip install -e . --quiet
-  echo "  Klaar met installeren."
+  echo "  Klaar met installeren. ffmpeg is meegekomen; niets anders nodig."
   echo ""
 fi
 

@@ -10,10 +10,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 from pathlib import Path
 
 from ..config import Config
+from ..media import duration as media_duration
 
 
 class TTSError(RuntimeError):
@@ -21,13 +21,8 @@ class TTSError(RuntimeError):
 
 
 def audio_duration(path: Path) -> float:
-    """Lengte van een audiobestand in seconden, via ffprobe."""
-    result = subprocess.run(
-        ["ffprobe", "-v", "error", "-show_entries", "format=duration",
-         "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
-        capture_output=True, text=True, check=True,
-    )
-    return float(result.stdout.strip())
+    """Lengte van een audiobestand in seconden."""
+    return media_duration(path)
 
 
 def _cache_key(text: str, settings: dict) -> str:

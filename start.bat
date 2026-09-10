@@ -19,24 +19,12 @@ if errorlevel 1 (
   exit /b 1
 )
 
-where ffmpeg >nul 2>&1
-if errorlevel 1 (
-  echo   ffmpeg ontbreekt. Dat heeft de studio nodig om video te maken.
-  echo.
-  echo     winget install Gyan.FFmpeg
-  echo.
-  echo   Sluit daarna dit venster en start opnieuw.
-  echo.
-  pause
-  exit /b 1
-)
-
 if not exist .venv (
   echo   Eerste keer opstarten. Even installeren, dit duurt een paar minuten...
   python -m venv .venv
   .venv\Scripts\python -m pip install --upgrade pip --quiet
   .venv\Scripts\python -m pip install -e . --quiet
-  echo   Klaar met installeren.
+  echo   Klaar met installeren. ffmpeg is meegekomen; niets anders nodig.
   echo.
 )
 
