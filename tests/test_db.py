@@ -266,3 +266,69 @@ def test_mislukte_afleveringen_mogen_opnieuw(store):
     assert "colors:balloons" not in store.taken_keys()
     # het script blijft wel bewaard
     assert store.load_blueprint("colors:balloons") is not None
+
+
+# ---------------------------------------------------------------------------
+#  Volksverhalen
+# ---------------------------------------------------------------------------
+
+
+def maak_verhaal():
+    from ytauto.scripting.blueprint import StoryScene
+
+    return Blueprint(
+        idea="test", title="The Tale", description="Een verhaal.", tags=["folklore"],
+        lesson_kind="norse", backdrop_top="#0B1026", backdrop_bottom="#2A2B52",
+        items=[],
+        scenes=[StoryScene(setting="forest", time="night", weather="mist",
+                           caption="The wood",
+                           subjects=[{"draw": "traveller", "x": 0.4,
+                                      "scale": 0.16, "depth": 0.9}]),
+                StoryScene(setting="coast", time="dawn")],
+        beats=[Beat("title", "The Tale.", scene=0, title="THE TALE"),
+               Beat("tell", "He walked into the wood.", scene=0),
+               Beat("close", "He came out at the sea.", scene=1)],
+        format="folklore", key="the-tale",
+    )
+
+
+def test_verhaal_komt_er_exact_zo_weer_uit(store):
+    bp = maak_verhaal()
+    store.save_blueprint(bp)
+    terug = store.load_blueprint(bp.key)
+
+    assert terug.format == "folklore"
+    assert len(terug.scenes) == 2
+    assert terug.scenes[0].setting == "forest"
+    assert terug.scenes[0].subjects[0]["draw"] == "traveller"
+    assert [b.scene for b in terug.beats] == [0, 0, 1]
+
+
+def test_verhaal_komt_ook_zonder_json_kolom_terug(store):
+    """De tabellen moeten op zichzelf genoeg zijn, ook voor verhalen."""
+    bp = maak_verhaal()
+    store.save_blueprint(bp)
+    with connect(store.db_path) as conn:
+        conn.execute("UPDATE episodes SET raw_json = NULL WHERE key = ?", (bp.key,))
+
+    terug = store.load_blueprint(bp.key)
+    assert terug.format == "folklore"
+    assert [(s.setting, s.time) for s in terug.scenes] == [("forest", "night"), ("coast", "dawn")]
+    assert [b.scene for b in terug.beats] == [0, 0, 1]
+    assert [b.narration for b in terug.beats] == [b.narration for b in bp.beats]
+
+
+def test_oude_database_krijgt_de_nieuwe_kolommen(tmp_path):
+    """Een database van voor de volksverhalen mag niet omvallen."""
+    pad = tmp_path / "oud.db"
+    conn = sqlite3.connect(pad)
+    conn.executescript(V1_SCHEMA)
+    conn.execute("INSERT INTO episodes VALUES ('colors:balloons','colors','balloons',"
+                 "'Learn Colors','planned',NULL,NULL,NULL,'2026-01-01T00:00:00+00:00',NULL)")
+    conn.commit()
+    conn.close()
+
+    with connect(pad) as conn:
+        rij = conn.execute("SELECT * FROM episodes").fetchone()
+    assert rij["format"] == "kids"          # bestaande rijen zijn leervideo's
+    assert rij["scenes_json"] is None

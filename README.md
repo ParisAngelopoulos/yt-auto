@@ -1,8 +1,16 @@
 # yt-auto
 
-Volautomatische productie van educatieve video's voor jonge kinderen (2–5 jaar).
-Claude bedenkt het onderwerp en schrijft het script, ElevenLabs spreekt het in,
-de beelden worden getekend, en YouTube krijgt de video binnen.
+Volautomatische productie van video's met volksverhalen, mythen en sagen.
+Claude kiest een verhaal en hertelt het, ElevenLabs vertelt het voor, de
+landschappen worden getekend, en YouTube krijgt de video binnen.
+
+De pipeline kan twee niches aan. Welke er draait staat in één regel
+(`channel.format` in `config/channel.yaml`):
+
+| | |
+|---|---|
+| `folklore` | volksverhalen over gelaagde silhouetlandschappen — **nu actief** |
+| `kids` | educatieve video's voor peuters met getekende figuren |
 
 Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
 
@@ -132,24 +140,29 @@ Dit doe je één keer. Daarna kan de pipeline zonder jou uploaden.
 Drie bestanden, geen code:
 
 ### `config/brief.md` — de toon
-Dit leest Claude bij elk script. Wil je rustiger, grappiger, meer herhaling,
-een ander soort les? Schrijf het hierin op. Het volgende script verandert mee.
+Dit leest Claude bij elk verhaal. Wil je rustiger vertellen, andere tradities,
+een korter slot? Schrijf het hierin op. Het volgende verhaal verandert mee.
 
 ### `config/channel.yaml` — de knoppen
-Kanaalnaam, taal, lengte, stem, hoe vaak er gepubliceerd wordt, hoe hard de
-muziek staat. De regel die je waarschijnlijk als eerste aanpast:
+Niche, kanaalnaam, taal, lengte, stem, publicatietempo. De regels die je
+waarschijnlijk als eerste aanpast:
 
 ```yaml
+channel:
+  format: folklore              # folklore | kids
 video:
-  target_duration_minutes: 8      # de pipeline bouwt net zoveel rondes tot dit gehaald is
+  target_duration_minutes: 11   # 8 tot 15 werkt het best voor een verhaal
 publish:
-  privacy_status: public          # zet op 'unlisted' zolang je nog meekijkt
-  max_per_week: 4                 # rem tegen spamdetectie
+  privacy_status: public        # zet op 'unlisted' zolang je nog meekijkt
+  max_per_week: 3               # rem tegen spamdetectie
 ```
 
-### `config/curriculum.yaml` — het vangnet
-Alleen in gebruik als Claude er niet is. Een les × een thema is een aflevering;
-er zitten er 36 in. Een thema toevoegen levert direct een nieuwe aflevering op.
+### `config/tales.yaml` — het vangnet
+Alleen in gebruik als Claude er niet is. Er staan drie complete
+hervertellingen in. Zelf een verhaal toevoegen kan: kopieer de opbouw,
+`scenes` zijn de plekken en `beats` verwijzen ernaar met hun index.
+
+Voor de kinderniche doet `config/curriculum.yaml` hetzelfde.
 
 ---
 
@@ -236,8 +249,8 @@ database wordt bijgewerkt zonder dat er een rij verloren gaat.
 
 ```
 config/brief.md ─┐
-                 ├─► Claude ──► blueprint.json ──┬──► scenes ──► PNG's ──┐
-curriculum.yaml ─┘   (idee, tekst, items)        │                       ├─► ffmpeg ──► video.mp4
+                 ├─► Claude ──► blueprint ────────┬──► scenes ──► PNG's ──┐
+tales.yaml ──────┘   (verhaal, scenes, tekst)    │                       ├─► ffmpeg ──► video.mp4
                                                  │   ElevenLabs ──► mp3 ─┤
                                                  └── muzieksynth ──► wav ┘
 ```
@@ -247,21 +260,25 @@ zinnen; de code bouwt daar het beeld bij. Daardoor kan een script nooit vragen o
 een figuur dat niet bestaat, terwijl Claude wel volledig vrij is in taal en
 onderwerp.
 
-**Beelden** worden getekend, niet gegenereerd. 52 figuren — dieren, fruit,
-voertuigen, vormen, voorwerpen — opgebouwd uit vectorvormen in
-`src/ytauto/render/objects.py`. Geen beeld-API, geen kosten, geen wisselende
-stijl tussen afleveringen, en een koe ziet er in video 40 nog precies zo uit als
-in video 1.
+**Beelden** worden getekend, niet gegenereerd. Elk beeld is een gelaagd
+landschap: lucht, maan of zon, bergkammen en bossen die naar de kijker toe
+steeds donkerder worden, en daartussen silhouetten. Dat donkerder worden is de
+hele truc — verre bergen zijn bleek omdat er lucht tussen zit, en zonder dat
+verloop is het een plaatje in plaats van diepte.
 
-**Muziek** wordt ter plekke gesynthetiseerd (`src/ytauto/audio/music.py`): zachte
-belletjes over een rustig akkoordenschema. Kindercontent wordt streng gescand op
-Content ID; zelfs 'royalty free' bibliotheken leveren regelmatig claims op. Wat
-hier uitkomt is van jou. Eigen muziek gebruiken kan: zet bestanden in
-`assets/music/` en `music.source: library` in de config.
+Tien landschappen, negen luchten, drie weertypen en 31 silhouetten
+(`src/ytauto/render/silhouettes.py`): een reiziger, een burcht, een roeiboot,
+een draak, staande stenen. Geen beeld-API, geen kosten, geen wisselende stijl
+tussen afleveringen.
 
-**Lesopbouw** volgt hoe peuters leren: voordoen, samen oefenen, zelf zoeken,
-kort herhalen. Bij elke vraag valt een stilte van 2,6 seconden, zodat het kind
-kan antwoorden. Die rondes worden herhaald tot de doellengte gehaald is.
+Het schema dwingt af dat Claude alleen plekken en figuren kiest die ook
+werkelijk getekend kunnen worden. Een verzonnen silhouet komt er niet doorheen.
+
+**Verhaalopbouw** volgt vaste beats: titelkaart, opening, het verhaal zelf,
+een wending waar het beeld verandert, de afloop, wat het verhaal wil zeggen,
+en een bronvermelding. Meerdere beats delen dezelfde scene, zodat het beeld
+blijft staan terwijl er verteld wordt en pas verandert als het verhaal van
+plek verandert.
 
 ---
 
@@ -289,25 +306,33 @@ ytauto check       # sleutels, tegoed en ffmpeg controleren
 
 Dit is geen juridisch advies, maar het scheelt je een hoop gedoe.
 
-**Made for Kids is verplicht.** Onder de Amerikaanse COPPA-wet moet elke video
-voor kinderen zo aangemerkt worden. De pipeline doet dat automatisch
-(`selfDeclaredMadeForKids`) en de veiligheidscontrole weigert te publiceren als
-je dat uitzet. Gevolg: geen reacties, geen meldingen, geen end screens, en geen
-gepersonaliseerde advertenties. Dat laatste betekent een duidelijk lagere
-opbrengst per weergave dan bij gewone content.
+**De verhalen zijn vrij, vertalingen niet.** Volksverhalen van eeuwen oud
+kennen geen rechthebbende. Een specifieke vertaling of hervertelling uit de
+twintigste eeuw wel. Daarom schrijft Claude altijd in eigen woorden en neemt
+hij geen zinnen letterlijk over; dat staat in `config/brief.md` en daar moet
+het blijven staan.
 
-**Geld verdienen kan pas** bij 1.000 abonnees en 4.000 uur kijktijd in een jaar.
-Reken op maanden, niet weken.
+**Noem de herkomst, en noem hem juist.** De veiligheidscontrole waarschuwt als
+er geen traditie is vermeld of als de bronvermelding aan het eind ontbreekt.
+Verhalen die in een levende cultuur een heilige of ceremoniële betekenis
+hebben, laat de briefing bewust staan.
 
-**YouTube handhaaft op massaproductie.** Herhaalde, inhoudelijk gelijke video's
-in hoog tempo worden gezien als spam. Daarom staat `max_per_week` op 4 en zit er
-minimaal 24 uur tussen twee uploads. Draai dat niet omhoog omdat het kan. Vier
-goede video's per week is voor dit kanaaltype al veel.
+**Dit is geen kindercontent.** `made_for_kids` staat uit en de controle
+blokkeert publiceren als je hem aanzet: een video onterecht als kindervideo
+aanmerken schakelt reacties en advertenties uit en klopt niet. Zet je de niche
+terug op `kids`, dan draait die regel om.
 
-**De veiligheidscontrole draait voor elke publicatie** en blokkeert enge woorden,
-merknamen, oproepen tot abonneren (niet toegestaan bij Made for Kids) en te grote
-helderheidssprongen tussen beelden. Die controles staan in `src/ytauto/safety.py`.
-Zet ze niet uit.
+**Geweld mag benoemd worden, niet uitgeschilderd.** In een sage wordt
+gevochten en gestorven; dat is geen probleem. Expliciet beschreven geweld
+kost je de advertentiegeschiktheid, en daar controleert `src/ytauto/safety.py`
+op.
+
+**Geld verdienen kan pas** bij 1.000 abonnees en 4.000 uur kijktijd in een
+jaar. Reken op maanden, niet weken.
+
+**YouTube handhaaft op massaproductie.** Daarom staat `max_per_week` op 3 en
+zit er minimaal 24 uur tussen twee uploads. Draai dat niet omhoog omdat het
+kan.
 
 ---
 
@@ -324,6 +349,7 @@ Zet ze niet uit.
 | `Script afgekeurd door de veiligheidscontrole` | De melding noemt het woord. Pas `config/brief.md` aan |
 | `thumbnail niet geplaatst` | Een eigen thumbnail vereist een geverifieerd YouTube-kanaal |
 | Video duurt lang om te maken | Normaal is 8–15 minuten. Sneller: `encoder_preset: veryfast` |
+| `Alle verhalen zijn gemaakt` | De bank is op. Voeg er een toe in `config/tales.yaml`, of zet een Anthropic-sleutel in `.env` |
 
 Tests draaien: `pytest -q`
 
@@ -335,10 +361,10 @@ Tests draaien: `pytest -q`
 state/           episodes.db — al je scripts, in SQL
 start.command    dubbelklikken op macOS/Linux
 start.bat        dubbelklikken op Windows
-config/          brief.md, channel.yaml, curriculum.yaml  ← hier stuur je
+config/          brief.md, channel.yaml, tales.yaml  ← hier stuur je
 src/ytauto/
   scripting/     Claude-schrijver, sjabloonschrijver, het blueprint-contract
-  render/        52 getekende figuren, schermindelingen, thumbnail
+  render/        landschappen, 31 silhouetten, 52 kinderfiguren, thumbnail
   audio/         muzieksynthesizer
   tts/           ElevenLabs en de offline teststem
   video/         ffmpeg-montage

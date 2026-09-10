@@ -34,7 +34,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from .config import ROOT
-from .scripting.blueprint import Beat, Blueprint, Item
+from .scripting.blueprint import Beat, Blueprint, Item, StoryScene
 
 DB_PATH = ROOT / "state" / "episodes.db"
 
@@ -126,6 +126,13 @@ MIGRATIONS: list[str] = [
     CREATE INDEX idx_episodes_kind      ON episodes(lesson_kind);
     CREATE INDEX idx_beats_narration    ON episode_beats(narration);
     """,
+    # 3 — volksverhalen: de vorm, de plekken en waar elke beat speelt
+    """
+    ALTER TABLE episodes ADD COLUMN format TEXT NOT NULL DEFAULT 'kids';
+    ALTER TABLE episodes ADD COLUMN scenes_json TEXT;
+    ALTER TABLE episode_beats ADD COLUMN scene_index INTEGER;
+    CREATE INDEX idx_episodes_format ON episodes(format);
+    """,
 ]
 
 
@@ -188,8 +195,9 @@ class Store:
                 INSERT INTO episodes (
                     key, slug, title, idea, description, lesson_kind,
                     backdrop_top, backdrop_bottom, source, word_count,
-                    estimated_seconds, status, raw_json, created_at
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?, 'planned', ?, ?)
+                    estimated_seconds, status, raw_json, created_at,
+                    format, scenes_json
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?, 'planned', ?, ?, ?, ?)
                 ON CONFLICT(key) DO UPDATE SET
                     slug=excluded.slug, title=excluded.title, idea=excluded.idea,
                     description=excluded.description, lesson_kind=excluded.lesson_kind,
@@ -197,11 +205,13 @@ class Store:
                     backdrop_bottom=excluded.backdrop_bottom,
                     source=excluded.source, word_count=excluded.word_count,
                     estimated_seconds=excluded.estimated_seconds,
-                    raw_json=excluded.raw_json, error=NULL
+                    raw_json=excluded.raw_json, error=NULL,
+                    format=excluded.format, scenes_json=excluded.scenes_json
                 """,
                 (bp.key, bp.slug, bp.title, bp.idea, bp.description, bp.lesson_kind,
                  bp.backdrop_top, bp.backdrop_bottom, bp.source, bp.word_count,
-                 bp.estimated_duration, bp.to_json(), _now()),
+                 bp.estimated_duration, bp.to_json(), _now(),
+                 bp.format, json.dumps([asdict(sc) for sc in bp.scenes])),
             )
 
             for tabel in ("episode_items", "episode_beats", "episode_tags"):
@@ -215,8 +225,8 @@ class Store:
             )
             conn.executemany(
                 "INSERT INTO episode_beats (episode_key, position, mode, narration,"
-                " item_index, title, subtitle) VALUES (?,?,?,?,?,?,?)",
-                [(bp.key, i, b.mode, b.narration, b.item, b.title, b.subtitle)
+                " item_index, title, subtitle, scene_index) VALUES (?,?,?,?,?,?,?,?)",
+                [(bp.key, i, b.mode, b.narration, b.item, b.title, b.subtitle, b.scene)
                  for i, b in enumerate(bp.beats)],
             )
             conn.executemany(
@@ -260,8 +270,11 @@ class Store:
             items=[Item(word=i["word"], draw=i["draw"], label=i["label"],
                         color=i["color"], count=i["count"]) for i in items],
             beats=[Beat(mode=b["mode"], narration=b["narration"], item=b["item_index"],
-                        title=b["title"], subtitle=b["subtitle"]) for b in beats],
+                        title=b["title"], subtitle=b["subtitle"],
+                        scene=b["scene_index"]) for b in beats],
             source=rij["source"], key=rij["key"],
+            format=rij["format"] or "kids",
+            scenes=[StoryScene(**sc) for sc in json.loads(rij["scenes_json"] or "[]")],
         )
 
     # ── overzicht en zoeken ─────────────────────────────────────────

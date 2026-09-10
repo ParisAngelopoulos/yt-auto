@@ -1,0 +1,339 @@
+# ============================================================
+#  VERHALENBANK  --  het vangnet
+#
+#  Alleen in gebruik als Claude er niet is. Deze verhalen zijn
+#  eeuwenoud en dus vrij van rechten; de tekst hieronder is een
+#  eigen hervertelling, geen overgenomen vertaling.
+#
+#  Zelf een verhaal toevoegen? Kopieer de opbouw. `scenes` zijn
+#  de plekken, `beats` verwijzen ernaar met hun index.
+# ============================================================
+
+tales:
+
+  # --------------------------------------------------------
+  - key: fisherman-and-his-wife
+    title: "The Fisherman and His Wife"
+    tradition: german
+    idea: "Een visser vangt een sprekende bot en zijn vrouw blijft wensen"
+    description: >-
+      An old tale from northern Germany, written down by the Brothers Grimm.
+      A poor fisherman catches a flounder that can grant wishes, and his wife
+      finds that nothing she is given is ever quite enough. The sea answers
+      every wish with worse weather.
+    tags: ["folklore", "grimm", "german folk tale", "fairy tale", "storytelling",
+           "bedtime story", "myths and legends", "folk tale retold"]
+
+    scenes:
+      - setting: coast
+        time: dawn
+        weather: none
+        caption: "A hut on the shore"
+        subjects:
+          - {draw: cottage, x: 0.22, scale: 0.11, depth: 0.88}
+          - {draw: man,     x: 0.62, scale: 0.10, depth: 0.94}
+      - setting: coast
+        time: day
+        weather: none
+        caption: null
+        subjects:
+          - {draw: rowboat, x: 0.48, scale: 0.07, depth: 0.62}
+      - setting: village
+        time: day
+        weather: none
+        caption: "A proper cottage"
+        subjects:
+          - {draw: cottage, x: 0.44, scale: 0.15, depth: 0.75}
+          - {draw: oak,     x: 0.78, scale: 0.20, depth: 0.93}
+      - setting: coast
+        time: overcast
+        weather: mist
+        caption: null
+        subjects:
+          - {draw: man, x: 0.34, scale: 0.11, depth: 0.92}
+      - setting: village
+        time: overcast
+        weather: none
+        caption: "A castle of stone"
+        subjects:
+          - {draw: castle, x: 0.50, scale: 0.20, depth: 0.70}
+          - {draw: gate,   x: 0.20, scale: 0.10, depth: 0.90}
+      - setting: cliffs
+        time: storm
+        weather: rain
+        caption: null
+        subjects:
+          - {draw: man, x: 0.30, scale: 0.12, depth: 0.93}
+      - setting: cliffs
+        time: underworld
+        weather: rain
+        caption: "The sea gone black"
+        subjects:
+          - {draw: tower, x: 0.66, scale: 0.30, depth: 0.72}
+      - setting: coast
+        time: night
+        weather: none
+        caption: null
+        subjects:
+          - {draw: cottage, x: 0.24, scale: 0.10, depth: 0.90}
+          - {draw: man,     x: 0.58, scale: 0.09, depth: 0.94}
+
+    beats:
+      - {mode: title, scene: 0, title: "The Fisherman and His Wife",
+         subtitle: "A folk tale from northern Germany",
+         narration: "The Fisherman and His Wife. A folk tale from northern Germany."}
+      - {mode: open, scene: 0, title: null, subtitle: null,
+         narration: "There was once a fisherman who lived with his wife in a hut by the sea."}
+      - {mode: open, scene: 0, title: null, subtitle: null,
+         narration: "The hut leaned into the wind. It had one room, one window, and a floor of packed earth."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "Every morning he rowed out and let down his line, and every evening he came back with what the sea had spared him."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "One morning the line went tight and stayed tight, and he pulled up a flounder as broad as a shield."}
+      - {mode: speech, scene: 1, title: null, subtitle: null,
+         narration: "Let me go, said the flounder. I am no fish. I am an enchanted prince, and I will taste of nothing good."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "The fisherman had never heard a fish speak, and he did not argue with one. He opened his hands and let it slide back into the green water."}
+      - {mode: turn, scene: 0, title: null, subtitle: null,
+         narration: "When he told his wife, she set down her bowl and looked at him for a long moment."}
+      - {mode: speech, scene: 0, title: null, subtitle: null,
+         narration: "You had a wish in your hands, she said, and you gave it back for nothing. Go and ask him for a cottage."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "He did not want to go. But he went, and stood at the edge of the water, and called out over it."}
+      - {mode: speech, scene: 1, title: null, subtitle: null,
+         narration: "Flounder, flounder in the sea. My wife has sent me. She asks a cottage."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "The water rose once, quietly, the way water does when something turns beneath it."}
+      - {mode: speech, scene: 1, title: null, subtitle: null,
+         narration: "Go home, said the flounder. She has it already."}
+      - {mode: turn, scene: 2, title: null, subtitle: null,
+         narration: "Where the hut had stood there was a cottage, with a hearth and a bed and a garden behind it."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "For a fortnight his wife was pleased. Then she stood at the window and looked at the hills beyond the garden."}
+      - {mode: speech, scene: 2, title: null, subtitle: null,
+         narration: "A cottage is a small thing, she said. Go and ask him for a castle."}
+      - {mode: tell, scene: 3, title: null, subtitle: null,
+         narration: "The sea had gone the colour of old iron. The fisherman called out over it, and did not like the sound of his own voice."}
+      - {mode: turn, scene: 4, title: null, subtitle: null,
+         narration: "The castle had a hall you could ride a horse through, and a hundred candles, and servants who did not meet his eye."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "By morning his wife had thought of something else."}
+      - {mode: speech, scene: 4, title: null, subtitle: null,
+         narration: "What is a castle without a crown, she said. Go and ask him to make me king."}
+      - {mode: tell, scene: 5, title: null, subtitle: null,
+         narration: "The wind had teeth in it now. The waves came in grey and broke black, and the rain went sideways across the rocks."}
+      - {mode: tell, scene: 5, title: null, subtitle: null,
+         narration: "Still the flounder came, and still the answer was the same. Go home. She has it already."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "She was king. Then she was emperor. Then she was more than that, and each time it took her less time to want the next thing."}
+      - {mode: turn, scene: 6, title: null, subtitle: null,
+         narration: "At last she sent him out in the dark, and told him what she wanted, and he could not say it aloud on the way."}
+      - {mode: speech, scene: 6, title: null, subtitle: null,
+         narration: "She wishes, he said at last, to command the sun and the moon to rise."}
+      - {mode: tell, scene: 6, title: null, subtitle: null,
+         narration: "The sea did not rise. It went flat and black and very still, the way a room goes quiet when someone has said too much."}
+      - {mode: speech, scene: 6, title: null, subtitle: null,
+         narration: "Go home, said the flounder. She is sitting in the hut."}
+      - {mode: close, scene: 7, title: null, subtitle: null,
+         narration: "And she was. The castle was gone, and the cottage with it, and the wind came through the window as it always had."}
+      - {mode: close, scene: 7, title: null, subtitle: null,
+         narration: "They are sitting there still, as far as anyone knows."}
+      - {mode: moral, scene: 7, title: null, subtitle: null,
+         narration: "The tale is not really about the fish. It is about a man who kept walking down to the water because it was easier than saying no."}
+      - {mode: source, scene: 7, title: null, subtitle: null,
+         narration: "This story was collected in the nineteenth century by Jacob and Wilhelm Grimm, who heard it in the dialect of the Baltic coast."}
+
+  # --------------------------------------------------------
+  - key: peach-boy
+    title: "Momotaro, the Peach Boy"
+    tradition: japanese
+    idea: "Een kind uit een perzik trekt met drie dieren naar het eiland van de demonen"
+    description: >-
+      One of the best known folk tales of Japan. An old couple find a child
+      inside a peach, and when he is grown he sets out for the island of the
+      oni with a dog, a monkey and a pheasant beside him.
+    tags: ["folklore", "japanese folk tale", "momotaro", "myths and legends",
+           "storytelling", "folk tale retold", "bedtime story"]
+
+    scenes:
+      - setting: valley
+        time: dawn
+        weather: mist
+        caption: "A village between the hills"
+        subjects:
+          - {draw: cottage, x: 0.36, scale: 0.10, depth: 0.80}
+      - setting: forest
+        time: day
+        weather: none
+        caption: null
+        subjects:
+          - {draw: woman, x: 0.40, scale: 0.13, depth: 0.90}
+      - setting: hills
+        time: day
+        weather: none
+        caption: null
+        subjects:
+          - {draw: child, x: 0.30, scale: 0.12, depth: 0.90}
+          - {draw: fox,   x: 0.56, scale: 0.07, depth: 0.85}
+      - setting: coast
+        time: dusk
+        weather: none
+        caption: "The crossing"
+        subjects:
+          - {draw: rowboat, x: 0.52, scale: 0.07, depth: 0.65}
+      - setting: cliffs
+        time: storm
+        weather: none
+        caption: "The island of the oni"
+        subjects:
+          - {draw: gate,  x: 0.42, scale: 0.14, depth: 0.78}
+          - {draw: giant, x: 0.68, scale: 0.16, depth: 0.88}
+      - setting: valley
+        time: dawn
+        weather: none
+        caption: null
+        subjects:
+          - {draw: cottage, x: 0.36, scale: 0.10, depth: 0.80}
+          - {draw: man,     x: 0.60, scale: 0.11, depth: 0.92}
+
+    beats:
+      - {mode: title, scene: 0, title: "Momotaro", subtitle: "A folk tale from Japan",
+         narration: "Momotaro, the Peach Boy. A folk tale from Japan."}
+      - {mode: open, scene: 0, title: null, subtitle: null,
+         narration: "An old man and an old woman lived in a village between the hills. They had no children, and they had stopped speaking of it."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "One morning the woman went down to the river to wash, and something came turning down the current towards her."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "It was a peach, and it was the size of a melon, and it bumped against her hands as though it had been aimed."}
+      - {mode: turn, scene: 0, title: null, subtitle: null,
+         narration: "When she set it on the table to cut it open, the peach split by itself, and there was a child inside, sitting up."}
+      - {mode: tell, scene: 0, title: null, subtitle: null,
+         narration: "They called him Momotaro, which means peach boy, because they were plain people and it was a plain name for what had happened."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "He grew quickly and he grew strong, and when he was still young he told them he was going to the island where the oni lived."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "The oni had been coming across the water for years, taking what they wanted from the coast villages. Nobody had gone after them."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "His mother made him millet dumplings for the road. That was all she could give him, so she gave him a great many."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "On the road a dog came out of the grass and asked what he was carrying. Momotaro gave him a dumpling, and the dog came with him."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "Then a monkey, on the path through the trees. Then a pheasant, out of the air. Each one asked, and each one was given, and each one stayed."}
+      - {mode: turn, scene: 3, title: null, subtitle: null,
+         narration: "At the shore they found a boat, and they rowed out towards the smoke on the horizon."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "The island had a wall around it and a gate of iron, and behind the gate the oni were feasting."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "The pheasant went over the wall and came down on their heads. The monkey went up the gatepost and drew the bolt. The dog went through first."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "It was not a long fight. The oni had never had to defend anything, only to take."}
+      - {mode: speech, scene: 4, title: null, subtitle: null,
+         narration: "Their chief knelt in the courtyard and promised he would not cross the water again."}
+      - {mode: close, scene: 5, title: null, subtitle: null,
+         narration: "They brought back what had been taken, and gave it to the villages it came from, and Momotaro went home to the two people who had found him in a peach."}
+      - {mode: moral, scene: 5, title: null, subtitle: null,
+         narration: "He did not go alone, and that is the part of the story people forget. He went with everyone who asked, and he fed them first."}
+      - {mode: source, scene: 5, title: null, subtitle: null,
+         narration: "Momotaro has been told in Japan for centuries, and written down in many versions since the Edo period. Almost every Japanese child knows him."}
+
+  # --------------------------------------------------------
+  - key: east-of-the-sun
+    title: "East of the Sun and West of the Moon"
+    tradition: norwegian
+    idea: "Een meisje volgt een witte beer naar een kasteel en verliest hem door één kaars"
+    description: >-
+      A Norwegian folk tale collected by Asbjornsen and Moe. A white bear
+      comes to a poor farmhouse in the north and asks for the youngest
+      daughter, and what follows is a long walk to a castle that lies east of
+      the sun and west of the moon.
+    tags: ["folklore", "norwegian folk tale", "myths and legends", "fairy tale",
+           "storytelling", "nordic folklore", "folk tale retold"]
+
+    scenes:
+      - setting: forest
+        time: winter
+        weather: snow
+        caption: "A farm in the north"
+        subjects:
+          - {draw: cottage, x: 0.30, scale: 0.11, depth: 0.86}
+          - {draw: bear,    x: 0.64, scale: 0.11, depth: 0.92}
+      - setting: mountains
+        time: moonlit
+        weather: snow
+        caption: null
+        subjects:
+          - {draw: bear,  x: 0.44, scale: 0.09, depth: 0.88}
+      - setting: valley
+        time: night
+        weather: none
+        caption: "The castle in the mountain"
+        subjects:
+          - {draw: castle, x: 0.52, scale: 0.19, depth: 0.72}
+      - setting: mountains
+        time: overcast
+        weather: mist
+        caption: null
+        subjects:
+          - {draw: woman, x: 0.36, scale: 0.11, depth: 0.92}
+      - setting: cliffs
+        time: dusk
+        weather: none
+        caption: "East of the sun"
+        subjects:
+          - {draw: tower, x: 0.58, scale: 0.26, depth: 0.75}
+      - setting: hills
+        time: dawn
+        weather: none
+        caption: null
+        subjects:
+          - {draw: woman, x: 0.40, scale: 0.12, depth: 0.90}
+          - {draw: man,   x: 0.56, scale: 0.12, depth: 0.90}
+
+    beats:
+      - {mode: title, scene: 0, title: "East of the Sun",
+         subtitle: "A folk tale from Norway",
+         narration: "East of the Sun and West of the Moon. A folk tale from Norway."}
+      - {mode: open, scene: 0, title: null, subtitle: null,
+         narration: "There was a farmer in the north with more children than he could feed, and the youngest of them was the one everyone liked best."}
+      - {mode: turn, scene: 0, title: null, subtitle: null,
+         narration: "One Thursday evening in autumn, something struck the window. When they opened the door there was a white bear standing in the snow."}
+      - {mode: speech, scene: 0, title: null, subtitle: null,
+         narration: "Give me your youngest daughter, said the bear, and I will make you as rich as you are poor."}
+      - {mode: tell, scene: 0, title: null, subtitle: null,
+         narration: "The girl said no. Then she thought about the winter coming, and about her father's face, and by the next Thursday she said yes."}
+      - {mode: tell, scene: 1, title: null, subtitle: null,
+         narration: "She rode on the bear's back through country she had never seen, and the snow went on for days."}
+      - {mode: turn, scene: 2, title: null, subtitle: null,
+         narration: "At the end of it a mountain opened, and inside was a castle with every room lit and nobody in it."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "She had whatever she asked for. She had only to ring a bell and it was there."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "And every night, when the candles were out, someone came and lay down beside her in the dark, and was gone before it was light."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "She never saw him. She was never allowed a light. That was the one thing asked of her."}
+      - {mode: turn, scene: 2, title: null, subtitle: null,
+         narration: "But she grew lonely, and she went home to visit, and her mother told her what she must do."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "So she carried a candle to bed, and when he was asleep she lit it, and looked at him."}
+      - {mode: tell, scene: 2, title: null, subtitle: null,
+         narration: "He was the handsomest man she had ever seen. Three drops of tallow fell on his shirt, and he woke."}
+      - {mode: speech, scene: 2, title: null, subtitle: null,
+         narration: "If you had waited one year, he said, I would have been free. Now I must go and marry a woman with a nose three ells long."}
+      - {mode: tell, scene: 3, title: null, subtitle: null,
+         narration: "The castle was gone in the morning and she was lying on a bare hillside, and she began to walk."}
+      - {mode: tell, scene: 3, title: null, subtitle: null,
+         narration: "She asked the East Wind, who did not know the way. She asked the West Wind, and the South Wind, and none of them had been so far."}
+      - {mode: tell, scene: 3, title: null, subtitle: null,
+         narration: "The North Wind had been there once, and had come back half dead from it. He carried her, low over the water, for a day and a night."}
+      - {mode: turn, scene: 4, title: null, subtitle: null,
+         narration: "So she came to the castle that lies east of the sun and west of the moon, and she still had the shirt with the tallow on it."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "Nobody in that castle could wash the three drops out. Not the bride, not her mother, not any of them."}
+      - {mode: tell, scene: 4, title: null, subtitle: null,
+         narration: "She washed it once and it came clean, because it was her candle that had made the marks."}
+      - {mode: close, scene: 5, title: null, subtitle: null,
+         narration: "They left before the wedding, and took with them everyone in that place who had been kept there, and did not look back at the mountain."}
+      - {mode: moral, scene: 5, title: null, subtitle: null,
+         narration: "She lost him by needing to see him, and got him back by walking further than anyone thought a person could walk. The story lets her have both."}
+      - {mode: source, scene: 5, title: null, subtitle: null,
+         narration: "This tale was collected in Norway by Peter Asbjornsen and Jorgen Moe, who gathered folk stories across the country in the eighteen forties."}

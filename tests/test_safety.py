@@ -29,16 +29,16 @@ def test_losse_letters_geven_geen_valse_treffer():
     assert check_text("A healthy diet and a red apple").ok
 
 
-def test_alle_sjabloonafleveringen_zijn_veilig():
-    cfg = load_config()
+def test_alle_sjabloonafleveringen_zijn_veilig(kids_cfg):
+    cfg = kids_cfg
     for plan in all_candidates(cfg):
         bp = write_blueprint(cfg, plan)
         report = check_blueprint(cfg, bp)
         assert report.ok, f"{plan.key}: {report.summary()}"
 
 
-def test_made_for_kids_uitzetten_blokkeert():
-    cfg = load_config()
+def test_made_for_kids_uitzetten_blokkeert(kids_cfg):
+    cfg = kids_cfg
     plan = all_candidates(cfg)[0]
     bp = write_blueprint(cfg, plan)
     cfg.raw["publish"]["made_for_kids"] = False

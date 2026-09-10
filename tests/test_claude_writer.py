@@ -64,14 +64,14 @@ def antwoord_van_claude() -> dict:
 
 
 def test_schema_staat_alleen_bestaande_figuren_toe():
-    schema = output_schema()
+    schema = output_schema("kids")
     toegestaan = schema["properties"]["items"]["items"]["properties"]["draw"]["enum"]
     assert set(toegestaan) == set(available_shapes())
 
 
 def test_schema_dwingt_alle_velden_af():
     """Zonder 'required' op alles kan de API velden weglaten die de code verwacht."""
-    schema = output_schema()
+    schema = output_schema("kids")
     assert set(schema["required"]) == set(schema["properties"])
     assert schema["additionalProperties"] is False
 
@@ -82,7 +82,7 @@ def test_schema_dwingt_alle_velden_af():
 
 
 def test_schema_kent_dezelfde_modes_als_de_renderer():
-    schema = output_schema()
+    schema = output_schema("kids")
     assert set(schema["properties"]["beats"]["items"]["properties"]["mode"]["enum"]) == set(MODES)
     assert set(schema["properties"]["lesson_kind"]["enum"]) == set(LESSON_KINDS)
 
@@ -145,15 +145,15 @@ def test_gehallucineerd_figuur_wordt_geweigerd():
 # ---------------------------------------------------------------------------
 
 
-def test_zonder_sleutel_een_duidelijke_melding(monkeypatch):
+def test_zonder_sleutel_een_duidelijke_melding(monkeypatch, kids_cfg):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    cfg = load_config()
+    cfg = kids_cfg
     cfg.secrets.anthropic_api_key = ""
     with pytest.raises(WriterUnavailable, match="ANTHROPIC_API_KEY"):
         claude_writer.write_blueprint(cfg)
 
 
-def test_volledige_aanroep_met_een_nagebootste_api(monkeypatch):
+def test_volledige_aanroep_met_een_nagebootste_api(monkeypatch, kids_cfg):
     """Controleert de aanroep zelf: model, streaming en het uitlezen."""
     gebruikt = {}
 
@@ -192,7 +192,7 @@ def test_volledige_aanroep_met_een_nagebootste_api(monkeypatch):
 
     monkeypatch.setattr("anthropic.Anthropic", NepClient)
 
-    cfg = load_config()
+    cfg = kids_cfg
     cfg.secrets.anthropic_api_key = "test-sleutel"
     bp = claude_writer.write_blueprint(cfg, already_made=["Learn Shapes"], hint="iets met kleuren")
 
@@ -206,7 +206,7 @@ def test_volledige_aanroep_met_een_nagebootste_api(monkeypatch):
     assert "Learn Shapes" in prompt and "iets met kleuren" in prompt
 
 
-def test_weigering_geeft_een_leesbare_fout(monkeypatch):
+def test_weigering_geeft_een_leesbare_fout(monkeypatch, kids_cfg):
     class Details:
         explanation = "past niet binnen het beleid"
 
@@ -227,7 +227,7 @@ def test_weigering_geeft_een_leesbare_fout(monkeypatch):
         def __init__(self, api_key=None): self.messages = Messages()
 
     monkeypatch.setattr("anthropic.Anthropic", NepClient)
-    cfg = load_config()
+    cfg = kids_cfg
     cfg.secrets.anthropic_api_key = "test-sleutel"
     with pytest.raises(Exception, match="wees het verzoek af"):
         claude_writer.write_blueprint(cfg)

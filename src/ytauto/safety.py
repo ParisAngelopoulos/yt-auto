@@ -1,9 +1,13 @@
 """Controles die het kanaal beschermen.
 
-Kindercontent wordt strenger beoordeeld dan wat dan ook op YouTube. Een
-kanaal met 'Made for Kids' valt onder COPPA en onder een apart pakket
-kwaliteitsregels. Deze controles draaien voor elke publicatie en kosten
-niets; één geweigerde video kost een dag.
+Wat gecontroleerd wordt hangt af van de niche. Bij kindercontent is de lat
+het hoogst: zo'n kanaal valt onder COPPA en onder een apart pakket
+kwaliteitsregels. Bij volksverhalen gelden andere grenzen — een wolf die
+iemand opeet hoort in een sage thuis en is daar geen probleem — maar wat
+YouTube ongeschikt vindt voor adverteerders is dat nog steeds wel.
+
+Deze controles draaien voor elke publicatie en kosten niets; één geweigerde
+video kost een dag.
 """
 
 from __future__ import annotations
@@ -34,6 +38,23 @@ CALLS_TO_ACTION = {
     "subscribe", "like this video", "click", "comment below", "hit the bell",
     "link in the description", "follow us", "share this video",
 }
+
+# ---------------------------------------------------------------------------
+#  Volksverhalen
+# ---------------------------------------------------------------------------
+
+# In een sage mag gevochten en gestorven worden. Wat niet kan is expliciet
+# beschreven geweld: dat kost je de advertentiegeschiktheid, ook als het
+# verhaal zelf eeuwenoud is.
+GRAPHIC = {
+    "disembowel", "disembowelled", "dismember", "dismembered", "mutilate",
+    "mutilated", "gore", "gory", "entrails", "decapitate", "decapitated",
+    "torture", "tortured", "flayed", "impaled", "butchered",
+}
+
+# Zelfdoding hoort niet beschreven te worden, hoe oud het verhaal ook is.
+SELF_HARM = {"suicide", "hang himself", "hang herself", "kill himself",
+             "kill herself", "took her own life", "took his own life"}
 
 # Merken en bestaande figuren leveren claims op.
 BRANDS = {
@@ -70,29 +91,55 @@ def _find(text: str, needles: set[str]) -> list[str]:
     return sorted(hits)
 
 
-def check_text(text: str) -> SafetyReport:
+def check_text(text: str, format: str = "kids") -> SafetyReport:
+    """Controleert gesproken tekst tegen de regels van deze niche."""
     report = SafetyReport()
+
+    for brand in _find(text, BRANDS):
+        report.issues.append(f"merknaam of bestaand figuur: {brand!r}")
+
+    if format == "folklore":
+        for woord in _find(text, GRAPHIC):
+            report.issues.append(f"te expliciet geweld voor adverteerders: {woord!r}")
+        for zin in _find(text, SELF_HARM):
+            report.issues.append(f"beschrijving van zelfdoding: {zin!r}")
+        return report
+
     for word in _find(text, FORBIDDEN):
         report.issues.append(f"verboden woord in de tekst: {word!r}")
     for phrase in _find(text, CALLS_TO_ACTION):
         report.issues.append(f"oproep tot actie, niet toegestaan bij Made for Kids: {phrase!r}")
-    for brand in _find(text, BRANDS):
-        report.issues.append(f"merknaam of bestaand figuur: {brand!r}")
     return report
 
 
 def check_blueprint(cfg: Config, bp: Blueprint) -> SafetyReport:
     """Controleert het script voordat er ook maar iets gerenderd wordt."""
-    report = check_text(bp.transcript())
+    vorm = bp.format
+    report = check_text(bp.transcript(), vorm)
+    report.issues += check_text(
+        f"{bp.title} {bp.description} {' '.join(bp.tags)}", vorm).issues
 
-    spoken = check_text(f"{bp.title} {bp.description} {' '.join(bp.tags)}")
-    report.issues += spoken.issues
-
-    if not cfg.publish.get("made_for_kids", True):
+    made_for_kids = bool(cfg.publish.get("made_for_kids", True))
+    if vorm == "kids" and not made_for_kids:
         report.issues.append(
             "publish.made_for_kids staat uit. Voor een kinderkanaal is dat "
             "verplicht onder COPPA."
         )
+    if vorm == "folklore":
+        if made_for_kids:
+            report.issues.append(
+                "publish.made_for_kids staat aan, maar dit kanaal maakt geen "
+                "kindercontent. Onterecht als kindervideo aanmerken schakelt "
+                "reacties en advertenties uit en klopt niet."
+            )
+        if not bp.lesson_kind.strip():
+            report.warnings.append(
+                "geen traditie vermeld; noem waar het verhaal vandaan komt"
+            )
+        if not any(b.mode == "source" for b in bp.beats):
+            report.warnings.append(
+                "geen bronvermelding aan het eind; dat hoort bij een hervertelling"
+            )
 
     minutes = bp.estimated_duration / 60
     if minutes < 1.5:
@@ -100,7 +147,7 @@ def check_blueprint(cfg: Config, bp: Blueprint) -> SafetyReport:
     if minutes > 20:
         report.warnings.append(f"script is {minutes:.0f} minuten, dat is lang voor deze leeftijd")
 
-    if len(bp.items) < 3:
+    if vorm == "kids" and len(bp.items) < 3:
         report.warnings.append(f"maar {len(bp.items)} items; drie is het minimum voor een zoekronde")
 
     if len(bp.title) > 100:

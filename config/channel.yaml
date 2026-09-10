@@ -4,15 +4,16 @@
 # ============================================================
 
 channel:
-  name: "Tiny Sprout Learning"
+  name: "Lantern & Thorn"
+  format: folklore              # folklore = volksverhalen | kids = leervideo's
   language: en                  # taalcode voor script + stem
-  audience: "toddlers and preschoolers, ages 2-5"
+  audience: "adults who like folklore, myth and quiet storytelling"
 
 video:
   width: 1920
   height: 1080
   fps: 30
-  target_duration_minutes: 8    # pipeline kiest zelf aantal items/rondes om dit te halen
+  target_duration_minutes: 11   # 8 tot 15 werkt het best voor een verhaal
   crossfade_seconds: 0.6        # zachte overgangen (nooit harde flitsen - zie safety)
   encoder_preset: medium        # sneller: veryfast | mooier/kleiner: slow
   crf: 20                       # lager = betere kwaliteit, groter bestand
@@ -22,12 +23,12 @@ video:
 # ------------------------------------------------------------
 tts:
   provider: elevenlabs          # elevenlabs | offline
-  voice_id: "XrExE9yKIg1WjnnlVkGX"   # 'Matilda' - warme, vriendelijke vrouwenstem
+  voice_id: "onwK4e9ZLuTAKqWW03F9"   # 'Daniel' - bedaarde Britse verteller
   model_id: "eleven_multilingual_v2"
-  stability: 0.45               # lager = meer expressie, hoger = consistenter
-  similarity_boost: 0.75
-  style: 0.35
-  speed: 0.92                   # iets langzamer: peuters hebben verwerkingstijd nodig
+  stability: 0.60               # hoger: een verteller hoort niet te schommelen
+  similarity_boost: 0.80
+  style: 0.20                   # laag: ingehouden, niet theatraal
+  speed: 0.94                   # rustig voorleestempo
 
 # ------------------------------------------------------------
 #  SCRIPT
@@ -47,17 +48,18 @@ script:
 # ------------------------------------------------------------
 music:
   source: synth                 # synth | library | none
-  volume_db: -26                # ver onder de stem; peuters moeten spraak goed horen
-  fade_seconds: 3
+  mood: folklore                # folklore = lage drone | kids = speeldoosje
+  volume_db: -28                # ver onder de stem
+  fade_seconds: 4
 
 # ------------------------------------------------------------
 #  PUBLICEREN
 # ------------------------------------------------------------
 publish:
   privacy_status: public        # public | unlisted | private
-  made_for_kids: true           # VERPLICHT voor deze niche (COPPA/FTC)
-  category_id: "27"             # 27 = Education
-  max_per_week: 4               # rem tegen spam-detectie van YouTube
+  made_for_kids: false          # volksverhalen zijn niet voor kinderen gemaakt
+  category_id: "24"             # 24 = Entertainment (27 = Education)
+  max_per_week: 3               # rem tegen spam-detectie van YouTube
   min_hours_between: 24
 
 # ------------------------------------------------------------
@@ -65,6 +67,6 @@ publish:
 # ------------------------------------------------------------
 safety:
   loudness_lufs: -14            # YouTube-standaard; voorkomt keihard geluid
-  max_luminance_delta: 0.35     # bescherming tegen flitsen/epilepsie-risico
-  min_scene_seconds: 2.5        # geen snelle knippers
-  require_text_check: true      # scripts langs de verboden-woordenlijst
+  max_luminance_delta: 0.45     # bescherming tegen flitsen/epilepsie-risico
+  min_scene_seconds: 3.0        # een verhaalbeeld mag blijven staan
+  require_text_check: true      # scripts langs de controlelijst

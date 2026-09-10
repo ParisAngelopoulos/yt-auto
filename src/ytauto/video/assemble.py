@@ -20,11 +20,11 @@ from typing import Callable
 
 import numpy as np
 
-from ..audio.music import SAMPLE_RATE, build_music, pick_library_track, write_wav
+from ..audio.music import SAMPLE_RATE, bed_for, pick_library_track, write_wav
 from ..config import ROOT, Config
 from ..media import duration as media_duration
 from ..media import ffmpeg_bin
-from ..render.scene import render_scene
+from ..render.frame import render_frame
 from ..script_builder import Scene
 from ..scripting.blueprint import Blueprint, to_scenes
 from ..tts import synthesize
@@ -71,7 +71,7 @@ def prepare_assets(
     for index, scene in enumerate(scenes):
         png = frames_dir / f"{scene.id}.png"
         if not png.exists():
-            render_scene(scene.visual, resolution, seed=seed + index).save(png, optimize=False)
+            render_frame(scene.visual, resolution, seed=seed + index).save(png, optimize=False)
 
         mp3 = voice_dir / f"{scene.id}.mp3"
         spoken = synthesize(cfg, scene.narration, mp3, cache_dir=workdir.parent / "voice-cache")
@@ -151,8 +151,7 @@ def _music_bed(cfg: Config, duration: float, seed: int, source: str) -> np.ndarr
             if len(bed) < needed:                      # herhalen tot het past
                 bed = np.tile(bed, int(needed / max(1, len(bed))) + 1)
             return bed[:needed]
-    from ..audio.music import synth_bed
-    return synth_bed(duration, seed)
+    return bed_for(cfg.music.get("mood", "kids"), duration, seed)
 
 
 # ---------------------------------------------------------------------------

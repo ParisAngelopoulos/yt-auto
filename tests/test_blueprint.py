@@ -91,8 +91,8 @@ def test_elke_scene_uit_het_sjabloon_is_te_renderen(key):
         assert beeld.size == (480, 270)
 
 
-def test_sjabloon_haalt_de_doellengte():
-    cfg = load_config()
+def test_sjabloon_haalt_de_doellengte(kids_cfg):
+    cfg = kids_cfg
     doel = float(cfg.video["target_duration_minutes"])
     for plan in all_candidates(cfg):
         bp = write_blueprint(cfg, plan)

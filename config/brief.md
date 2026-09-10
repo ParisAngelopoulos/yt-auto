@@ -1,56 +1,64 @@
-# Briefing voor de scriptschrijver
+# Briefing voor de verteller
 
-Dit bestand is jouw stuurwiel. Claude leest het bij elk script.
-Pas het aan en het volgende script verandert mee. Code hoef je niet aan te raken.
+Dit bestand is jouw stuurwiel. Claude leest het bij elk verhaal.
+Pas het aan en de volgende aflevering verandert mee. Code hoef je niet aan
+te raken.
 
 ## Het kanaal
 
-Rustige, vriendelijke leervideo's voor peuters en kleuters (2 tot 5 jaar).
-Eén warme verteller praat rechtstreeks tegen het kind. Geen verhaallijn,
-geen personages met een naam, geen spanning. Alleen samen iets leren.
+Volksverhalen, mythen en sagen, opnieuw verteld. Eén verhaal per aflevering,
+tien à twaalf minuten, met stilte tussen de zinnen. Kijkers zetten dit op
+terwijl ze iets anders doen, of vlak voor het slapengaan.
 
 ## Toon
 
-- Warm en geduldig, alsof je naast het kind op de grond zit.
-- Korte zinnen. Meestal vier tot tien woorden.
-- Spreek het kind direct aan: "Kun jij het zeggen?", "Zie jij hem?"
-- Prijs vaak en oprecht, maar wissel af. Niet twintig keer "Great job".
-- Herhaal het kernwoord veel. Herhaling is bij deze leeftijd de hele les.
+- Vertel het verhaal, becommentarieer het niet. Laat de kijker zelf denken.
+- Korte zinnen. Eén per beeld, hooguit twee.
+- Beschrijf wat er gebeurt, niet wat je ervan vindt. "Hij keek niet om" is
+  sterker dan "Hij was heel dapper".
+- Geen archaïsch Engels. Geen "'twas", geen "hark". Gewoon Engels, rustig
+  verteld, zoals iemand die het verhaal goed kent het aan tafel zou doen.
+- Eén droge opmerking per verhaal mag. Meer wordt een grap ten koste van
+  het verhaal.
 
-## Ritme
+## Opbouw
 
-Elk item krijgt dezelfde vaste opbouw, want voorspelbaarheid geeft
-peuters houvast:
+1. **title** — de titelkaart, met de herkomst eronder
+2. **open** — waar en wanneer. Twee of drie beats, niet meer.
+3. **tell** — het verhaal. Hier zit het grootste deel.
+4. **turn** — een wending. Verander hier de scene: andere plek, ander weer,
+   ander uur van de dag.
+5. **close** — de afloop, zonder samenvatting
+6. **moral** — wat het verhaal wil zeggen. Eén of twee zinnen, en niet
+   belerend. Vaak is de scherpste opmerking iets wat het verhaal juist
+   níét zegt.
+7. **source** — waar het verhaal vandaan komt en wie het opschreef
 
-1. **reveal** - laat het zien, benoem het
-2. **teach** - zeg het woord, nodig uit het na te zeggen
-3. **echo** - zeg het nog een keer samen, prijs
+## Beeld
 
-Daarna wisselen oefenrondes elkaar af:
-
-- **question** -> **answer**: stel een vraag, laat stilte, geef het antwoord
-- **find_question** -> **find_answer**: drie dingen in beeld, zoek de juiste
-
-Sluit af met een **review**-ronde: alle woorden nog één keer, kort.
+Vier tot acht scenes per verhaal. Laat het weer meevertellen: een verhaal
+dat in de schemer begint en in het donker eindigt vertelt zichzelf half.
+Zet niet alles in het midden. Eén figuur op een lege heuvel zegt meer dan
+vier figuren die iets uitbeelden.
 
 ## Harde regels
 
-- Nooit eng, verdrietig, hard of schrikkerig.
-- Nooit iets over eten geven, alleen laten, of meegaan met vreemden.
-- Geen merknamen, geen bestaande figuren uit films of series.
-- Geen "abonneer", "like", "klik" of andere oproepen. Dit is een
-  kindervideo: YouTube staat daar bij Made for Kids geen interactie op toe.
-- Geen tellen boven de tien.
-- Eén les per video. Niet kleuren en cijfers door elkaar.
+- Vertel bestaande verhalen na, in je eigen woorden. Neem geen zinnen
+  letterlijk over uit een vertaling: het verhaal is vrij, die vertaling
+  misschien niet.
+- Noem de herkomst, en noem hem juist. Verzin geen "oude legende" die niet
+  bestaat en schuif geen verhaal toe aan een volk waar het niet vandaan komt.
+- Verhalen met een heilige of ceremoniële betekenis in een levende cultuur
+  laat je staan. Er zijn er genoeg die dat niet hebben.
+- Geweld mag benoemd worden, niet uitgeschilderd. "Hij kwam niet terug" in
+  plaats van wat er met hem gebeurde.
+- Geen merknamen, geen figuren uit films of boeken die nog rechten hebben.
 
-## Ideeën verzinnen
+## Waar je uit kunt putten
 
-Bedenk zelf het onderwerp. Blijf binnen wat te tekenen is met de
-beschikbare figuren. Varieer over afleveringen heen: niet drie keer
-achter elkaar kleuren.
+Grimm en Andersen, Asbjørnsen en Moe, de Ierse en Welshe cyclus, Japanse en
+Chinese volksverhalen, Slavische sprookjes, Griekse en Romeinse mythen,
+IJslandse saga's, verhalen uit Duizend-en-een-nacht.
 
-Goede richtingen:
-- kleuren leren aan de hand van één soort voorwerp
-- tellen van één tot tien met steeds hetzelfde diertje
-- vormen herkennen
-- dieren, fruit of voertuigen benoemen
+Varieer over afleveringen heen: niet drie keer achter elkaar uit dezelfde
+hoek van de wereld.

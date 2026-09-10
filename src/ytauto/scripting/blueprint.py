@@ -15,7 +15,13 @@ from pathlib import Path
 from typing import Any
 
 from ..render.objects import available_shapes
+from ..render.silhouettes import available_silhouettes
+from ..render.story_scene import available_settings, available_times, available_weather
 from ..script_builder import Scene, estimate_speech_seconds
+
+# Twee vormen delen dezelfde machinerie. Wat verschilt is hoe een aflevering
+# is opgebouwd: een les gaat over items, een verhaal beweegt door plekken.
+FORMATS = ("kids", "folklore")
 
 LESSON_KINDS = ("colors", "counting", "shapes", "naming")
 
@@ -36,9 +42,24 @@ MODES = {
     "outro_title":   {"layout": "title",  "pause": 0.0, "min": 4.0, "confetti": True},
 }
 
+# Beats van een volksverhaal. Anders dan bij de les zit hier geen oefening
+# in; het ritme komt van de stiltes tussen de zinnen.
+STORY_MODES = {
+    "title":   {"pause": 1.2, "min": 5.0},   # titelkaart
+    "open":    {"pause": 0.8, "min": 4.0},   # de plek en de tijd
+    "tell":    {"pause": 0.5, "min": 3.0},   # het verhaal zelf
+    "turn":    {"pause": 0.9, "min": 3.5},   # een wending; het beeld verandert
+    "speech":  {"pause": 0.6, "min": 3.0},   # iemand spreekt
+    "close":   {"pause": 1.0, "min": 4.0},   # de afloop
+    "moral":   {"pause": 1.2, "min": 4.5},   # wat het verhaal wil zeggen
+    "source":  {"pause": 0.6, "min": 4.0},   # waar het vandaan komt
+}
+
 
 @dataclass
 class Item:
+    """Wat er in een leervideo geleerd wordt."""
+
     word: str
     draw: str
     label: str
@@ -47,12 +68,29 @@ class Item:
 
 
 @dataclass
+class StoryScene:
+    """Een plek in het verhaal: waar het speelt en wie er staat.
+
+    Meerdere beats delen dezelfde scene. Dat scheelt de scriptschrijver werk
+    en zorgt dat het beeld rustig blijft: pas bij een echte plaats- of
+    tijdsprong verandert er iets.
+    """
+
+    setting: str
+    time: str
+    weather: str | None = None
+    caption: str | None = None
+    subjects: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
 class Beat:
     mode: str
     narration: str
-    item: int | None = None
+    item: int | None = None          # leervideo: welk item
     title: str | None = None
     subtitle: str | None = None
+    scene: int | None = None         # verhaal: op welke plek
 
 
 @dataclass
@@ -70,6 +108,8 @@ class Blueprint:
     beats: list[Beat]
     source: str = "claude"          # claude | template
     key: str = ""                   # unieke sleutel voor de boekhouding
+    format: str = "kids"            # kids | folklore
+    scenes: list[StoryScene] = field(default_factory=list)
 
     # -- opslag --
 
@@ -86,10 +126,12 @@ class Blueprint:
             lesson_kind=data["lesson_kind"],
             backdrop_top=data.get("backdrop_top") or data.get("backdrop", {}).get("top", "#DCEEFB"),
             backdrop_bottom=data.get("backdrop_bottom") or data.get("backdrop", {}).get("bottom", "#F6E4C8"),
-            items=[Item(**i) for i in data["items"]],
+            items=[Item(**i) for i in data.get("items", [])],
             beats=[Beat(**b) for b in data["beats"]],
             source=data.get("source", "claude"),
             key=data.get("key", ""),
+            format=data.get("format", "kids"),
+            scenes=[StoryScene(**sc) for sc in data.get("scenes", [])],
         )
 
     @classmethod
@@ -115,11 +157,17 @@ class Blueprint:
 
     @property
     def estimated_duration(self) -> float:
+        tabel = STORY_MODES if self.is_story else MODES
+        standaard = tabel["tell"] if self.is_story else tabel["reveal"]
         total = 0.0
         for beat in self.beats:
-            mode = MODES.get(beat.mode, MODES["reveal"])
+            mode = tabel.get(beat.mode, standaard)
             total += max(mode["min"], estimate_speech_seconds(beat.narration)) + mode["pause"]
         return total
+
+    @property
+    def is_story(self) -> bool:
+        return self.format == "folklore"
 
     def transcript(self) -> str:
         """Leesbaar script, zoals het in de bedieningspagina getoond wordt."""
@@ -144,14 +192,25 @@ def validate(bp: Blueprint) -> Blueprint:
 
     Liever hier een duidelijke fout dan halverwege het renderen van scene 87.
     """
+    if bp.format not in FORMATS:
+        raise BlueprintError(f"format {bp.format!r} bestaat niet")
+    if not bp.beats:
+        raise BlueprintError("blueprint heeft geen beats")
+
+    for i, beat in enumerate(bp.beats):
+        if not beat.narration.strip():
+            raise BlueprintError(f"beat {i} heeft geen tekst")
+
+    return _validate_story(bp) if bp.is_story else _validate_kids(bp)
+
+
+def _validate_kids(bp: Blueprint) -> Blueprint:
     shapes = set(available_shapes())
 
     if bp.lesson_kind not in LESSON_KINDS:
         raise BlueprintError(f"lesson_kind {bp.lesson_kind!r} bestaat niet")
     if not bp.items:
         raise BlueprintError("blueprint heeft geen items")
-    if not bp.beats:
-        raise BlueprintError("blueprint heeft geen beats")
 
     for i, item in enumerate(bp.items):
         if item.draw not in shapes:
@@ -166,12 +225,45 @@ def validate(bp: Blueprint) -> Blueprint:
             raise BlueprintError(f"beat {i} heeft onbekende mode {beat.mode!r}")
         if beat.item is not None and not (0 <= beat.item < len(bp.items)):
             raise BlueprintError(f"beat {i} verwijst naar item {beat.item}, dat bestaat niet")
-        if not beat.narration.strip():
-            raise BlueprintError(f"beat {i} heeft geen tekst")
 
-    for name, value in (("backdrop_top", bp.backdrop_top), ("backdrop_bottom", bp.backdrop_bottom)):
-        if not _is_hex(value):
-            raise BlueprintError(f"{name} is geen geldige kleur: {value!r}")
+    for naam, waarde in (("backdrop_top", bp.backdrop_top),
+                         ("backdrop_bottom", bp.backdrop_bottom)):
+        if not _is_hex(waarde):
+            raise BlueprintError(f"{naam} is geen geldige kleur: {waarde!r}")
+
+    return bp
+
+
+def _validate_story(bp: Blueprint) -> Blueprint:
+    settings = set(available_settings())
+    tijden = set(available_times())
+    weersoorten = set(available_weather())
+    silhouetten = set(available_silhouettes())
+
+    if not bp.scenes:
+        raise BlueprintError("verhaal heeft geen scenes")
+
+    for i, scene in enumerate(bp.scenes):
+        if scene.setting not in settings:
+            raise BlueprintError(f"scene {i} speelt in {scene.setting!r}, dat bestaat niet")
+        if scene.time not in tijden:
+            raise BlueprintError(f"scene {i} heeft tijd {scene.time!r}, die bestaat niet")
+        if scene.weather and scene.weather not in weersoorten:
+            raise BlueprintError(f"scene {i} heeft weer {scene.weather!r}, dat bestaat niet")
+        for j, onderwerp in enumerate(scene.subjects):
+            naam = onderwerp.get("draw")
+            if naam not in silhouetten:
+                raise BlueprintError(
+                    f"scene {i}, figuur {j}: {naam!r} bestaat niet als silhouet"
+                )
+
+    for i, beat in enumerate(bp.beats):
+        if beat.mode not in STORY_MODES:
+            raise BlueprintError(f"beat {i} heeft onbekende mode {beat.mode!r}")
+        if beat.scene is None:
+            raise BlueprintError(f"beat {i} verwijst niet naar een scene")
+        if not (0 <= beat.scene < len(bp.scenes)):
+            raise BlueprintError(f"beat {i} verwijst naar scene {beat.scene}, die bestaat niet")
 
     return bp
 
@@ -192,6 +284,57 @@ def _is_hex(value: str) -> bool:
 
 def to_scenes(bp: Blueprint, seed: int = 0) -> list[Scene]:
     """Zet de blueprint om in renderbare scenes."""
+    if bp.is_story:
+        return _story_scenes(bp, seed)
+    return _kids_scenes(bp, seed)
+
+
+def _story_scenes(bp: Blueprint, seed: int = 0) -> list[Scene]:
+    """Elke beat krijgt het beeld van zijn scene.
+
+    Opeenvolgende beats in dezelfde scene leveren hetzelfde beeld op. Dat is
+    de bedoeling: bij een verhaal hoort het beeld te blijven staan terwijl er
+    verteld wordt, en pas te veranderen als het verhaal van plek verandert.
+    """
+    scenes: list[Scene] = []
+    for index, beat in enumerate(bp.beats):
+        plek = bp.scenes[beat.scene or 0]
+        visual: dict[str, Any] = {
+            "kind": "story",
+            "setting": plek.setting,
+            "time": plek.time,
+            "subjects": list(plek.subjects),
+        }
+        if plek.weather and plek.weather != "none":
+            visual["weather"] = plek.weather
+
+        if beat.mode == "title":
+            visual["title"] = {"text": beat.title or bp.title}
+            if beat.subtitle:
+                visual["subtitle"] = {"text": beat.subtitle}
+            visual["vignette"] = 0.68
+        elif plek.caption and _first_beat_of_scene(bp, index):
+            # Een plaatsnaam hoort één keer in beeld, bij aankomst.
+            visual["caption"] = plek.caption
+
+        mode = STORY_MODES[beat.mode]
+        scenes.append(Scene(
+            id=f"{index:03d}-{beat.mode}",
+            narration=beat.narration,
+            visual=visual,
+            pause_after=mode["pause"],
+            min_duration=mode["min"],
+        ))
+    return scenes
+
+
+def _first_beat_of_scene(bp: Blueprint, index: int) -> bool:
+    if index == 0:
+        return True
+    return bp.beats[index - 1].scene != bp.beats[index].scene
+
+
+def _kids_scenes(bp: Blueprint, seed: int = 0) -> list[Scene]:
     rng = random.Random(seed)
     bg = {"style": "gradient", "top": bp.backdrop_top, "bottom": bp.backdrop_bottom}
     scenes: list[Scene] = []

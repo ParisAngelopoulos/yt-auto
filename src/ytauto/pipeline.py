@@ -76,10 +76,15 @@ def make_script(cfg: Config, hint: str | None = None, store: Store | None = None
             print(f"  Claude niet beschikbaar ({exc}); sjabloon wordt gebruikt.")
 
     if blueprint is None:
-        from .scripting.template_writer import write_blueprint as template_write
+        if cfg.channel.get("format", "kids") == "folklore":
+            from .scripting.tale_writer import write_blueprint as tale_write
 
-        plan = pick_next(cfg, store, enforce_rate_limit=False)
-        blueprint = template_write(cfg, plan)
+            blueprint = tale_write(cfg, taken=store.taken_keys())
+        else:
+            from .scripting.template_writer import write_blueprint as template_write
+
+            plan = pick_next(cfg, store, enforce_rate_limit=False)
+            blueprint = template_write(cfg, plan)
 
     report = check_blueprint(cfg, blueprint)
     if not report.ok:
