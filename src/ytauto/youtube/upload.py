@@ -131,7 +131,16 @@ def check_credentials(cfg: Config) -> dict:
         youtube = build_client(cfg)
         response = youtube.channels().list(part="snippet", mine=True).execute()
     except Exception as exc:                                    # noqa: BLE001
-        return {"ok": False, "reason": str(exc)[:200]}
+        melding = str(exc)
+        if "invalid_grant" in melding:
+            return {"ok": False, "reason": "Het refresh token is verlopen. "
+                                           "Draai scripts/get_youtube_token.py opnieuw."}
+        if "invalid_client" in melding:
+            return {"ok": False, "reason": "Client id of secret klopt niet."}
+        if "accessNotConfigured" in melding or "has not been used" in melding:
+            return {"ok": False, "reason": "YouTube Data API v3 staat nog uit "
+                                           "in je Google Cloud-project."}
+        return {"ok": False, "reason": melding.splitlines()[0][:180]}
 
     items = response.get("items", [])
     if not items:

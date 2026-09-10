@@ -27,6 +27,7 @@
         background:var(--card);color:var(--muted);white-space:nowrap}
   .chip.on{color:var(--go);border-color:color-mix(in srgb,var(--go) 40%,var(--line))}
   .chip.off{color:var(--muted);opacity:.75}
+  .chip.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
 
   .steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
   @media (max-width:760px){.steps{grid-template-columns:1fr}}
@@ -44,9 +45,11 @@
   button:disabled{opacity:.42;cursor:not-allowed}
   button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 
-  input[type=text]{width:100%;font:inherit;padding:11px 13px;margin-bottom:10px;
+  input[type=text],input[type=password]{width:100%;font:inherit;padding:11px 13px;margin-bottom:10px;
     border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-  input[type=text]::placeholder{color:var(--muted)}
+  input[type=text]::placeholder,input[type=password]::placeholder{color:var(--muted)}
+  input:focus{outline:2px solid color-mix(in srgb,var(--accent) 45%,transparent);outline-offset:1px}
+  .field input+input{margin-top:8px}
 
   .bar{height:7px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:14px}
   .bar>i{display:block;height:100%;width:0;background:var(--accent);
@@ -82,6 +85,22 @@
           color-mix(in srgb,#e0a03f 40%,var(--line));border-radius:12px;padding:13px 16px;
           font-size:14px;margin-bottom:18px}
   code{background:var(--bg);padding:1px 6px;border-radius:5px;font-size:13px}
+
+  details.keys{background:var(--card);border:1px solid var(--line);border-radius:16px;
+               box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+  details.keys>summary{cursor:pointer;padding:18px 22px;font-weight:600;list-style:none;
+                       display:flex;align-items:center;gap:10px}
+  details.keys>summary::-webkit-details-marker{display:none}
+  details.keys>summary::before{content:'▸';color:var(--muted);transition:transform .15s}
+  details.keys[open]>summary::before{transform:rotate(90deg)}
+  .keybody{padding:0 22px 22px;border-top:1px solid var(--line);margin-top:-1px}
+  .field{margin-top:16px}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+  .field .help{font-size:12.5px;color:var(--muted);margin-bottom:7px}
+  .field .help a{color:var(--accent)}
+  .result{font-size:13px;margin-top:6px;min-height:18px}
+  .result.ok{color:var(--go)} .result.bad{color:var(--bad)}
+  .keybody>button{margin-top:20px}
   a{color:var(--accent)}
 </style>
 </head>
@@ -97,6 +116,49 @@
   </header>
 
   <div class="notice hidden" id="warn"></div>
+
+  <details class="keys" id="keys">
+    <summary>Sleutels instellen</summary>
+    <div class="keybody">
+
+      <div class="field">
+        <label for="k-anthropic">Claude — schrijft de scripts</label>
+        <div class="help">
+          Maak een sleutel op
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>
+          en zet er wat tegoed op. Ongeveer 15 cent per script.
+        </div>
+        <input type="password" id="k-anthropic" placeholder="sk-ant-..." autocomplete="off">
+        <div class="result" id="r-anthropic"></div>
+      </div>
+
+      <div class="field">
+        <label for="k-elevenlabs">ElevenLabs — spreekt de video in</label>
+        <div class="help">
+          Te vinden op
+          <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener">elevenlabs.io</a>
+          onder Settings, API Keys. Ongeveer 3.500 tekens per video.
+        </div>
+        <input type="password" id="k-elevenlabs" placeholder="sk_..." autocomplete="off">
+        <div class="result" id="r-elevenlabs"></div>
+      </div>
+
+      <div class="field">
+        <label>YouTube — publiceert</label>
+        <div class="help">
+          Deze drie haal je in één keer op met
+          <code>python scripts/get_youtube_token.py</code>. Zie de README.
+        </div>
+        <input type="password" id="k-yt-id" placeholder="Client ID" autocomplete="off">
+        <input type="password" id="k-yt-secret" placeholder="Client secret" autocomplete="off">
+        <input type="password" id="k-yt-refresh" placeholder="Refresh token" autocomplete="off">
+        <div class="result" id="r-youtube"></div>
+      </div>
+
+      <button id="btn-keys">Opslaan en testen</button>
+      <div class="jobline" id="line-keys">Sleutels blijven op je eigen computer, in het bestand .env</div>
+    </div>
+  </details>
 
   <div class="steps">
     <div class="card">
@@ -153,8 +215,13 @@ async function api(path, body){
   return data;
 }
 
-function chip(label, on){
-  return `<span class="chip ${on ? 'on' : 'off'}">${on ? '●' : '○'} ${label}</span>`;
+function chip(label, aanwezig, getest){
+  // Drie standen: niet ingevuld, ingevuld maar ongetest, en getest.
+  // Een groene stip bij een kapotte sleutel is misleidend.
+  if(!aanwezig) return `<span class="chip off" title="nog niet ingevuld">○ ${label}</span>`;
+  if(getest === true)  return `<span class="chip on" title="getest en werkend">✓ ${label}</span>`;
+  if(getest === false) return `<span class="chip bad" title="getest, werkt niet">✗ ${label}</span>`;
+  return `<span class="chip" title="ingevuld, nog niet getest">● ${label}</span>`;
 }
 
 function renderStatus(s){
@@ -162,13 +229,14 @@ function renderStatus(s){
   $('subline').textContent =
     `${s.language} · streeflengte ${s.target_minutes} min · ` +
     `deze week ${s.published_this_week}/${s.max_per_week} gepubliceerd`;
+  const t = s.key_tests || {};
   $('chips').innerHTML =
-    chip('Claude', s.keys.anthropic) +
-    chip('ElevenLabs', s.keys.elevenlabs) +
-    chip('YouTube', s.keys.youtube);
+    chip('Claude', s.keys.anthropic, t.anthropic) +
+    chip('ElevenLabs', s.keys.elevenlabs, t.elevenlabs) +
+    chip('YouTube', s.keys.youtube, t.youtube);
   $('warn').innerHTML = s.voice_provider === 'offline'
     ? 'Geen ElevenLabs-sleutel gevonden, dus de video krijgt de gratis <strong>teststem</strong>. ' +
-      'Beeld en timing kloppen wel. Zet je sleutel in <code>.env</code> voor de echte stem.'
+      'Beeld en timing kloppen wel. Vul hem hieronder in bij <strong>Sleutels instellen</strong>.'
     : '';
   $('warn').classList.toggle('hidden', s.voice_provider !== 'offline');
 }
@@ -287,6 +355,57 @@ $('btn-publish').onclick = async () => {
   catch(err){ $('line-publish').textContent = err.message; $('line-publish').classList.add('err'); }
 };
 $('btn-thumb').onclick = () => window.open('/api/thumbnail.jpg', '_blank');
+
+const KEY_FIELDS = {
+  'k-anthropic':  'ANTHROPIC_API_KEY',
+  'k-elevenlabs': 'ELEVENLABS_API_KEY',
+  'k-yt-id':      'YOUTUBE_CLIENT_ID',
+  'k-yt-secret':  'YOUTUBE_CLIENT_SECRET',
+  'k-yt-refresh': 'YOUTUBE_REFRESH_TOKEN',
+};
+
+function showKeyResult(naam, info){
+  const el = $('r-' + naam);
+  if(!el) return;
+  if(!info){ el.textContent = ''; el.className = 'result'; return; }
+  if(info.ok){
+    el.textContent = '✓ werkt' + (info.detail ? ' — ' + info.detail : '') +
+                     (info.warning ? ' — ' + info.warning : '');
+    el.className = 'result ok';
+  } else {
+    el.textContent = '✗ ' + info.reason;
+    el.className = 'result bad';
+  }
+}
+
+$('btn-keys').onclick = async () => {
+  const knop = $('btn-keys');
+  const regel = $('line-keys');
+  const payload = {};
+  for(const [id, naam] of Object.entries(KEY_FIELDS)) payload[naam] = $(id).value;
+
+  knop.disabled = true;
+  knop.textContent = 'Testen…';
+  regel.textContent = '';
+  regel.classList.remove('err');
+  try{
+    const uitkomst = await api('/api/keys', payload);
+    // Waarden nooit laten staan in het formulier: ze staan nu in .env.
+    for(const id of Object.keys(KEY_FIELDS)) $(id).value = '';
+    ['anthropic','elevenlabs','youtube'].forEach(n => showKeyResult(n, uitkomst.results[n]));
+    regel.textContent = uitkomst.saved.length
+      ? 'Opgeslagen in .env: ' + uitkomst.saved.join(', ')
+      : 'Niets gewijzigd; bestaande sleutels getest.';
+    renderedEpisode = null;      // stem kan veranderd zijn, paneel opnieuw opbouwen
+    await refresh();
+  }catch(err){
+    regel.textContent = err.message;
+    regel.classList.add('err');
+  }finally{
+    knop.disabled = false;
+    knop.textContent = 'Opslaan en testen';
+  }
+};
 
 refresh();
 setInterval(() => { refresh(); }, 1500);

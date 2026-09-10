@@ -236,3 +236,43 @@ def _make_key(bp: Blueprint) -> str:
 
     slug = re.sub(r"[^a-z0-9]+", "-", bp.title.lower()).strip("-")[:60]
     return slug or "episode"
+
+
+def check_credentials(cfg: Config) -> dict:
+    """Kijkt of de sleutel werkt, zonder een script te schrijven.
+
+    Gebruikt de modellenlijst: dat is een gewone opvraging zonder tokens,
+    dus het testen van je sleutel kost niets.
+    """
+    api_key = cfg.secrets.anthropic_api_key
+    if not api_key:
+        return {"ok": False, "reason": "Geen ANTHROPIC_API_KEY gevonden"}
+
+    try:
+        import anthropic
+    except ImportError:
+        return {"ok": False, "reason": "De package 'anthropic' is niet geïnstalleerd"}
+
+    gewenst = cfg.script.get("model", "claude-opus-5")
+    try:
+        modellen = [m.id for m in anthropic.Anthropic(api_key=api_key).models.list()]
+    except Exception as exc:                                    # noqa: BLE001
+        naam = type(exc).__name__
+        if "Authentication" in naam:
+            return {"ok": False, "reason": "De sleutel wordt geweigerd. Kloppen alle tekens?"}
+        if "PermissionDenied" in naam:
+            return {"ok": False, "reason": "De sleutel mag hier niet bij. Staat er tegoed op je account?"}
+        if "Connection" in naam or "Timeout" in naam:
+            return {"ok": False, "reason": "Claude is niet bereikbaar. Staat je internet aan?"}
+        return {"ok": False, "reason": f"{naam}: {str(exc)[:160]}"}
+
+    if gewenst not in modellen:
+        return {
+            "ok": True,
+            "model": gewenst,
+            "warning": (
+                f"Het ingestelde model {gewenst!r} zit niet in de lijst van je "
+                f"account. Pas script.model aan in channel.yaml."
+            ),
+        }
+    return {"ok": True, "model": gewenst}

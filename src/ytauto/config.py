@@ -55,6 +55,59 @@ class Secrets:
         )
 
 
+ENV_PATH = ROOT / ".env"
+
+# Alles wat de studio aan geheimen kent. De volgorde bepaalt hoe .env
+# eruitziet als hij nieuw wordt aangemaakt.
+SECRET_KEYS = (
+    "ANTHROPIC_API_KEY",
+    "ELEVENLABS_API_KEY",
+    "YOUTUBE_CLIENT_ID",
+    "YOUTUBE_CLIENT_SECRET",
+    "YOUTUBE_REFRESH_TOKEN",
+)
+
+
+def write_secrets(values: dict[str, str], path: Path | None = None) -> list[str]:
+    """Werkt .env bij en laat de rest van het bestand met rust.
+
+    Alleen sleutels uit SECRET_KEYS worden geschreven; anders zou een
+    aanroep van buitenaf willekeurige omgevingsvariabelen kunnen zetten.
+    Lege waarden worden overgeslagen, zodat een leeg veld in het formulier
+    een bestaande sleutel niet wist.
+    """
+    path = path or ENV_PATH
+    schoon = {
+        key: value.strip()
+        for key, value in values.items()
+        if key in SECRET_KEYS and value and value.strip()
+    }
+    if not schoon:
+        return []
+
+    regels = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+    nog_te_doen = dict(schoon)
+
+    for index, regel in enumerate(regels):
+        naam = regel.split("=", 1)[0].strip()
+        if naam in nog_te_doen:
+            regels[index] = f"{naam}={nog_te_doen.pop(naam)}"
+    for naam, waarde in nog_te_doen.items():
+        regels.append(f"{naam}={waarde}")
+
+    path.write_text("\n".join(regels) + "\n", encoding="utf-8")
+    try:
+        path.chmod(0o600)          # geheimen zijn niet leesbaar voor anderen
+    except OSError:
+        pass
+
+    # De lopende sessie moet de nieuwe waarden meteen kennen.
+    for naam, waarde in schoon.items():
+        os.environ[naam] = waarde
+
+    return sorted(schoon)
+
+
 @dataclass
 class Config:
     raw: dict[str, Any]

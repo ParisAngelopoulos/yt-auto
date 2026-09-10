@@ -1,5 +1,6 @@
 """Opdrachtregel voor de pipeline.
 
+    ytauto setup      sleutels invoeren en meteen testen
     ytauto panel      bedieningspagina openen (twee knoppen)
     ytauto script     laat Claude een aflevering schrijven
     ytauto video      maak de video van het laatste script
@@ -14,7 +15,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from .config import load_config
+from .config import load_config, write_secrets
 from .pipeline import load_current, make_script, make_video, publish, run_once
 from .state import Store
 
@@ -78,6 +79,56 @@ def cmd_run(args) -> int:
         print(f"  {result['reason']}")
     if result.get("video_id"):
         print(f"  https://youtu.be/{result['video_id']}")
+    return 0
+
+
+def cmd_setup(args) -> int:
+    """Vraagt de sleutels, slaat ze op en test ze meteen."""
+    from getpass import getpass
+
+    from .config import Secrets
+    from .ui.server import test_all_keys
+
+    cfg = load_config()
+    huidig = cfg.secrets
+
+    print("\n  Sleutels instellen. Enter overslaan laat een bestaande sleutel staan.\n")
+    vragen = [
+        ("ANTHROPIC_API_KEY", "Claude (schrijft de scripts)",
+         "console.anthropic.com/settings/keys", bool(huidig.anthropic_api_key)),
+        ("ELEVENLABS_API_KEY", "ElevenLabs (spreekt in)",
+         "elevenlabs.io -> Settings -> API Keys", bool(huidig.elevenlabs_api_key)),
+        ("YOUTUBE_CLIENT_ID", "YouTube client id",
+         "python scripts/get_youtube_token.py", bool(huidig.youtube_client_id)),
+        ("YOUTUBE_CLIENT_SECRET", "YouTube client secret", "", bool(huidig.youtube_client_secret)),
+        ("YOUTUBE_REFRESH_TOKEN", "YouTube refresh token", "", bool(huidig.youtube_refresh_token)),
+    ]
+
+    ingevoerd: dict[str, str] = {}
+    for naam, omschrijving, bron, aanwezig in vragen:
+        status = "al ingesteld" if aanwezig else "nog leeg"
+        print(f"  {omschrijving}  [{status}]")
+        if bron:
+            print(f"    {bron}")
+        waarde = getpass("    waarde: ").strip()
+        if waarde:
+            ingevoerd[naam] = waarde
+        print()
+
+    opgeslagen = write_secrets(ingevoerd)
+    if opgeslagen:
+        print(f"  Opgeslagen in .env: {', '.join(opgeslagen)}\n")
+    else:
+        print("  Niets gewijzigd. Bestaande sleutels worden nu getest.\n")
+
+    cfg.secrets = Secrets.from_env()
+    for naam, info in test_all_keys(cfg).items():
+        if info.get("ok"):
+            extra = info.get("detail") or info.get("warning") or ""
+            print(f"  {naam:12} werkt {('- ' + extra) if extra else ''}")
+        else:
+            print(f"  {naam:12} FOUT: {info['reason']}")
+    print()
     return 0
 
 
@@ -148,6 +199,7 @@ def main() -> int:
     run.add_argument("--no-publish", action="store_true", help="wel maken, niet uploaden")
     run.set_defaults(func=cmd_run)
 
+    subparsers.add_parser("setup", help="sleutels invoeren en testen").set_defaults(func=cmd_setup)
     subparsers.add_parser("status", help="wat is er gemaakt").set_defaults(func=cmd_status)
     subparsers.add_parser("check", help="controleer sleutels en omgeving").set_defaults(func=cmd_check)
 

@@ -103,11 +103,15 @@ def check_credentials(cfg: Config) -> dict:
             "https://api.elevenlabs.io/v1/user/subscription",
             headers={"xi-api-key": api_key}, timeout=20,
         )
-    except requests.RequestException as exc:
-        return {"ok": False, "reason": f"netwerkfout: {exc}"}
+    except requests.RequestException:
+        # De onderliggende melding is een lange stacktrace-achtige tekst die
+        # niemand helpt. Wat je moet weten is dat de dienst onbereikbaar is.
+        return {"ok": False, "reason": "ElevenLabs is niet bereikbaar. Staat je internet aan?"}
 
+    if response.status_code == 401:
+        return {"ok": False, "reason": "De sleutel wordt geweigerd. Kloppen alle tekens?"}
     if response.status_code != 200:
-        return {"ok": False, "reason": f"status {response.status_code}"}
+        return {"ok": False, "reason": f"ElevenLabs antwoordde met status {response.status_code}"}
 
     data = response.json()
     used = data.get("character_count", 0)

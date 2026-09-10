@@ -19,7 +19,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-from ..config import Config, load_config
+from ..config import SECRET_KEYS, Config, Secrets, load_config, write_secrets
 from ..pipeline import Episode, load_current, make_script, make_video, publish
 from ..state import Store
 from ..tts import effective_provider
@@ -55,6 +55,10 @@ class Job:
 
 JOB = Job()
 JOB_LOCK = threading.Lock()
+
+# Laatste uitslag per dienst. Een sleutel die ingevuld is, is nog niet
+# hetzelfde als een sleutel die werkt; de pagina moet dat verschil tonen.
+LAST_TEST: dict[str, dict] = {}
 
 
 def run_in_background(kind: str, work) -> bool:
@@ -112,6 +116,41 @@ def episode_payload(episode: Episode | None) -> dict | None:
     }
 
 
+def test_all_keys(cfg: Config) -> dict:
+    """Controleert elke ingevulde sleutel bij de dienst zelf.
+
+    Anthropic en ElevenLabs kosten hier niets: het zijn opvragingen zonder
+    tokens. Beter dat je het hier hoort dan halverwege een video.
+    """
+    resultaat: dict[str, dict] = {}
+
+    if cfg.secrets.anthropic_api_key:
+        from ..scripting.claude_writer import check_credentials
+
+        resultaat["anthropic"] = check_credentials(cfg)
+
+    if cfg.secrets.elevenlabs_api_key:
+        from ..tts.elevenlabs import check_credentials as eleven_check
+
+        info = eleven_check(cfg)
+        if info["ok"]:
+            info["detail"] = (f"{info['remaining']:,} tekens over "
+                              f"({info['tier']})").replace(",", ".")
+        resultaat["elevenlabs"] = info
+
+    if cfg.secrets.can_upload():
+        from ..youtube.upload import check_credentials as yt_check
+
+        info = yt_check(cfg)
+        if info.get("ok"):
+            info["detail"] = f"kanaal: {info['channel']}"
+        resultaat["youtube"] = info
+
+    LAST_TEST.clear()
+    LAST_TEST.update(resultaat)
+    return resultaat
+
+
 def status_payload(cfg: Config) -> dict:
     secrets = cfg.secrets
     store = Store()
@@ -126,6 +165,7 @@ def status_payload(cfg: Config) -> dict:
             "youtube": secrets.can_upload(),
         },
         "voice_provider": effective_provider(cfg),
+        "key_tests": {naam: bool(info.get("ok")) for naam, info in LAST_TEST.items()},
         "published_this_week": store.published_since(7),
         "max_per_week": cfg.publish.get("max_per_week", 4),
         "episode": episode_payload(load_current(cfg)),
@@ -234,6 +274,15 @@ class Handler(BaseHTTPRequestHandler):
                 return {"key": episode.blueprint.key}
 
             started = run_in_background("video", work)
+
+        elif route == "/api/keys":
+            # De server luistert alleen op 127.0.0.1, dus dit blijft binnen
+            # je eigen machine. Waarden worden nooit teruggestuurd naar de
+            # pagina; alleen of ze werken.
+            opgeslagen = write_secrets({k: str(body.get(k, "")) for k in SECRET_KEYS})
+            self.cfg.secrets = Secrets.from_env()
+            self._send_json({"saved": opgeslagen, "results": test_all_keys(self.cfg)})
+            return
 
         elif route == "/api/publish":
             episode = load_current(self.cfg)

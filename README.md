@@ -56,13 +56,29 @@ Liever de opdrachtregel? `ytauto panel` doet hetzelfde.
 
 ## De sleutels
 
+Vul ze in op de pagina zelf, onder **Sleutels instellen**. Je plakt ze, klikt
+op *Opslaan en testen*, en ziet meteen of ze werken. Ze worden opgeslagen in
+`.env` op je eigen computer; dat bestand staat in `.gitignore` en komt nooit in
+GitHub terecht.
+
+Liever de terminal? `ytauto setup` vraagt hetzelfde en test het ook.
+
 | Waarvoor | Waar je hem haalt | Kosten |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) | ± €0,15 per script |
-| `ELEVENLABS_API_KEY` | [elevenlabs.io](https://elevenlabs.io) → Profile → API Keys | zie hieronder |
-| `YOUTUBE_*` (3 stuks) | `python scripts/get_youtube_token.py` | gratis |
+| Claude — schrijft de scripts | [console.anthropic.com](https://console.anthropic.com/settings/keys) | ± €0,15 per script |
+| ElevenLabs — spreekt in | [elevenlabs.io](https://elevenlabs.io/app/settings/api-keys) → Settings → API Keys | zie hieronder |
+| YouTube — publiceert | `python scripts/get_youtube_token.py` | gratis |
 
-Zet ze in `.env`. Dat bestand staat in `.gitignore` en komt nooit in GitHub terecht.
+Het testen kost niets: het zijn gewone opvragingen zonder tokens.
+
+De bolletjes rechtsboven in de pagina zeggen wat er aan de hand is:
+
+| | |
+|---|---|
+| ○ | nog niet ingevuld |
+| ● | ingevuld, nog niet getest |
+| ✓ | getest en werkend |
+| ✗ | getest, werkt niet — de reden staat bij het veld |
 
 **ElevenLabs-verbruik:** een video van 8 minuten is ongeveer 3.500 tekens.
 
@@ -165,6 +181,7 @@ kan antwoorden. Die rondes worden herhaald tot de doellengte gehaald is.
 ## Alle commando's
 
 ```bash
+ytauto setup       # sleutels invoeren en meteen testen
 ytauto panel       # bedieningspagina met de twee knoppen
 ytauto script      # laat Claude een aflevering schrijven en print hem
 ytauto video       # maak de video van het laatste script
