@@ -5,195 +5,352 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Videostudio</title>
 <style>
-  :root{
-    --bg:#f4f1ea; --card:#fffdf9; --ink:#33291f; --muted:#8a7c6d;
-    --line:#e6ded1; --accent:#e07a3f; --accent-ink:#fff;
-    --go:#4f9d69; --bad:#c4553f; --shadow:0 1px 2px rgba(60,45,30,.06),0 8px 24px rgba(60,45,30,.07);
+/* Lettertypes komen uit assets/fonts, niet van internet: de studio moet er
+   ook goed uitzien zonder verbinding. Baloo 2 is dezelfde letter die in de
+   video's getekend wordt. */
+@font-face{font-family:'Baloo 2';src:url('/fonts/Baloo2.ttf') format('truetype');
+  font-weight:400 800;font-display:swap}
+@font-face{font-family:'Plex';src:url('/fonts/IBMPlexSans.ttf') format('truetype');
+  font-weight:100 700;font-display:swap}
+@font-face{font-family:'Plex Mono';src:url('/fonts/IBMPlexMono-Regular.ttf') format('truetype');
+  font-weight:400;font-display:swap}
+@font-face{font-family:'Plex Mono';src:url('/fonts/IBMPlexMono-Medium.ttf') format('truetype');
+  font-weight:500;font-display:swap}
+
+:root{
+  --ground:#EAEEF3; --surface:#FFFFFF; --raised:#F5F8FB;
+  --ink:#141C26; --muted:#5C6E82; --faint:#8496A8;
+  --line:#D9E1EA; --line-soft:#E8EDF3;
+  --accent:#1F5FC4; --accent-soft:#E4EDFB; --accent-ink:#FFFFFF;
+  --go:#237A4E; --go-soft:#E1F1E8;
+  --bad:#B3392C; --bad-soft:#FBE7E4;
+  --warn:#9A5B0B; --warn-soft:#FBEEDC;
+  --shadow-sm:0 1px 2px rgba(20,28,38,.06);
+  --shadow:0 1px 2px rgba(20,28,38,.05), 0 10px 28px -12px rgba(20,28,38,.22);
+  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --ui:'Plex',-apple-system,'Segoe UI',system-ui,sans-serif;
+  --mono:'Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F141A; --surface:#171E26; --raised:#1D2731;
+    --ink:#E7EEF6; --muted:#8598AB; --faint:#6B7D91;
+    --line:#28323E; --line-soft:#212A34;
+    --accent:#5DA0F5; --accent-soft:#16273B; --accent-ink:#0F141A;
+    --go:#5FBE8A; --go-soft:#162A20;
+    --bad:#E8776A; --bad-soft:#2C1A18;
+    --warn:#E0A559; --warn-soft:#2B2011;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -12px rgba(0,0,0,.7);
   }
-  @media (prefers-color-scheme:dark){
-    :root{ --bg:#1b1815; --card:#252019; --ink:#f0e8dc; --muted:#a2947f;
-           --line:#39312a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); }
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-       font:15px/1.55 ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI",system-ui,sans-serif}
-  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+}
+:root[data-theme="dark"]{
+  --ground:#0F141A; --surface:#171E26; --raised:#1D2731;
+  --ink:#E7EEF6; --muted:#8598AB; --faint:#6B7D91;
+  --line:#28323E; --line-soft:#212A34;
+  --accent:#5DA0F5; --accent-soft:#16273B; --accent-ink:#0F141A;
+  --go:#5FBE8A; --go-soft:#162A20;
+  --bad:#E8776A; --bad-soft:#2C1A18;
+  --warn:#E0A559; --warn-soft:#2B2011;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -12px rgba(0,0,0,.7);
+}
 
-  header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;margin-bottom:22px}
-  h1{font-size:25px;margin:0;letter-spacing:-.02em}
-  .sub{color:var(--muted);font-size:14px}
-  .chips{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
-  .chip{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);
-        background:var(--card);color:var(--muted);white-space:nowrap}
-  .chip.on{color:var(--go);border-color:color-mix(in srgb,var(--go) 40%,var(--line))}
-  .chip.off{color:var(--muted);opacity:.75}
-  .chip.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font:15px/1.55 var(--ui);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;
+  letter-spacing:-.01em}
 
-  .steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
-  @media (max-width:760px){.steps{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
-        padding:20px;box-shadow:var(--shadow)}
-  .step-n{font-size:12px;color:var(--muted);letter-spacing:.10em;text-transform:uppercase}
-  .card h2{font-size:19px;margin:6px 0 6px}
-  .card p{margin:0 0 16px;color:var(--muted);font-size:14px}
+.wrap{max-width:1060px;margin:0 auto;padding-inline:20px;padding-block:0 72px}
 
-  button{font:inherit;font-weight:600;border:0;border-radius:11px;padding:13px 20px;
-         cursor:pointer;background:var(--accent);color:var(--accent-ink);width:100%;
-         transition:transform .08s ease,filter .15s ease}
-  button:hover:not(:disabled){filter:brightness(1.06)}
-  button:active:not(:disabled){transform:translateY(1px)}
-  button:disabled{opacity:.42;cursor:not-allowed}
-  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+/* ── instrumentenbalk ─────────────────────────────────────────── */
+.rail{border-bottom:1px solid var(--line);background:var(--surface);
+  padding-block:14px;padding-inline:20px;margin-bottom:26px}
+.rail-in{max-width:1060px;margin:0 auto;display:flex;align-items:center;
+  gap:14px;flex-wrap:wrap}
+.mark{width:30px;height:30px;border-radius:9px;background:var(--accent);
+  display:grid;place-items:center;flex:none}
+.mark svg{width:17px;height:17px;display:block}
+.rail h1{font-size:17px;line-height:1.2}
+.rail .meta{font:400 12px/1.4 var(--mono);color:var(--faint);
+  letter-spacing:.01em;margin-top:1px}
+.pills{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font:500 11.5px/1 var(--mono);
+  letter-spacing:.03em;padding:6px 10px;border-radius:7px;border:1px solid var(--line);
+  background:var(--raised);color:var(--faint);white-space:nowrap}
+.pill i{width:6px;height:6px;border-radius:50%;background:currentColor;
+  display:block;flex:none;opacity:.55}
+.pill.set{color:var(--muted)}
+.pill.ok{color:var(--go);background:var(--go-soft);border-color:transparent}
+.pill.ok i{opacity:1}
+.pill.err{color:var(--bad);background:var(--bad-soft);border-color:transparent}
+.pill.err i{opacity:1}
 
-  input[type=text],input[type=password]{width:100%;font:inherit;padding:11px 13px;margin-bottom:10px;
-    border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
-  input[type=text]::placeholder,input[type=password]::placeholder{color:var(--muted)}
-  input:focus{outline:2px solid color-mix(in srgb,var(--accent) 45%,transparent);outline-offset:1px}
-  .field input+input{margin-top:8px}
+/* ── melding ──────────────────────────────────────────────────── */
+.notice{display:flex;gap:11px;background:var(--warn-soft);
+  border:1px solid color-mix(in srgb,var(--warn) 26%,transparent);
+  border-radius:var(--r);padding:13px 16px;font-size:14px;margin-bottom:18px;
+  color:var(--ink)}
+.notice svg{width:17px;height:17px;flex:none;margin-top:2px;color:var(--warn)}
 
-  .bar{height:7px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:14px}
-  .bar>i{display:block;height:100%;width:0;background:var(--accent);
-         transition:width .35s ease;border-radius:99px}
-  .jobline{font-size:13px;color:var(--muted);margin-top:9px;min-height:19px}
-  .jobline.err{color:var(--bad)}
+/* ── sleutels ─────────────────────────────────────────────────── */
+details.keys{background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+details.keys>summary{cursor:pointer;padding:15px 20px;list-style:none;
+  display:flex;align-items:center;gap:10px;font-weight:600;font-size:14.5px}
+details.keys>summary::-webkit-details-marker{display:none}
+details.keys>summary::after{content:'';width:7px;height:7px;margin-left:auto;
+  border-right:1.6px solid var(--faint);border-bottom:1.6px solid var(--faint);
+  transform:rotate(-45deg);transition:transform .18s ease}
+details.keys[open]>summary::after{transform:rotate(45deg)}
+.keybody{padding:4px 20px 20px;display:grid;gap:18px}
+.field label{display:block;font:600 13px/1.3 var(--ui);margin-bottom:4px}
+.field .help{font-size:12.5px;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.field .help a{color:var(--accent)}
+.result{font:500 12.5px/1.4 var(--mono);margin-top:7px;min-height:17px}
+.result.ok{color:var(--go)} .result.bad{color:var(--bad)}
 
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;
-         padding:22px;box-shadow:var(--shadow);margin-bottom:16px}
-  .panel h3{margin:0 0 4px;font-size:18px}
-  .meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin:10px 0 16px}
-  .desc{white-space:pre-wrap;font-size:14px;color:var(--ink);opacity:.9}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-  .tag{font-size:12px;padding:3px 9px;border-radius:7px;background:var(--bg);
-       border:1px solid var(--line);color:var(--muted)}
+input[type=text],input[type=password]{width:100%;font:15px/1.4 var(--ui);
+  padding:11px 13px;border:1px solid var(--line);border-radius:10px;
+  background:var(--raised);color:var(--ink)}
+input::placeholder{color:var(--faint)}
+input:focus-visible,button:focus-visible,summary:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+.field input+input{margin-top:8px}
 
-  .script{margin-top:18px;border-top:1px solid var(--line);padding-top:16px;
-          max-height:460px;overflow:auto}
-  .beat{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:6px 0;
-        border-bottom:1px dashed var(--line);font-size:14px}
-  .beat:last-child{border-bottom:0}
-  .beat .m{font-size:11px;color:var(--muted);text-transform:uppercase;
-           letter-spacing:.06em;padding-top:3px}
-  .beat.sec{background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:8px;
-            padding:8px 8px;margin:6px -8px}
+/* ── stappen ──────────────────────────────────────────────────── */
+.steps{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;
+  gap:0;margin-bottom:22px}
+.link{width:46px;display:grid;place-items:center;position:relative}
+.link::before{content:'';position:absolute;inset:0;margin:auto;width:100%;height:1.5px;
+  background:repeating-linear-gradient(90deg,var(--line) 0 5px,transparent 5px 10px)}
+.link span{position:relative;width:22px;height:22px;border-radius:50%;
+  background:var(--ground);display:grid;place-items:center;color:var(--faint)}
+.link svg{width:12px;height:12px}
 
-  video{width:100%;border-radius:12px;background:#000;display:block}
-  .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-  .row button{width:auto;flex:1;min-width:150px}
-  .hidden{display:none}
-  .empty{color:var(--muted);font-size:14px;text-align:center;padding:36px 12px}
-  .notice{background:color-mix(in srgb,#e0a03f 16%,var(--card));border:1px solid
-          color-mix(in srgb,#e0a03f 40%,var(--line));border-radius:12px;padding:13px 16px;
-          font-size:14px;margin-bottom:18px}
-  code{background:var(--bg);padding:1px 6px;border-radius:5px;font-size:13px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.step-head{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.step-num{width:21px;height:21px;border-radius:6px;background:var(--accent-soft);
+  color:var(--accent);font:500 11.5px/21px var(--mono);text-align:center;flex:none}
+.step h2{font-size:18.5px}
+.step p{margin:0 0 15px;color:var(--muted);font-size:14px;line-height:1.5}
+.step .spacer{flex:1}
 
-  details.keys{background:var(--card);border:1px solid var(--line);border-radius:16px;
-               box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
-  details.keys>summary{cursor:pointer;padding:18px 22px;font-weight:600;list-style:none;
-                       display:flex;align-items:center;gap:10px}
-  details.keys>summary::-webkit-details-marker{display:none}
-  details.keys>summary::before{content:'▸';color:var(--muted);transition:transform .15s}
-  details.keys[open]>summary::before{transform:rotate(90deg)}
-  .keybody{padding:0 22px 22px;border-top:1px solid var(--line);margin-top:-1px}
-  .field{margin-top:16px}
-  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
-  .field .help{font-size:12.5px;color:var(--muted);margin-bottom:7px}
-  .field .help a{color:var(--accent)}
-  .result{font-size:13px;margin-top:6px;min-height:18px}
-  .result.ok{color:var(--go)} .result.bad{color:var(--bad)}
-  .keybody>button{margin-top:20px}
-  a{color:var(--accent)}
+button{font:600 15px/1 var(--ui);border:1px solid transparent;border-radius:10px;
+  padding:13px 18px;cursor:pointer;background:var(--accent);color:var(--accent-ink);
+  width:100%;transition:filter .15s ease,transform .07s ease}
+button:hover:not(:disabled){filter:brightness(1.08)}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+button.ghost:hover:not(:disabled){background:var(--raised);filter:none}
+
+/* ── voortgang ────────────────────────────────────────────────── */
+.progress{margin-top:15px}
+.progress.hidden{display:none}
+.track{height:5px;border-radius:99px;background:var(--line-soft);overflow:hidden}
+.track>i{display:block;height:100%;width:0;background:var(--accent);
+  border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.stages{display:flex;gap:5px;margin-top:9px}
+.stage{flex:1;font:400 10px/1.3 var(--mono);letter-spacing:.02em;color:var(--faint);
+  text-align:center;padding-top:6px;border-top:2px solid var(--line-soft);
+  transition:color .2s,border-color .2s}
+.stage.now{color:var(--accent);border-top-color:var(--accent)}
+.stage.done{color:var(--muted);border-top-color:var(--go)}
+.jobline{font:400 12.5px/1.5 var(--mono);color:var(--muted);margin-top:9px;
+  min-height:18px;overflow-wrap:anywhere}
+.jobline.err{color:var(--bad)}
+.jobline a{color:var(--accent)}
+
+/* ── script ───────────────────────────────────────────────────── */
+.slab{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.slab-head{padding:20px 22px 0}
+.slab-head h2{font-size:20px;margin-bottom:3px}
+.idea{color:var(--muted);font-size:14px}
+.readout{display:flex;flex-wrap:wrap;gap:0;margin:15px 0 0;
+  border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.readout div{flex:1;min-width:88px;padding:11px 0 11px 22px;
+  border-left:1px solid var(--line-soft)}
+.readout div:first-child{border-left:0}
+.readout dt{font:400 10.5px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.readout dd{margin:0;font:500 15px/1 var(--mono);font-variant-numeric:tabular-nums}
+.slab-body{padding:18px 22px 22px}
+.desc{font-size:14px;color:var(--muted);line-height:1.6;max-width:66ch}
+.items{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.item{font:500 12px/1 var(--mono);padding:5px 9px;border-radius:6px;
+  background:var(--accent-soft);color:var(--accent)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.tag{font:400 11.5px/1 var(--mono);padding:5px 8px;border-radius:6px;
+  background:var(--raised);border:1px solid var(--line);color:var(--faint)}
+
+.script-head{display:flex;align-items:baseline;gap:10px;margin:22px 0 2px;
+  padding-top:16px;border-top:1px solid var(--line-soft)}
+.script-head h3{font-size:15px}
+.script-head span{font:400 11.5px/1 var(--mono);color:var(--faint);margin-left:auto}
+.script{max-height:440px;overflow:auto;margin-top:8px;
+  scrollbar-width:thin}
+.beat{display:grid;grid-template-columns:112px 1fr;gap:14px;padding:7px 0;
+  border-bottom:1px solid var(--line-soft);font-size:14.5px;line-height:1.5}
+.beat:last-child{border-bottom:0}
+.beat .m{font:400 10.5px/1.5 var(--mono);letter-spacing:.03em;color:var(--faint);
+  text-transform:uppercase;padding-top:3px}
+.beat.sec{margin:10px 0 4px;padding:9px 12px;background:var(--raised);
+  border-radius:9px;border-bottom:0}
+.beat.sec .m{color:var(--accent)}
+.beat.sec>div:last-child{font-weight:600}
+
+.empty{padding:40px 22px 44px;text-align:center;color:var(--muted);font-size:14px}
+.empty strong{color:var(--ink)}
+.empty .big{font-family:var(--display);font-size:18px;color:var(--ink);
+  display:block;margin-bottom:6px}
+
+/* ── video ────────────────────────────────────────────────────── */
+video{width:100%;border-radius:11px;background:#000;display:block}
+.row{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
+.row button{width:auto;flex:1;min-width:160px}
+
+.hidden{display:none!important}
+
+@media (max-width:820px){
+  .steps{grid-template-columns:1fr;gap:0}
+  .link{width:auto;height:34px}
+  .link::before{width:1.5px;height:100%;margin:0 auto;
+    background:repeating-linear-gradient(180deg,var(--line) 0 5px,transparent 5px 10px)}
+  .link span{transform:rotate(90deg)}
+  .beat{grid-template-columns:1fr;gap:2px}
+  .beat .m{padding-top:0}
+  .readout div{padding-left:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
+<div class="rail">
+  <div class="rail-in">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 5h16v14H4z"/><path d="M9 9.5v5l4.5-2.5z" fill="#fff" stroke="none"/>
+      </svg>
+    </span>
     <div>
       <h1 id="channel">Videostudio</h1>
-      <div class="sub" id="subline">verbinden…</div>
+      <div class="meta" id="subline">verbinden…</div>
     </div>
-    <div class="chips" id="chips"></div>
-  </header>
+    <div class="pills" id="chips"></div>
+  </div>
+</div>
 
-  <div class="notice hidden" id="warn"></div>
+<div class="wrap">
+
+  <div class="notice hidden" id="warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round"><path d="M12 8v5"/><path d="M12 17h.01"/>
+      <circle cx="12" cy="12" r="9.5"/></svg>
+    <span id="warn-text"></span>
+  </div>
 
   <details class="keys" id="keys">
     <summary>Sleutels instellen</summary>
     <div class="keybody">
-
       <div class="field">
         <label for="k-anthropic">Claude — schrijft de scripts</label>
-        <div class="help">
-          Maak een sleutel op
+        <div class="help">Maak een sleutel op
           <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>
-          en zet er wat tegoed op. Ongeveer 15 cent per script.
-        </div>
-        <input type="password" id="k-anthropic" placeholder="sk-ant-..." autocomplete="off">
+          en zet er wat tegoed op. Ongeveer 15 cent per script.</div>
+        <input type="password" id="k-anthropic" placeholder="sk-ant-…" autocomplete="off">
         <div class="result" id="r-anthropic"></div>
       </div>
 
       <div class="field">
         <label for="k-elevenlabs">ElevenLabs — spreekt de video in</label>
-        <div class="help">
-          Te vinden op
+        <div class="help">Te vinden op
           <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener">elevenlabs.io</a>
-          onder Settings, API Keys. Ongeveer 3.500 tekens per video.
-        </div>
-        <input type="password" id="k-elevenlabs" placeholder="sk_..." autocomplete="off">
+          onder Settings, API Keys. Ongeveer 3.500 tekens per video.</div>
+        <input type="password" id="k-elevenlabs" placeholder="sk_…" autocomplete="off">
         <div class="result" id="r-elevenlabs"></div>
       </div>
 
       <div class="field">
-        <label>YouTube — publiceert</label>
-        <div class="help">
-          Deze drie haal je in één keer op met
-          <code>python scripts/get_youtube_token.py</code>. Zie de README.
-        </div>
+        <label for="k-yt-id">YouTube — publiceert</label>
+        <div class="help">Deze drie haal je in één keer op met
+          <code>python scripts/get_youtube_token.py</code>.</div>
         <input type="password" id="k-yt-id" placeholder="Client ID" autocomplete="off">
         <input type="password" id="k-yt-secret" placeholder="Client secret" autocomplete="off">
         <input type="password" id="k-yt-refresh" placeholder="Refresh token" autocomplete="off">
         <div class="result" id="r-youtube"></div>
       </div>
 
-      <button id="btn-keys">Opslaan en testen</button>
-      <div class="jobline" id="line-keys">Sleutels blijven op je eigen computer, in het bestand .env</div>
+      <div>
+        <button id="btn-keys">Opslaan en testen</button>
+        <div class="jobline" id="line-keys">Sleutels blijven op je eigen computer, in .env</div>
+      </div>
     </div>
   </details>
 
   <div class="steps">
-    <div class="card">
-      <div class="step-n">Stap 1</div>
-      <h2>Schrijf het script</h2>
+    <section class="step">
+      <div class="step-head"><span class="step-num">1</span><h2>Schrijf het script</h2></div>
       <p>Claude bedenkt zelf het onderwerp en schrijft de hele aflevering. Je hoeft niets in te vullen.</p>
       <input type="text" id="hint" placeholder="Optioneel: een wens, bijvoorbeeld 'iets met tellen'">
+      <div class="spacer"></div>
       <button id="btn-script">Schrijf het script</button>
-      <div class="bar hidden" id="bar-script"><i></i></div>
+      <div class="progress hidden" id="bar-script">
+        <div class="track"><i></i></div>
+      </div>
       <div class="jobline" id="line-script"></div>
+    </section>
+
+    <div class="link" aria-hidden="true">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+        stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="M13 6l6 6-6 6"/></svg></span>
     </div>
 
-    <div class="card">
-      <div class="step-n">Stap 2</div>
-      <h2>Maak de video</h2>
+    <section class="step">
+      <div class="step-head"><span class="step-num">2</span><h2>Maak de video</h2></div>
       <p>Zet het script om in een complete video: beeld, stem via ElevenLabs, muziek en thumbnail.</p>
+      <div class="spacer"></div>
       <button id="btn-video" disabled>Maak de video</button>
-      <div class="bar hidden" id="bar-video"><i></i></div>
+      <div class="progress hidden" id="bar-video">
+        <div class="track"><i></i></div>
+        <div class="stages">
+          <div class="stage" data-stage="0">beeld &amp; stem</div>
+          <div class="stage" data-stage="1">audio</div>
+          <div class="stage" data-stage="2">encoderen</div>
+          <div class="stage" data-stage="3">thumbnail</div>
+        </div>
+      </div>
       <div class="jobline" id="line-video"></div>
+    </section>
+  </div>
+
+  <div class="slab" id="script-panel">
+    <div class="empty">
+      <span class="big">Nog geen script</span>
+      Klik op <strong>Schrijf het script</strong>. Je krijgt de hele aflevering
+      te lezen voordat er iets gerenderd wordt.
     </div>
   </div>
 
-  <div class="panel" id="script-panel">
-    <div class="empty">Nog geen script. Klik op <strong>Schrijf het script</strong>.</div>
-  </div>
-
-  <div class="panel hidden" id="video-panel">
-    <h3>De video</h3>
-    <div class="meta" id="video-meta"></div>
-    <video id="player" controls preload="metadata"></video>
-    <div class="row">
-      <button class="ghost" id="btn-thumb">Bekijk de thumbnail</button>
-      <button id="btn-publish">Publiceer op YouTube</button>
+  <div class="slab hidden" id="video-panel">
+    <div class="slab-head"><h2>De video</h2></div>
+    <dl class="readout" id="video-meta"></dl>
+    <div class="slab-body">
+      <video id="player" controls preload="metadata" playsinline
+             poster="/api/thumbnail.jpg"></video>
+      <div class="row">
+        <button class="ghost" id="btn-thumb">Bekijk de thumbnail</button>
+        <button id="btn-publish">Publiceer op YouTube</button>
+      </div>
+      <div class="jobline" id="line-publish"></div>
     </div>
-    <div class="jobline" id="line-publish"></div>
   </div>
 
 </div>
@@ -204,6 +361,7 @@ let state = null;
 let renderedEpisode = null;   // voorkomt dat je scrollpositie terugspringt
 
 const SECTION_MODES = new Set(['intro_title','card','outro_title']);
+const esc = (s) => String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 
 async function api(path, body){
   const options = body
@@ -215,77 +373,95 @@ async function api(path, body){
   return data;
 }
 
-function chip(label, aanwezig, getest){
-  // Drie standen: niet ingevuld, ingevuld maar ongetest, en getest.
-  // Een groene stip bij een kapotte sleutel is misleidend.
-  if(!aanwezig) return `<span class="chip off" title="nog niet ingevuld">○ ${label}</span>`;
-  if(getest === true)  return `<span class="chip on" title="getest en werkend">✓ ${label}</span>`;
-  if(getest === false) return `<span class="chip bad" title="getest, werkt niet">✗ ${label}</span>`;
-  return `<span class="chip" title="ingevuld, nog niet getest">● ${label}</span>`;
+/* ── kop ──────────────────────────────────────────────────────── */
+
+function pill(label, aanwezig, getest){
+  // Vier standen. Een groen bolletje bij een kapotte sleutel is misleidend.
+  let cls = 'pill', titel = 'nog niet ingevuld';
+  if(aanwezig && getest === true){ cls += ' ok'; titel = 'getest en werkend'; }
+  else if(aanwezig && getest === false){ cls += ' err'; titel = 'getest, werkt niet'; }
+  else if(aanwezig){ cls += ' set'; titel = 'ingevuld, nog niet getest'; }
+  return `<span class="${cls}" title="${titel}"><i></i>${label}</span>`;
 }
 
 function renderStatus(s){
   $('channel').textContent = s.channel;
   $('subline').textContent =
-    `${s.language} · streeflengte ${s.target_minutes} min · ` +
-    `deze week ${s.published_this_week}/${s.max_per_week} gepubliceerd`;
+    `${s.language} · ${s.target_minutes} min · ` +
+    `${s.published_this_week}/${s.max_per_week} deze week`;
+
   const t = s.key_tests || {};
   $('chips').innerHTML =
-    chip('Claude', s.keys.anthropic, t.anthropic) +
-    chip('ElevenLabs', s.keys.elevenlabs, t.elevenlabs) +
-    chip('YouTube', s.keys.youtube, t.youtube);
-  $('warn').innerHTML = s.voice_provider === 'offline'
-    ? 'Geen ElevenLabs-sleutel gevonden, dus de video krijgt de gratis <strong>teststem</strong>. ' +
-      'Beeld en timing kloppen wel. Vul hem hieronder in bij <strong>Sleutels instellen</strong>.'
-    : '';
-  $('warn').classList.toggle('hidden', s.voice_provider !== 'offline');
+    pill('Claude', s.keys.anthropic, t.anthropic) +
+    pill('ElevenLabs', s.keys.elevenlabs, t.elevenlabs) +
+    pill('YouTube', s.keys.youtube, t.youtube);
+
+  const teststem = s.voice_provider === 'offline';
+  $('warn').classList.toggle('hidden', !teststem);
+  if(teststem){
+    $('warn-text').innerHTML = 'Geen ElevenLabs-sleutel gevonden, dus de video krijgt de ' +
+      '<strong>teststem</strong>. Beeld en timing kloppen wel. Vul je sleutel hierboven in ' +
+      'bij <strong>Sleutels instellen</strong> voor de echte stem.';
+  }
 }
 
+/* ── script ───────────────────────────────────────────────────── */
+
 function renderEpisode(ep){
-  // Alleen opnieuw opbouwen als er echt iets veranderd is: anders verlies je
-  // je plek in het script terwijl je aan het lezen bent.
   const stamp = ep ? `${ep.key}|${ep.beats.length}|${ep.has_video}|${ep.video_size_mb}` : '';
   if(stamp === renderedEpisode) return;
   renderedEpisode = stamp;
 
   const panel = $('script-panel');
   if(!ep){
-    panel.innerHTML = '<div class="empty">Nog geen script. Klik op <strong>Schrijf het script</strong>.</div>';
+    panel.innerHTML = `<div class="empty"><span class="big">Nog geen script</span>
+      Klik op <strong>Schrijf het script</strong>. Je krijgt de hele aflevering
+      te lezen voordat er iets gerenderd wordt.</div>`;
     $('btn-video').disabled = true;
     $('video-panel').classList.add('hidden');
     return;
   }
 
   const beats = ep.beats.map(b => {
-    const section = SECTION_MODES.has(b.mode) ? ' sec' : '';
-    const text = b.narration.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-    return `<div class="beat${section}"><div class="m">${b.mode.replace(/_/g,' ')}</div><div>${text}</div></div>`;
+    const sec = SECTION_MODES.has(b.mode) ? ' sec' : '';
+    return `<div class="beat${sec}"><div class="m">${esc(b.mode).replace(/_/g,' ')}</div>` +
+           `<div>${esc(b.narration)}</div></div>`;
   }).join('');
 
+  const items = ep.items.map(i => `<span class="item">${esc(i.label || i.word)}</span>`).join('');
+
   panel.innerHTML = `
-    <h3>${ep.title}</h3>
-    <div class="sub">${ep.idea}</div>
-    <div class="meta">
-      <span>${ep.beats.length} scenes</span>
-      <span>${ep.word_count} woorden</span>
-      <span>~${ep.estimated_minutes} min</span>
-      <span>${ep.items.length} items</span>
-      <span>geschreven door ${ep.source === 'claude' ? 'Claude' : 'sjabloon'}</span>
+    <div class="slab-head">
+      <h2>${esc(ep.title)}</h2>
+      <div class="idea">${esc(ep.idea)}</div>
+      <dl class="readout">
+        <div><dt>scenes</dt><dd>${ep.beats.length}</dd></div>
+        <div><dt>woorden</dt><dd>${ep.word_count}</dd></div>
+        <div><dt>lengte</dt><dd>${ep.estimated_minutes} min</dd></div>
+        <div><dt>items</dt><dd>${ep.items.length}</dd></div>
+        <div><dt>schrijver</dt><dd>${ep.source === 'claude' ? 'Claude' : 'sjabloon'}</dd></div>
+      </dl>
     </div>
-    <div class="desc">${ep.description}</div>
-    <div class="tags">${ep.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-    <div class="script">${beats}</div>`;
+    <div class="slab-body">
+      <div class="desc">${esc(ep.description)}</div>
+      <div class="items">${items}</div>
+      <div class="tags">${ep.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+      <div class="script-head"><h3>Het script</h3><span>${ep.beats.length} scenes</span></div>
+      <div class="script">${beats}</div>
+    </div>`;
 
   $('btn-video').disabled = false;
 
   const videoPanel = $('video-panel');
   if(ep.has_video){
     videoPanel.classList.remove('hidden');
-    $('video-meta').innerHTML = `<span>${ep.video_size_mb} MB</span><span>klaar om te publiceren</span>`;
+    $('video-meta').innerHTML =
+      `<div><dt>bestand</dt><dd>${ep.video_size_mb} MB</dd></div>` +
+      `<div><dt>beeld</dt><dd>1920×1080</dd></div>` +
+      `<div><dt>status</dt><dd>klaar</dd></div>`;
     const player = $('player');
     const src = '/api/video.mp4?v=' + encodeURIComponent(ep.key + ep.video_size_mb);
     if(player.getAttribute('src') !== src) player.setAttribute('src', src);
-    $('btn-publish').disabled = !state?.keys.youtube;
     $('btn-publish').textContent = state?.keys.youtube
       ? 'Publiceer op YouTube' : 'Publiceren (YouTube nog niet gekoppeld)';
   } else {
@@ -293,39 +469,60 @@ function renderEpisode(ep){
   }
 }
 
+/* ── voortgang ────────────────────────────────────────────────── */
+
+function stageFromMessage(message, fraction){
+  // De server stuurt losse meldingen; hier worden ze op de vier vaste
+  // fasen van het renderen gelegd.
+  if(/thumbnail|klaar/.test(message)) return 3;
+  if(/encod/.test(message)) return 2;
+  if(/audio/.test(message)) return 1;
+  if(/scene/.test(message)) return 0;
+  return fraction >= 0.95 ? 3 : fraction >= 0.7 ? 2 : fraction >= 0.55 ? 1 : 0;
+}
+
 function renderJob(job){
-  const target = job.kind === 'video' ? 'video'
-               : job.kind === 'script' ? 'script' : 'publish';
-  ['script','video'].forEach(name => {
-    const active = job.running && job.kind === name;
-    $('bar-' + name).classList.toggle('hidden', !active && !(job.kind === name && job.error));
-    $('bar-' + name).firstElementChild.style.width = (job.fraction * 100) + '%';
+  ['script','video'].forEach(naam => {
+    const actief = job.running && job.kind === naam;
+    const bar = $('bar-' + naam);
+    bar.classList.toggle('hidden', !actief);
+    bar.querySelector('.track > i').style.width = (job.fraction * 100) + '%';
   });
 
-  const line = $('line-' + (target === 'publish' ? 'publish' : target));
+  if(job.kind === 'video'){
+    const nu = stageFromMessage(job.message || '', job.fraction);
+    $('bar-video').querySelectorAll('.stage').forEach(el => {
+      const i = Number(el.dataset.stage);
+      el.classList.toggle('now', i === nu && job.running);
+      el.classList.toggle('done', i < nu || (!job.running && !job.error && job.fraction >= 1));
+    });
+  }
+
+  const doel = job.kind === 'publiceren' ? 'publish' : (job.kind || 'script');
+  const regel = $('line-' + (doel === 'video' ? 'video' : doel === 'publish' ? 'publish' : 'script'));
   ['line-script','line-video','line-publish'].forEach(id => {
-    if(id !== line.id) $(id).textContent = '';
+    if(id !== regel.id) $(id).textContent = '';
     $(id).classList.remove('err');
   });
 
   if(job.error){
-    line.textContent = job.error;
-    line.classList.add('err');
+    regel.textContent = job.error;
+    regel.classList.add('err');
   } else if(job.running){
-    line.textContent = job.message;
+    regel.textContent = job.message;
   } else if(job.result && job.result.url){
-    line.innerHTML = `Staat online: <a href="${job.result.url}" target="_blank" rel="noopener">${job.result.url}</a>`;
+    regel.innerHTML = `Staat online: <a href="${job.result.url}" target="_blank" rel="noopener">${job.result.url}</a>`;
   } else {
-    line.textContent = '';
+    regel.textContent = '';
   }
 
-  const running = job.running;
-  $('btn-script').disabled = running;
-  $('btn-video').disabled = running || !state?.episode;
-  $('btn-publish').disabled = running || !state?.keys.youtube;
-  $('btn-script').textContent = (running && job.kind === 'script')
+  const bezig = job.running;
+  $('btn-script').disabled = bezig;
+  $('btn-video').disabled = bezig || !state?.episode;
+  $('btn-publish').disabled = bezig || !state?.keys.youtube;
+  $('btn-script').textContent = (bezig && job.kind === 'script')
     ? 'Claude schrijft…' : 'Schrijf het script';
-  $('btn-video').textContent = (running && job.kind === 'video')
+  $('btn-video').textContent = (bezig && job.kind === 'video')
     ? `Bezig… ${Math.round(job.fraction * 100)}%` : 'Maak de video';
 }
 
@@ -335,24 +532,30 @@ async function refresh(){
     renderStatus(state);
     renderEpisode(state.episode);
     renderJob(state.job);
-    busy = state.job.running;
   }catch(err){
     $('subline').textContent = 'geen verbinding met de server';
   }
 }
 
+/* ── knoppen ──────────────────────────────────────────────────── */
+
+function fout(id, err){
+  $(id).textContent = err.message;
+  $(id).classList.add('err');
+}
+
 $('btn-script').onclick = async () => {
   try{ await api('/api/script', {hint: $('hint').value}); await refresh(); }
-  catch(err){ $('line-script').textContent = err.message; $('line-script').classList.add('err'); }
+  catch(err){ fout('line-script', err); }
 };
 $('btn-video').onclick = async () => {
   try{ await api('/api/video', {}); await refresh(); }
-  catch(err){ $('line-video').textContent = err.message; $('line-video').classList.add('err'); }
+  catch(err){ fout('line-video', err); }
 };
 $('btn-publish').onclick = async () => {
   if(!confirm('De video wordt nu echt op je YouTube-kanaal gezet. Doorgaan?')) return;
   try{ await api('/api/publish', {}); await refresh(); }
-  catch(err){ $('line-publish').textContent = err.message; $('line-publish').classList.add('err'); }
+  catch(err){ fout('line-publish', err); }
 };
 $('btn-thumb').onclick = () => window.open('/api/thumbnail.jpg', '_blank');
 
@@ -379,8 +582,7 @@ function showKeyResult(naam, info){
 }
 
 $('btn-keys').onclick = async () => {
-  const knop = $('btn-keys');
-  const regel = $('line-keys');
+  const knop = $('btn-keys'), regel = $('line-keys');
   const payload = {};
   for(const [id, naam] of Object.entries(KEY_FIELDS)) payload[naam] = $(id).value;
 
@@ -390,17 +592,15 @@ $('btn-keys').onclick = async () => {
   regel.classList.remove('err');
   try{
     const uitkomst = await api('/api/keys', payload);
-    // Waarden nooit laten staan in het formulier: ze staan nu in .env.
     for(const id of Object.keys(KEY_FIELDS)) $(id).value = '';
     ['anthropic','elevenlabs','youtube'].forEach(n => showKeyResult(n, uitkomst.results[n]));
     regel.textContent = uitkomst.saved.length
       ? 'Opgeslagen in .env: ' + uitkomst.saved.join(', ')
       : 'Niets gewijzigd; bestaande sleutels getest.';
-    renderedEpisode = null;      // stem kan veranderd zijn, paneel opnieuw opbouwen
+    renderedEpisode = null;
     await refresh();
   }catch(err){
-    regel.textContent = err.message;
-    regel.classList.add('err');
+    fout('line-keys', err);
   }finally{
     knop.disabled = false;
     knop.textContent = 'Opslaan en testen';
@@ -408,7 +608,7 @@ $('btn-keys').onclick = async () => {
 };
 
 refresh();
-setInterval(() => { refresh(); }, 1500);
+setInterval(refresh, 1500);
 </script>
 </body>
 </html>

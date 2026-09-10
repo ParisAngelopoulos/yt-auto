@@ -63,6 +63,22 @@ def _pad(freqs: tuple[float, ...], duration: float, amp: float = 0.10) -> np.nda
     return out / len(freqs) * envelope * amp
 
 
+def _mix_in(track: np.ndarray, start: int, chunk: np.ndarray) -> None:
+    """Telt een fragment bij het spoor op en kapt netjes af aan het einde.
+
+    Zonder deze afkapping klapt de synthesizer eruit zodra een noot voorbij
+    het einde van het spoor begint: een negatieve slicelengte levert dan
+    bijna de hele array op in plaats van niets.
+    """
+    if start >= len(track):
+        return
+    begin = max(0, start)
+    einde = min(len(track), start + len(chunk))
+    if einde <= begin:
+        return
+    track[begin:einde] += chunk[begin - start:einde - start]
+
+
 def synth_bed(duration: float, seed: int = 0) -> np.ndarray:
     """Bouwt een muziekbed van precies deze lengte."""
     rng = random.Random(seed)
@@ -73,8 +89,7 @@ def synth_bed(duration: float, seed: int = 0) -> np.ndarray:
     position = 0
     while position < total:
         chord = PROGRESSION[bar % len(PROGRESSION)]
-        pad = _pad(chord, BAR_SECONDS)
-        track[position:position + len(pad)] += pad[:max(0, len(track) - position)]
+        _mix_in(track, position, _pad(chord, BAR_SECONDS))
 
         # Vier tellen per maat; niet elke tel krijgt een noot, dat geeft lucht.
         for beat in range(4):
@@ -84,9 +99,7 @@ def synth_bed(duration: float, seed: int = 0) -> np.ndarray:
             if beat == 0:
                 note = rng.choice(PENTATONIC[:5])   # maat begint laag
             start = position + int(beat * BAR_SECONDS / 4 * SAMPLE_RATE)
-            bell = _bell(note, BAR_SECONDS / 2, amp=rng.uniform(0.28, 0.46))
-            end = min(len(track), start + len(bell))
-            track[start:end] += bell[:end - start]
+            _mix_in(track, start, _bell(note, BAR_SECONDS / 2, amp=rng.uniform(0.28, 0.46)))
 
         position += int(BAR_SECONDS * SAMPLE_RATE)
         bar += 1

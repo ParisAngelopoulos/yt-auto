@@ -19,12 +19,13 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-from ..config import SECRET_KEYS, Config, Secrets, load_config, write_secrets
+from ..config import ROOT, SECRET_KEYS, Config, Secrets, load_config, write_secrets
 from ..pipeline import Episode, load_current, make_script, make_video, publish
 from ..state import Store
 from ..tts import effective_provider
 
 PANEL = Path(__file__).parent / "panel.html"
+FONT_DIR = ROOT / "assets" / "fonts"
 
 
 # ---------------------------------------------------------------------------
@@ -228,6 +229,16 @@ class Handler(BaseHTTPRequestHandler):
 
         if route in ("/", "/index.html"):
             self._send_file(PANEL, "text/html; charset=utf-8")
+        elif route.startswith("/fonts/"):
+            # De lettertypes komen uit de projectmap, niet van internet: de
+            # studio moet er ook goed uitzien zonder verbinding. Alleen de
+            # bestandsnaam wordt gebruikt, zodat ../ nergens heen leidt.
+            naam = Path(route).name
+            if naam.endswith(".ttf") and (FONT_DIR / naam).is_file():
+                self._send_file(FONT_DIR / naam, "font/ttf")
+            else:
+                self._send_json({"error": "onbekend lettertype"}, 404)
+
         elif route == "/api/status":
             self._send_json(status_payload(self.cfg))
         elif route == "/api/video.mp4":
