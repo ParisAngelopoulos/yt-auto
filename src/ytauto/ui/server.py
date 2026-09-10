@@ -17,11 +17,12 @@ import webbrowser
 from dataclasses import asdict, dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from ..config import ROOT, SECRET_KEYS, Config, Secrets, load_config, write_secrets
-from ..pipeline import Episode, load_current, make_script, make_video, publish
-from ..state import Store
+from ..pipeline import (Episode, adopt_loose_scripts, load_current, make_script,
+                        make_video, open_episode, publish)
+from ..db import Store
 from ..tts import effective_provider
 
 PANEL = Path(__file__).parent / "panel.html"
@@ -152,6 +153,40 @@ def test_all_keys(cfg: Config) -> dict:
     return resultaat
 
 
+def library_payload(store: Store, search: str = "") -> dict:
+    """Het archief: alles wat er ooit geschreven is.
+
+    Het script staat in de database en blijft dus altijd. De gerenderde
+    video staat in out/ en kan weg zijn; daarom wordt per aflevering
+    gekeken of het bestand er nog is. 'Klaar' beweren terwijl er niets meer
+    staat, is misleidend.
+    """
+    from ..pipeline import OUT_DIR
+
+    def heeft_video(slug: str) -> bool:
+        pad = OUT_DIR / slug / "video.mp4"
+        return pad.exists() and pad.stat().st_size > 10_000
+
+    rijen = store.library(limit=200, search=search)
+    return {
+        "stats": store.stats(),
+        "episodes": [{
+            "key": r["key"],
+            "title": r["title"],
+            "idea": r["idea"],
+            "kind": r["lesson_kind"],
+            "source": r["source"],
+            "status": r["status"],
+            "has_video": heeft_video(r["slug"]),
+            "beats": r["beats"],
+            "words": r["word_count"],
+            "minutes": round((r["duration_s"] or r["estimated_seconds"] or 0) / 60, 1),
+            "video_id": r["video_id"],
+            "created_at": (r["created_at"] or "")[:10],
+        } for r in rijen],
+    }
+
+
 def status_payload(cfg: Config) -> dict:
     secrets = cfg.secrets
     store = Store()
@@ -241,6 +276,9 @@ class Handler(BaseHTTPRequestHandler):
 
         elif route == "/api/status":
             self._send_json(status_payload(self.cfg))
+        elif route == "/api/library":
+            zoek = parse_qs(urlparse(self.path).query).get("search", [""])[0]
+            self._send_json(library_payload(Store(), zoek))
         elif route == "/api/video.mp4":
             episode = load_current(self.cfg)
             if episode and episode.has_video:
@@ -286,6 +324,15 @@ class Handler(BaseHTTPRequestHandler):
 
             started = run_in_background("video", work)
 
+        elif route == "/api/open":
+            episode = open_episode(str(body.get("key", "")))
+            if episode is None:
+                self._send_json({"error": "Die aflevering staat niet in het archief."}, 404)
+            else:
+                self._send_json({"key": episode.blueprint.key,
+                                 "title": episode.blueprint.title})
+            return
+
         elif route == "/api/keys":
             # De server luistert alleen op 127.0.0.1, dus dit blijft binnen
             # je eigen machine. Waarden worden nooit teruggestuurd naar de
@@ -320,6 +367,10 @@ class Handler(BaseHTTPRequestHandler):
 
 def serve(port: int = 8765, open_browser: bool = True) -> None:
     Handler.cfg = load_config()
+
+    opgenomen = adopt_loose_scripts()
+    if opgenomen:
+        print(f"  {len(opgenomen)} losse script(s) opgenomen in de database.")
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     url = f"http://127.0.0.1:{port}"
 

@@ -170,6 +170,68 @@ te halen zonder hem te publiceren.
 
 ---
 
+## De database
+
+Alles wat de studio schrijft gaat in **één SQLite-bestand**: `state/episodes.db`.
+Dat is echte SQL, maar zonder server die moet draaien. Je kunt het bestand
+kopiëren, in een back-up zetten en met elk SQL-programma openen.
+
+Waarom dit belangrijk is: de scripts stonden eerst alleen als losse
+JSON-bestanden in `out/`. Die map staat in `.gitignore`, dus wie hem opruimde
+was zijn werk kwijt. Nu bevat `out/` alleen nog gerenderde video's, en die
+kun je altijd opnieuw maken.
+
+### Wat erin staat
+
+| Tabel | Inhoud |
+|---|---|
+| `episodes` | één rij per aflevering: titel, idee, beschrijving, status, video-id |
+| `episode_beats` | elke gesproken zin, op volgorde, met zijn scenesoort |
+| `episode_items` | wat er geleerd wordt: het woord, het figuur, de kleur |
+| `episode_tags` | de YouTube-zoektermen |
+
+Elke aflevering bewaart daarnaast zijn eigen JSON in de kolom `raw_json`. Dat
+is dubbelop, en dat is bewust: de tabellen zijn om in te zoeken, de JSON is de
+garantie dat je een aflevering altijd exact terugkrijgt.
+
+### Erbij komen
+
+In de pagina staat onderaan **Archief**: alles wat je ooit geschreven hebt,
+doorzoekbaar. Klik een aflevering aan en hij staat weer klaar — video maken kan
+dan meteen.
+
+Vanaf de opdrachtregel:
+
+```bash
+ytauto library                 # alles wat er ooit geschreven is
+ytauto library --search colors # zoeken op titel of idee
+ytauto open colors:balloons    # een oudere aflevering terughalen
+ytauto find "red balloon"      # zoeken in alle gesproken tekst
+ytauto export backup.json      # alles als één JSON-bestand
+```
+
+En een eigen vraag stellen, als je SQL kent:
+
+```bash
+ytauto sql "SELECT lesson_kind, COUNT(*) n, SUM(word_count) woorden
+            FROM episodes GROUP BY lesson_kind"
+
+ytauto sql "SELECT mode, COUNT(*) n FROM episode_beats
+            GROUP BY mode ORDER BY n DESC"
+```
+
+Alleen `SELECT` is toegestaan; je kunt er per ongeluk niets mee weggooien. Wil
+je toch zelf rondkijken, open dan `state/episodes.db` met
+[DB Browser for SQLite](https://sqlitebrowser.org) of `sqlite3 state/episodes.db`.
+
+### Migreren gaat vanzelf
+
+Gebruikte je de studio al voordat de database er was? Bij het opstarten worden
+losse `blueprint.json`-bestanden uit `out/` alsnog opgenomen, en een oudere
+database wordt bijgewerkt zonder dat er een rij verloren gaat.
+
+---
+
 ## Wat er onder de motorkap gebeurt
 
 ```
@@ -212,6 +274,11 @@ ytauto script      # laat Claude een aflevering schrijven en print hem
 ytauto video       # maak de video van het laatste script
 ytauto publish     # zet die video op YouTube
 ytauto run         # alles achter elkaar, zonder tussenkomst
+ytauto library     # alles wat er ooit geschreven is
+ytauto open KEY    # een oudere aflevering terughalen
+ytauto find TEXT   # zoek in alle gesproken tekst
+ytauto sql "..."   # een eigen SELECT op de database
+ytauto export      # alles als JSON wegschrijven
 ytauto status      # wat is er gemaakt, wat staat er online
 ytauto check       # sleutels, tegoed en ffmpeg controleren
 ```
@@ -265,6 +332,7 @@ Tests draaien: `pytest -q`
 ## Mappen
 
 ```
+state/           episodes.db — al je scripts, in SQL
 start.command    dubbelklikken op macOS/Linux
 start.bat        dubbelklikken op Windows
 config/          brief.md, channel.yaml, curriculum.yaml  ← hier stuur je
@@ -276,6 +344,5 @@ src/ytauto/
   video/         ffmpeg-montage
   youtube/       upload
   ui/            bedieningspagina
-out/             gemaakte afleveringen (niet in git)
-state/           boekhouding: wat is er al gemaakt
+out/             gerenderde video's (niet in git, altijd opnieuw te maken)
 ```

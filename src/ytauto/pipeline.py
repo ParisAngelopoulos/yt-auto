@@ -18,7 +18,7 @@ from .planner import NothingToDo, check_rate_limit, pick_next
 from .render.thumbnail import build_thumbnail
 from .safety import SafetyReport, check_blueprint, check_frames
 from .scripting.blueprint import Blueprint
-from .state import Store
+from .db import Store
 from .video.assemble import assemble, probe_duration
 
 OUT_DIR = ROOT / "out"
@@ -87,11 +87,13 @@ def make_script(cfg: Config, hint: str | None = None, store: Store | None = None
 
     workdir = OUT_DIR / blueprint.slug
     workdir.mkdir(parents=True, exist_ok=True)
+
+    # De database is de bron; het bestand ernaast is er alleen om even in te
+    # kunnen kijken. Wie out/ opruimt raakt dus niets kwijt.
+    store.save_blueprint(blueprint)
     blueprint.save(workdir / "blueprint.json")
 
-    theme = blueprint.items[0].draw if blueprint.items else ""
-    store.mark_planned(blueprint.key, blueprint.lesson_kind, theme, blueprint.title)
-    set_current(blueprint.slug)
+    set_current(blueprint.key)
     return Episode(blueprint=blueprint, workdir=workdir)
 
 
@@ -151,25 +153,46 @@ def publish(cfg: Config, episode: Episode, store: Store | None = None) -> str:
 # ---------------------------------------------------------------------------
 
 
-def set_current(slug: str) -> None:
+def adopt_loose_scripts(store: Store | None = None) -> list[str]:
+    """Neemt scripts die nog los op schijf staan alsnog op in de database.
+
+    Draait bij het opstarten. Wie de studio al gebruikte voordat de database
+    er was, raakt zo niets kwijt.
+    """
+    return (store or Store()).import_json_files(OUT_DIR)
+
+
+def set_current(key: str) -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     CURRENT.write_text(json.dumps({
-        "slug": slug,
+        "key": key,
         "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }), encoding="utf-8")
 
 
-def load_current(cfg: Config) -> Episode | None:
+def load_current(cfg: Config, store: Store | None = None) -> Episode | None:
+    """De aflevering waar je nu aan werkt, uit de database."""
     if not CURRENT.exists():
         return None
-    slug = json.loads(CURRENT.read_text(encoding="utf-8")).get("slug")
-    if not slug:
+    key = json.loads(CURRENT.read_text(encoding="utf-8")).get("key")
+    if not key:
         return None
-    workdir = OUT_DIR / slug
-    path = workdir / "blueprint.json"
-    if not path.exists():
+
+    blueprint = (store or Store()).load_blueprint(key)
+    if blueprint is None:
         return None
-    return Episode(blueprint=Blueprint.load(path), workdir=workdir)
+    return Episode(blueprint=blueprint, workdir=OUT_DIR / blueprint.slug)
+
+
+def open_episode(key: str, store: Store | None = None) -> Episode | None:
+    """Haalt een oudere aflevering uit het archief en maakt hem de huidige."""
+    blueprint = (store or Store()).load_blueprint(key)
+    if blueprint is None:
+        return None
+    workdir = OUT_DIR / blueprint.slug
+    workdir.mkdir(parents=True, exist_ok=True)
+    set_current(key)
+    return Episode(blueprint=blueprint, workdir=workdir)
 
 
 def run_once(cfg: Config, progress: Progress = _noop, do_publish: bool = True) -> dict:

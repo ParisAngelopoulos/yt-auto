@@ -4,7 +4,7 @@ import pytest
 
 from ytauto.config import load_config
 from ytauto.planner import NothingToDo, check_rate_limit, pick_next
-from ytauto.state import Store
+from ytauto.db import Store
 
 
 @pytest.fixture

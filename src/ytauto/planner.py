@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .config import Config
-from .state import Store
+from .db import Store
 
 
 class NothingToDo(Exception):

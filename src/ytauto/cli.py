@@ -6,6 +6,11 @@
     ytauto video      maak de video van het laatste script
     ytauto publish    zet die video op YouTube
     ytauto run        alles achter elkaar, zonder tussenkomst
+    ytauto library    alles wat er ooit geschreven is
+    ytauto open KEY   een oudere aflevering terughalen
+    ytauto find TEXT  zoek in alle gesproken tekst
+    ytauto sql "..."  een eigen SELECT op de database
+    ytauto export     alles als JSON wegschrijven
     ytauto status     wat is er gemaakt en wat staat er klaar
     ytauto check      controleer de sleutels en de omgeving
 """
@@ -14,10 +19,12 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from .config import load_config, write_secrets
-from .pipeline import load_current, make_script, make_video, publish, run_once
-from .state import Store
+from .pipeline import (adopt_loose_scripts, load_current, make_script, make_video,
+                       open_episode, publish, run_once)
+from .db import Store
 
 
 def _progress(message: str, fraction: float) -> None:
@@ -147,6 +154,84 @@ def cmd_status(args) -> int:
     return 0
 
 
+def cmd_library(args) -> int:
+    """Alles wat er ooit geschreven is, uit de database."""
+    store = Store()
+    adopt_loose_scripts(store)
+    rijen = store.library(limit=args.limit, search=args.search or "")
+
+    if not rijen:
+        print("  Nog niets geschreven. Draai: ytauto script")
+        return 0
+
+    merk = {"uploaded": "online", "produced": "klaar ", "planned": "script",
+            "failed": "MISLUK"}
+    print()
+    for rij in rijen:
+        minuten = (rij["duration_s"] or rij["estimated_seconds"] or 0) / 60
+        print(f"  {merk.get(rij['status'], rij['status']):6}  {minuten:4.1f}m  "
+              f"{rij['beats']:3} sc  {rij['title'][:56]}")
+        print(f"          {rij['key']}")
+
+    s = store.stats()
+    print(f"\n  {s['afleveringen']} afleveringen, {s['zinnen']} zinnen, "
+          f"{s['woorden']} woorden, {s['online']} online\n")
+    return 0
+
+
+def cmd_open(args) -> int:
+    episode = open_episode(args.key)
+    if episode is None:
+        print(f"  Geen aflevering met sleutel {args.key!r}. Kijk met: ytauto library")
+        return 1
+    print(f"\n  {episode.blueprint.title}\n")
+    print(episode.blueprint.transcript())
+    print(f"\n  Staat nu klaar. Video maken met: ytauto video")
+    return 0
+
+
+def cmd_find(args) -> int:
+    """Zoekt in alle gesproken tekst van alle afleveringen."""
+    rijen = Store().search_lines(args.text, limit=args.limit)
+    if not rijen:
+        print(f"  Niets gevonden voor {args.text!r}.")
+        return 0
+    print()
+    for rij in rijen:
+        print(f"  {rij['title'][:44]:46} [{rij['mode']:13}] {rij['narration']}")
+    print(f"\n  {len(rijen)} regels\n")
+    return 0
+
+
+def cmd_sql(args) -> int:
+    """Een eigen SELECT op de database."""
+    try:
+        rijen = Store().query(args.query)
+    except Exception as exc:                                    # noqa: BLE001
+        print(f"  {exc}")
+        return 1
+    if not rijen:
+        print("  Geen rijen.")
+        return 0
+
+    kolommen = rijen[0].keys()
+    breedtes = [max(len(k), max(len(str(r[k])) for r in rijen)) for k in kolommen]
+    print()
+    print("  " + "  ".join(k.ljust(b) for k, b in zip(kolommen, breedtes)))
+    print("  " + "  ".join("-" * b for b in breedtes))
+    for rij in rijen:
+        print("  " + "  ".join(str(rij[k]).ljust(b) for k, b in zip(kolommen, breedtes)))
+    print(f"\n  {len(rijen)} rijen\n")
+    return 0
+
+
+def cmd_export(args) -> int:
+    doel = Path(args.path)
+    aantal = Store().export_all(doel)
+    print(f"  {aantal} afleveringen weggeschreven naar {doel}")
+    return 0
+
+
 def cmd_check(args) -> int:
     cfg = load_config()
     secrets = cfg.secrets
@@ -204,6 +289,28 @@ def main() -> int:
     run.set_defaults(func=cmd_run)
 
     subparsers.add_parser("setup", help="sleutels invoeren en testen").set_defaults(func=cmd_setup)
+
+    library = subparsers.add_parser("library", help="alles wat er geschreven is")
+    library.add_argument("--limit", type=int, default=50)
+    library.add_argument("--search", help="zoek in titel en idee")
+    library.set_defaults(func=cmd_library)
+
+    openen = subparsers.add_parser("open", help="een oudere aflevering terughalen")
+    openen.add_argument("key", help="de sleutel uit 'ytauto library'")
+    openen.set_defaults(func=cmd_open)
+
+    find = subparsers.add_parser("find", help="zoek in alle gesproken tekst")
+    find.add_argument("text")
+    find.add_argument("--limit", type=int, default=40)
+    find.set_defaults(func=cmd_find)
+
+    sql = subparsers.add_parser("sql", help="een eigen SELECT op de database")
+    sql.add_argument("query")
+    sql.set_defaults(func=cmd_sql)
+
+    export = subparsers.add_parser("export", help="alles als JSON wegschrijven")
+    export.add_argument("path", nargs="?", default="export.json")
+    export.set_defaults(func=cmd_export)
     subparsers.add_parser("status", help="wat is er gemaakt").set_defaults(func=cmd_status)
     subparsers.add_parser("check", help="controleer sleutels en omgeving").set_defaults(func=cmd_check)
 

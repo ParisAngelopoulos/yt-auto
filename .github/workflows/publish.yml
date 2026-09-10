@@ -67,13 +67,17 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-      - name: Boekhouding terugschrijven
+      - name: Scripts en boekhouding terugschrijven
         if: always()
         run: |
-          # Zonder dit vergeet de volgende run wat er al gemaakt is en
-          # zou hij dezelfde aflevering opnieuw kunnen publiceren.
+          # Twee redenen: zonder de database vergeet de volgende run wat er al
+          # gemaakt is en zou hij dezelfde aflevering opnieuw publiceren. En
+          # omdat alle scripts erin staan, is dit meteen je back-up.
+          ytauto export state/scripts.json || true
+          python -c "import sqlite3; sqlite3.connect('state/episodes.db').execute('VACUUM')" || true
+
           git config user.name "yt-auto"
           git config user.email "actions@github.com"
-          git add -f state/episodes.db
-          git diff --staged --quiet || git commit -m "boekhouding bijgewerkt [skip ci]"
+          git add -f state/episodes.db state/scripts.json
+          git diff --staged --quiet || git commit -m "scripts bijgewerkt [skip ci]"
           git push
