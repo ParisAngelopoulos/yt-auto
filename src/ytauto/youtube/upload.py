@@ -14,7 +14,10 @@ from ..config import Config
 from ..scripting.blueprint import Blueprint
 
 TOKEN_URI = "https://oauth2.googleapis.com/token"
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+# Dezelfde twee als in scripts/get_youtube_token.py. Ze moeten gelijk zijn:
+# readonly is nodig om te controleren of het kanaal bereikbaar is.
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload",
+          "https://www.googleapis.com/auth/youtube.readonly"]
 MAX_ATTEMPTS = 4
 
 
@@ -133,8 +136,11 @@ def check_credentials(cfg: Config) -> dict:
     except Exception as exc:                                    # noqa: BLE001
         melding = str(exc)
         if "invalid_grant" in melding:
-            return {"ok": False, "reason": "Het refresh token is verlopen. "
-                                           "Draai scripts/get_youtube_token.py opnieuw."}
+            return {"ok": False, "reason": (
+                "Het refresh token werkt niet meer. Staat je app in de Google "
+                "Cloud Console nog op 'Testing'? Dan verloopt hij na 7 dagen. "
+                "Zet de publishing status op 'In production' en haal met "
+                "scripts/get_youtube_token.py een nieuw token op.")}
         if "invalid_client" in melding:
             return {"ok": False, "reason": "Client id of secret klopt niet."}
         if "accessNotConfigured" in melding or "has not been used" in melding:

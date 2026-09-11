@@ -124,14 +124,59 @@ niets extra aan spraak.
 
 ### YouTube koppelen
 
-1. Ga naar de [Google Cloud Console](https://console.cloud.google.com), maak een
-   project en zet **YouTube Data API v3** aan.
-2. Maak OAuth-gegevens van het type **Desktop app**, download het JSON-bestand en
-   zet het in de projectmap als `client_secret.json`.
-3. Voeg jezelf bij het OAuth-toestemmingsscherm toe als **testgebruiker**.
-4. Draai `python scripts/get_youtube_token.py` en plak de drie regels in `.env`.
+Dit is de enige stap die even werk is. Je doet hem één keer.
 
-Dit doe je één keer. Daarna kan de pipeline zonder jou uploaden.
+**1. Project aanmaken**
+Ga naar de [Google Cloud Console](https://console.cloud.google.com) en maak een
+nieuw project. De naam maakt niet uit.
+
+**2. De API aanzetten**
+*APIs & Services* → *Library* → zoek **YouTube Data API v3** → **Enable**.
+
+**3. Toestemmingsscherm invullen**
+*APIs & Services* → *OAuth consent screen*. Kies **External**. Vul een app-naam
+en je eigen e-mailadres in; de rest mag leeg.
+
+**4. Zet de status op In production** ← de belangrijkste stap
+Op datzelfde scherm staat *Publishing status*. Die staat op **Testing**. Klik
+op **Publish app**.
+
+> Laat je hem op *Testing* staan, dan **verloopt je refresh token na zeven
+> dagen** en staat je automatisering elke week stil met `invalid_grant`.
+> Google vraagt pas om verificatie als andere mensen je app gaan gebruiken;
+> voor je eigen kanaal is dat niet nodig.
+
+**5. Inloggegevens maken**
+*Credentials* → *Create credentials* → *OAuth client ID* → type **Desktop app**
+→ **Create** → **Download JSON**.
+
+**6. Het bestand neerzetten**
+Hernoem het gedownloade bestand naar `client_secret.json` en zet het in de
+projectmap, naast `README.md`.
+
+**7. Het token ophalen**
+
+```bash
+python scripts/get_youtube_token.py
+```
+
+Je browser opent. Log in met het Google-account van je YouTube-kanaal.
+
+Google waarschuwt dat de app niet geverifieerd is. Dat klopt — het is jouw
+eigen app. Klik op **Geavanceerd** en dan op **Ga naar … (onveilig)**.
+
+**8. De drie regels opslaan**
+Het script drukt `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET` en
+`YOUTUBE_REFRESH_TOKEN` af. Plak ze in de bedieningspagina onder *Sleutels
+instellen*, of zet ze in `.env`.
+
+Controleren of het werkt: `ytauto check` toont de naam van je kanaal.
+
+**Hoeveel kun je uploaden?** Google geeft je 10.000 eenheden per dag en een
+upload kost er 1.600. Dat zijn zes video's per dag — ruim boven de drie per
+week waar de pipeline op staat.
+
+Daarna kan de pipeline zonder jou uploaden.
 
 ---
 
