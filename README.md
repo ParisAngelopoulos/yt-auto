@@ -134,21 +134,32 @@ nieuw project. De naam maakt niet uit.
 *APIs & Services* → *Library* → zoek **YouTube Data API v3** → **Enable**.
 
 **3. Toestemmingsscherm invullen**
-*APIs & Services* → *OAuth consent screen*. Kies **External**. Vul een app-naam
-en je eigen e-mailadres in; de rest mag leeg.
+In het linkermenu heet dit tegenwoordig **Google Auth Platform**; in oudere
+projecten staat het onder *APIs & Services* → *OAuth consent screen*. Beide
+leiden naar hetzelfde. Kies **External** (of *Extern*). Vul een app-naam en je
+eigen e-mailadres in; de rest mag leeg.
 
 **4. Zet de status op In production** ← de belangrijkste stap
-Op datzelfde scherm staat *Publishing status*. Die staat op **Testing**. Klik
-op **Publish app**.
+
+- **Nieuwe indeling:** *Google Auth Platform* → **Audience** (Doelgroep). Daar
+  staat *Publishing status: Testing* met de knop **Publish app**.
+- **Oudere indeling:** *APIs & Services* → *OAuth consent screen*. Daar staat
+  *Publishing status* met dezelfde knop.
+
+Klik erop en bevestig. De status springt naar **In production**.
 
 > Laat je hem op *Testing* staan, dan **verloopt je refresh token na zeven
 > dagen** en staat je automatisering elke week stil met `invalid_grant`.
-> Google vraagt pas om verificatie als andere mensen je app gaan gebruiken;
-> voor je eigen kanaal is dat niet nodig.
+>
+> Google meldt bij het publiceren dat verificatie nodig kan zijn. Dat gaat over
+> apps die door ánderen gebruikt worden. Voor je eigen kanaal hoef je die
+> verificatie niet te doorlopen: de app werkt gewoon, met een
+> waarschuwingsscherm bij het inloggen dat je zelf wegklikt.
 
 **5. Inloggegevens maken**
-*Credentials* → *Create credentials* → *OAuth client ID* → type **Desktop app**
-→ **Create** → **Download JSON**.
+*Clients* (nieuwe indeling) of *Credentials* (oudere) → **Create client** /
+*Create credentials* → *OAuth client ID* → type **Desktop app** → **Create**.
+Er verschijnt een venster met een downloadknop: **Download JSON**.
 
 **6. Het bestand neerzetten**
 Hernoem het gedownloade bestand naar `client_secret.json` en zet het in de
