@@ -1,0 +1,416 @@
+[
+  {
+    "idea": "Een visser vangt een sprekende bot en zijn vrouw blijft wensen",
+    "title": "The Fisherman and His Wife",
+    "description": "An old tale from northern Germany, written down by the Brothers Grimm. A poor fisherman catches a flounder that can grant wishes, and his wife finds that nothing she is given is ever quite enough. The sea answers every wish with worse weather.",
+    "tags": [
+      "folklore",
+      "grimm",
+      "german folk tale",
+      "fairy tale",
+      "storytelling",
+      "bedtime story",
+      "myths and legends",
+      "folk tale retold"
+    ],
+    "lesson_kind": "german",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "The Fisherman and His Wife. A folk tale from northern Germany.",
+        "item": null,
+        "title": "The Fisherman and His Wife",
+        "subtitle": "A folk tale from northern Germany",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "There was once a fisherman who lived with his wife in a hut by the sea.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "The hut leaned into the wind. It had one room, one window, and a floor of packed earth.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "Every morning he rowed out and let down his line, and every evening he came back with what the sea had spared him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "One morning the line went tight and stayed tight, and he pulled up a flounder as broad as a shield.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "speech",
+        "narration": "Let me go, said the flounder. I am no fish. I am an enchanted prince, and I will taste of nothing good.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The fisherman had never heard a fish speak, and he did not argue with one. He opened his hands and let it slide back into the green water.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "When he told his wife, she set down her bowl and looked at him for a long moment.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "speech",
+        "narration": "You had a wish in your hands, she said, and you gave it back for nothing. Go and ask him for a cottage.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "He did not want to go. But he went, and stood at the edge of the water, and called out over it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "speech",
+        "narration": "Flounder, flounder in the sea. My wife has sent me. She asks a cottage.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The water rose once, quietly, the way water does when something turns beneath it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "speech",
+        "narration": "Go home, said the flounder. She has it already.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "Where the hut had stood there was a cottage, with a hearth and a bed and a garden behind it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "For a fortnight his wife was pleased. Then she stood at the window and looked at the hills beyond the garden.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "speech",
+        "narration": "A cottage is a small thing, she said. Go and ask him for a castle.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The sea had gone the colour of old iron. The fisherman called out over it, and did not like the sound of his own voice.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "turn",
+        "narration": "The castle had a hall you could ride a horse through, and a hundred candles, and servants who did not meet his eye.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "By morning his wife had thought of something else.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "speech",
+        "narration": "What is a castle without a crown, she said. Go and ask him to make me king.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The wind had teeth in it now. The waves came in grey and broke black, and the rain went sideways across the rocks.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "tell",
+        "narration": "Still the flounder came, and still the answer was the same. Go home. She has it already.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "tell",
+        "narration": "She was king. Then she was emperor. Then she was more than that, and each time it took her less time to want the next thing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "turn",
+        "narration": "At last she sent him out in the dark, and told him what she wanted, and he could not say it aloud on the way.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 6
+      },
+      {
+        "mode": "speech",
+        "narration": "She wishes, he said at last, to command the sun and the moon to rise.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 6
+      },
+      {
+        "mode": "tell",
+        "narration": "The sea did not rise. It went flat and black and very still, the way a room goes quiet when someone has said too much.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 6
+      },
+      {
+        "mode": "speech",
+        "narration": "Go home, said the flounder. She is sitting in the hut.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 6
+      },
+      {
+        "mode": "close",
+        "narration": "And she was. The castle was gone, and the cottage with it, and the wind came through the window as it always had.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 7
+      },
+      {
+        "mode": "close",
+        "narration": "They are sitting there still, as far as anyone knows.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 7
+      },
+      {
+        "mode": "moral",
+        "narration": "The tale is not really about the fish. It is about a man who kept walking down to the water because it was easier than saying no.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 7
+      },
+      {
+        "mode": "source",
+        "narration": "This story was collected in the nineteenth century by Jacob and Wilhelm Grimm, who heard it in the dialect of the Baltic coast.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 7
+      }
+    ],
+    "source": "template",
+    "key": "fisherman-and-his-wife",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "coast",
+        "time": "dawn",
+        "weather": "none",
+        "caption": "A hut on the shore",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.22,
+            "scale": 0.11,
+            "depth": 0.88
+          },
+          {
+            "draw": "man",
+            "x": 0.62,
+            "scale": 0.1,
+            "depth": 0.94
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "rowboat",
+            "x": 0.48,
+            "scale": 0.07,
+            "depth": 0.62
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "day",
+        "weather": "none",
+        "caption": "A proper cottage",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.44,
+            "scale": 0.15,
+            "depth": 0.75
+          },
+          {
+            "draw": "oak",
+            "x": 0.78,
+            "scale": 0.2,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "overcast",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "man",
+            "x": 0.34,
+            "scale": 0.11,
+            "depth": 0.92
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "overcast",
+        "weather": "none",
+        "caption": "A castle of stone",
+        "subjects": [
+          {
+            "draw": "castle",
+            "x": 0.5,
+            "scale": 0.2,
+            "depth": 0.7
+          },
+          {
+            "draw": "gate",
+            "x": 0.2,
+            "scale": 0.1,
+            "depth": 0.9
+          }
+        ]
+      },
+      {
+        "setting": "cliffs",
+        "time": "storm",
+        "weather": "rain",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "man",
+            "x": 0.3,
+            "scale": 0.12,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "cliffs",
+        "time": "underworld",
+        "weather": "rain",
+        "caption": "The sea gone black",
+        "subjects": [
+          {
+            "draw": "tower",
+            "x": 0.66,
+            "scale": 0.3,
+            "depth": 0.72
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "night",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.24,
+            "scale": 0.1,
+            "depth": 0.9
+          },
+          {
+            "draw": "man",
+            "x": 0.58,
+            "scale": 0.09,
+            "depth": 0.94
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-11T10:20:23+00:00",
+    "published_at": null
+  }
+]
