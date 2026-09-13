@@ -1,5 +1,288 @@
 [
   {
+    "idea": "Een kind uit een perzik trekt met drie dieren naar het eiland van de demonen",
+    "title": "Momotaro, the Peach Boy",
+    "description": "One of the best known folk tales of Japan. An old couple find a child inside a peach, and when he is grown he sets out for the island of the oni with a dog, a monkey and a pheasant beside him.",
+    "tags": [
+      "folklore",
+      "japanese folk tale",
+      "momotaro",
+      "myths and legends",
+      "storytelling",
+      "folk tale retold",
+      "bedtime story"
+    ],
+    "lesson_kind": "japanese",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "Momotaro, the Peach Boy. A folk tale from Japan.",
+        "item": null,
+        "title": "Momotaro",
+        "subtitle": "A folk tale from Japan",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "An old man and an old woman lived in a village between the hills. They had no children, and they had stopped speaking of it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "One morning the woman went down to the river to wash, and something came turning down the current towards her.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It was a peach, and it was the size of a melon, and it bumped against her hands as though it had been aimed.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "When she set it on the table to cut it open, the peach split by itself, and there was a child inside, sitting up.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "They called him Momotaro, which means peach boy, because they were plain people and it was a plain name for what had happened.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "He grew quickly and he grew strong, and when he was still young he told them he was going to the island where the oni lived.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The oni had been coming across the water for years, taking what they wanted from the coast villages. Nobody had gone after them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "His mother made him millet dumplings for the road. That was all she could give him, so she gave him a great many.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "On the road a dog came out of the grass and asked what he was carrying. Momotaro gave him a dumpling, and the dog came with him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Then a monkey, on the path through the trees. Then a pheasant, out of the air. Each one asked, and each one was given, and each one stayed.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "turn",
+        "narration": "At the shore they found a boat, and they rowed out towards the smoke on the horizon.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The island had a wall around it and a gate of iron, and behind the gate the oni were feasting.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The pheasant went over the wall and came down on their heads. The monkey went up the gatepost and drew the bolt. The dog went through first.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not a long fight. The oni had never had to defend anything, only to take.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "speech",
+        "narration": "Their chief knelt in the courtyard and promised he would not cross the water again.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "close",
+        "narration": "They brought back what had been taken, and gave it to the villages it came from, and Momotaro went home to the two people who had found him in a peach.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "He did not go alone, and that is the part of the story people forget. He went with everyone who asked, and he fed them first.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "Momotaro has been told in Japan for centuries, and written down in many versions since the Edo period. Almost every Japanese child knows him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "template",
+    "key": "peach-boy",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "valley",
+        "time": "dawn",
+        "weather": "mist",
+        "caption": "A village between the hills",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.36,
+            "scale": 0.1,
+            "depth": 0.8
+          }
+        ]
+      },
+      {
+        "setting": "forest",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.4,
+            "scale": 0.13,
+            "depth": 0.9
+          }
+        ]
+      },
+      {
+        "setting": "hills",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "child",
+            "x": 0.3,
+            "scale": 0.12,
+            "depth": 0.9
+          },
+          {
+            "draw": "fox",
+            "x": 0.56,
+            "scale": 0.07,
+            "depth": 0.85
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "dusk",
+        "weather": "none",
+        "caption": "The crossing",
+        "subjects": [
+          {
+            "draw": "rowboat",
+            "x": 0.52,
+            "scale": 0.07,
+            "depth": 0.65
+          }
+        ]
+      },
+      {
+        "setting": "cliffs",
+        "time": "storm",
+        "weather": "none",
+        "caption": "The island of the oni",
+        "subjects": [
+          {
+            "draw": "gate",
+            "x": 0.42,
+            "scale": 0.14,
+            "depth": 0.78
+          },
+          {
+            "draw": "giant",
+            "x": 0.68,
+            "scale": 0.16,
+            "depth": 0.88
+          }
+        ]
+      },
+      {
+        "setting": "valley",
+        "time": "dawn",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.36,
+            "scale": 0.1,
+            "depth": 0.8
+          },
+          {
+            "draw": "man",
+            "x": 0.6,
+            "scale": 0.11,
+            "depth": 0.92
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-13T10:52:28+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Een visser vangt een sprekende bot en zijn vrouw blijft wensen",
     "title": "The Fisherman and His Wife",
     "description": "An old tale from northern Germany, written down by the Brothers Grimm. A poor fisherman catches a flounder that can grant wishes, and his wife finds that nothing she is given is ever quite enough. The sea answers every wish with worse weather.",
