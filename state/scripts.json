@@ -1,5 +1,314 @@
 [
   {
+    "idea": "Een meisje volgt een witte beer naar een kasteel en verliest hem door één kaars",
+    "title": "East of the Sun and West of the Moon",
+    "description": "A Norwegian folk tale collected by Asbjornsen and Moe. A white bear comes to a poor farmhouse in the north and asks for the youngest daughter, and what follows is a long walk to a castle that lies east of the sun and west of the moon.",
+    "tags": [
+      "folklore",
+      "norwegian folk tale",
+      "myths and legends",
+      "fairy tale",
+      "storytelling",
+      "nordic folklore",
+      "folk tale retold"
+    ],
+    "lesson_kind": "norwegian",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "East of the Sun and West of the Moon. A folk tale from Norway.",
+        "item": null,
+        "title": "East of the Sun",
+        "subtitle": "A folk tale from Norway",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "There was a farmer in the north with more children than he could feed, and the youngest of them was the one everyone liked best.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "turn",
+        "narration": "One Thursday evening in autumn, something struck the window. When they opened the door there was a white bear standing in the snow.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "speech",
+        "narration": "Give me your youngest daughter, said the bear, and I will make you as rich as you are poor.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The girl said no. Then she thought about the winter coming, and about her father's face, and by the next Thursday she said yes.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "She rode on the bear's back through country she had never seen, and the snow went on for days.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "At the end of it a mountain opened, and inside was a castle with every room lit and nobody in it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "She had whatever she asked for. She had only to ring a bell and it was there.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "And every night, when the candles were out, someone came and lay down beside her in the dark, and was gone before it was light.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "She never saw him. She was never allowed a light. That was the one thing asked of her.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "turn",
+        "narration": "But she grew lonely, and she went home to visit, and her mother told her what she must do.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "So she carried a candle to bed, and when he was asleep she lit it, and looked at him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He was the handsomest man she had ever seen. Three drops of tallow fell on his shirt, and he woke.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "speech",
+        "narration": "If you had waited one year, he said, I would have been free. Now I must go and marry a woman with a nose three ells long.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The castle was gone in the morning and she was lying on a bare hillside, and she began to walk.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "She asked the East Wind, who did not know the way. She asked the West Wind, and the South Wind, and none of them had been so far.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The North Wind had been there once, and had come back half dead from it. He carried her, low over the water, for a day and a night.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "turn",
+        "narration": "So she came to the castle that lies east of the sun and west of the moon, and she still had the shirt with the tallow on it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Nobody in that castle could wash the three drops out. Not the bride, not her mother, not any of them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "She washed it once and it came clean, because it was her candle that had made the marks.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "close",
+        "narration": "They left before the wedding, and took with them everyone in that place who had been kept there, and did not look back at the mountain.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "She lost him by needing to see him, and got him back by walking further than anyone thought a person could walk. The story lets her have both.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "This tale was collected in Norway by Peter Asbjornsen and Jorgen Moe, who gathered folk stories across the country in the eighteen forties.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "template",
+    "key": "east-of-the-sun",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "forest",
+        "time": "winter",
+        "weather": "snow",
+        "caption": "A farm in the north",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.3,
+            "scale": 0.11,
+            "depth": 0.86
+          },
+          {
+            "draw": "bear",
+            "x": 0.64,
+            "scale": 0.11,
+            "depth": 0.92
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "moonlit",
+        "weather": "snow",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "bear",
+            "x": 0.44,
+            "scale": 0.09,
+            "depth": 0.88
+          }
+        ]
+      },
+      {
+        "setting": "valley",
+        "time": "night",
+        "weather": "none",
+        "caption": "The castle in the mountain",
+        "subjects": [
+          {
+            "draw": "castle",
+            "x": 0.52,
+            "scale": 0.19,
+            "depth": 0.72
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "overcast",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.36,
+            "scale": 0.11,
+            "depth": 0.92
+          }
+        ]
+      },
+      {
+        "setting": "cliffs",
+        "time": "dusk",
+        "weather": "none",
+        "caption": "East of the sun",
+        "subjects": [
+          {
+            "draw": "tower",
+            "x": 0.58,
+            "scale": 0.26,
+            "depth": 0.75
+          }
+        ]
+      },
+      {
+        "setting": "hills",
+        "time": "dawn",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.4,
+            "scale": 0.12,
+            "depth": 0.9
+          },
+          {
+            "draw": "man",
+            "x": 0.56,
+            "scale": 0.12,
+            "depth": 0.9
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-14T11:21:55+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Een kind uit een perzik trekt met drie dieren naar het eiland van de demonen",
     "title": "Momotaro, the Peach Boy",
     "description": "One of the best known folk tales of Japan. An old couple find a child inside a peach, and when he is grown he sets out for the island of the oni with a dog, a monkey and a pheasant beside him.",
