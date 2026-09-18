@@ -174,3 +174,58 @@ def test_de_bank_is_groot_genoeg_om_niet_op_te_raken():
     assert bank["combinations"] >= 40
     assert len(bank["traditions"]) >= 6
     assert len(bank["patterns"]) >= 5
+
+
+# ---------------------------------------------------------------------------
+#  Helderheid
+# ---------------------------------------------------------------------------
+
+
+def _luminance(visual, seed=0):
+    """Meet hetzelfde als de veiligheidscontrole in safety.check_frames."""
+    from PIL import ImageStat
+
+    from ytauto.render.frame import render_frame
+
+    beeld = render_frame(visual, (320, 180), seed=seed)
+    return ImageStat.Stat(beeld.convert("L").resize((32, 18))).mean[0] / 255.0
+
+
+def _grootste_sprong(bp, pattern):
+    """De grootste helderheidssprong tussen twee opeenvolgende beelden."""
+    from ytauto.scripting.blueprint import to_scenes
+
+    scenes = to_scenes(bp, seed=1)
+    vorige, ergste = None, 0.0
+    for index, scene in enumerate(scenes):
+        waarde = _luminance(scene.visual, seed=index)
+        if vorige is not None:
+            ergste = max(ergste, abs(waarde - vorige))
+        vorige = waarde
+    return ergste
+
+
+@pytest.mark.parametrize("pattern", PATTERNS, ids=lambda p: p["key"])
+def test_het_beeld_springt_nergens_te_hard(story_cfg, pattern):
+    """Een sprong van nacht naar klaarlichte dag blokkeert het renderen.
+
+    Dat is geen theorie: 'The Road After Dark' eindigde met 0.09 -> 0.57 en
+    werd afgekeurd nadat alle beelden en alle spraak al gemaakt waren.
+    """
+    grens = float(story_cfg.safety["max_luminance_delta"])
+    for tradition in TRADITIONS[:3]:
+        bp = compose(story_cfg, tradition, pattern, seed=7)
+        sprong = _grootste_sprong(bp, pattern)
+        assert sprong <= grens, (
+            f"{bp.title}: sprong van {sprong:.2f}, grens {grens}"
+        )
+
+
+def test_de_gemeten_helderheid_klopt_met_de_tabel():
+    """De tabel is met de hand gemeten; de renderer kan veranderen."""
+    from ytauto.scripting.local_writer import TIME_BRIGHTNESS
+
+    for tijd, verwacht in TIME_BRIGHTNESS.items():
+        gemeten = _luminance({"kind": "story", "setting": "hills",
+                              "time": tijd, "subjects": []}, seed=3)
+        assert abs(gemeten - verwacht) < 0.06, f"{tijd}: {gemeten:.2f} vs {verwacht}"

@@ -158,6 +158,63 @@ def fill(template: str, slots: dict[str, str]) -> str:
 # ---------------------------------------------------------------------------
 
 
+# Hoe licht een beeld wordt, per tijdstip. Gemeten aan de renderer zelf, op
+# dezelfde manier als de veiligheidscontrole meet: het landschap maakt maar
+# een paar honderdsten verschil, het tijdstip bepaalt bijna alles.
+TIME_BRIGHTNESS = {
+    "underworld": 0.08, "night": 0.13, "moonlit": 0.16, "storm": 0.17,
+    "dusk": 0.29, "overcast": 0.34, "dawn": 0.37, "winter": 0.45, "day": 0.56,
+}
+
+# Hoeveel een beeld hoogstens mag verspringen ten opzichte van het vorige.
+# De veiligheidscontrole staat 0.45 toe; hier wordt ruimer gerekend, omdat
+# silhouetten en weer een beeld nog een paar honderdsten donkerder maken dan
+# de tabel hierboven zegt.
+MAX_BRIGHTNESS_STEP = 0.30
+
+
+def smooth_times(scenes: list[StoryScene], volgorde: list[int],
+                 max_step: float = MAX_BRIGHTNESS_STEP) -> None:
+    """Haalt te grote helderheidssprongen uit de opeenvolging van beelden.
+
+    Een verhaal dat 's nachts eindigt en dan ineens op klaarlichte dag in het
+    dorp staat, springt van 0.08 naar 0.56. Dat blokkeert de
+    veiligheidscontrole — terecht, want zulke sprongen zijn een risico voor
+    kijkers met epilepsie. Het beeld schuift daarom op naar het dichtstbijzijnde
+    tijdstip dat wél kan: 'first light' wordt dan dawn in plaats van day, wat
+    het verhaal meestal ook beter past.
+    """
+    vorige: float | None = None
+    gezien: set[int] = set()
+
+    for index in volgorde:
+        scene = scenes[index]
+        helderheid = TIME_BRIGHTNESS.get(scene.time, 0.3)
+
+        if (vorige is not None and index not in gezien
+                and abs(helderheid - vorige) > max_step):
+            haalbaar = [t for t, waarde in TIME_BRIGHTNESS.items()
+                        if abs(waarde - vorige) <= max_step]
+            scene.time = min(haalbaar,
+                             key=lambda t: abs(TIME_BRIGHTNESS[t] - helderheid))
+            helderheid = TIME_BRIGHTNESS[scene.time]
+
+        gezien.add(index)
+        vorige = helderheid
+
+
+def scene_order(pattern: dict, aantal_scenes: int) -> list[int]:
+    """In welke volgorde de beelden op het scherm komen.
+
+    De titelkaart hoort bij de eerste scene en de bronvermelding bij de
+    laatste; daartussen staat de arc.
+    """
+    volgorde = [0] + [entry["scene"] for entry in pattern["arc"]] + [aantal_scenes - 1]
+    return [index for teller, index in enumerate(volgorde)
+            if teller == 0 or volgorde[teller - 1] != index]
+
+
+
 def _pick(rng: random.Random, waarde) -> Any:
     return rng.choice(waarde) if isinstance(waarde, list) else waarde
 
@@ -327,6 +384,9 @@ def compose(cfg: Config, tradition: dict, pattern: dict, seed: int) -> Blueprint
     rng = random.Random(seed)
     slots = bind_slots(rng, tradition, pattern)
     scenes = build_scenes(rng, tradition, pattern, slots)
+    grens = float(cfg.safety.get("max_luminance_delta", 0.45))
+    smooth_times(scenes, scene_order(pattern, len(scenes)),
+                 min(MAX_BRIGHTNESS_STEP, grens * 0.66))
 
     titel = fill(rng.choice(pattern["titles"]), slots)
     ondertitel = tradition["label"]
