@@ -1,17 +1,64 @@
-"""Spraak: de terugval op de teststem en de cache."""
+"""Spraak: welke stem er gekozen wordt, en de cache."""
 
 import pytest
 
 from ytauto.config import load_config
-from ytauto.tts import _cache_key, effective_provider, synthesize
+from ytauto.tts import _cache_key, effective_provider, synthesize, voice_status
 
 
-def test_zonder_sleutel_valt_hij_terug_op_de_teststem():
-    """De tweede knop moet altijd iets opleveren, ook zonder ElevenLabs."""
+@pytest.fixture
+def met_piper(monkeypatch):
+    """Doet alsof piper-tts geïnstalleerd is, los van deze machine."""
+    from ytauto.tts import piper
+
+    monkeypatch.setattr(piper, "is_installed", lambda: True)
+
+
+@pytest.fixture
+def zonder_piper(monkeypatch):
+    from ytauto.tts import piper
+
+    monkeypatch.setattr(piper, "is_installed", lambda: False)
+
+
+def test_zonder_sleutel_valt_hij_terug_op_de_gratis_stem(met_piper):
+    """Geen sleutel is geen reden voor een robotstem: Piper kost niets."""
     cfg = load_config()
     cfg.raw["tts"]["provider"] = "elevenlabs"
     cfg.secrets.elevenlabs_api_key = ""
+    assert effective_provider(cfg) == "piper"
+
+
+def test_zonder_piper_blijft_de_teststem_over(zonder_piper):
+    """De tweede knop moet altijd iets opleveren, ook als er niets staat."""
+    cfg = load_config()
+    cfg.raw["tts"]["provider"] = "piper"
     assert effective_provider(cfg) == "offline"
+
+
+def test_de_gratis_stem_is_gratis_en_publiceerbaar(met_piper):
+    cfg = load_config()
+    cfg.raw["tts"]["provider"] = "piper"
+    stem = voice_status(cfg)
+    assert stem["free"] is True
+    assert stem["publishable"] is True
+
+
+def test_elevenlabs_is_niet_gratis():
+    cfg = load_config()
+    cfg.raw["tts"]["provider"] = "elevenlabs"
+    cfg.secrets.elevenlabs_api_key = "sleutel"
+    stem = voice_status(cfg)
+    assert stem["free"] is False
+
+
+def test_de_teststem_is_gratis_maar_niet_om_te_publiceren(zonder_piper):
+    cfg = load_config()
+    cfg.raw["tts"]["provider"] = "offline"
+    stem = voice_status(cfg)
+    assert stem["free"] is True
+    assert stem["publishable"] is False
+    assert "piper" in stem["reason"].lower()
 
 
 def test_met_sleutel_gebruikt_hij_elevenlabs():
@@ -29,12 +76,13 @@ def test_offline_blijft_offline_ook_met_sleutel():
 
 
 def test_cache_scheidt_de_stemmen():
-    """Anders krijg je robotstem uit de cache nadat je ElevenLabs koppelt."""
+    """Anders krijg je de oude stem uit de cache nadat je een andere kiest."""
     zin = "Look, a red balloon!"
     basis = {"voice_id": "abc", "stability": 0.45}
     offline = _cache_key(zin, {**basis, "_provider": "offline"})
+    gratis = _cache_key(zin, {**basis, "_provider": "piper"})
     echt = _cache_key(zin, {**basis, "_provider": "elevenlabs"})
-    assert offline != echt
+    assert len({offline, gratis, echt}) == 3
 
 
 def test_cache_scheidt_ook_op_steminstellingen():

@@ -4,8 +4,8 @@ Draait op je eigen machine, praat rechtstreeks met de pipeline. Bewust
 gebouwd op de standaardbibliotheek: geen Flask, geen build-stap, geen
 extra dingen die stuk kunnen. Starten met:  python -m ytauto.ui
 
-Knop 1 laat Claude een aflevering bedenken en schrijven, zodat je hem kunt
-lezen. Knop 2 zet datzelfde script om in een complete video.
+Knop 1 laat een aflevering bedenken en schrijven, zodat je hem kunt lezen.
+Knop 2 zet datzelfde script om in een complete video.
 """
 
 from __future__ import annotations
@@ -20,10 +20,11 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from ..config import ROOT, SECRET_KEYS, Config, Secrets, load_config, write_secrets
-from ..pipeline import (Episode, adopt_loose_scripts, load_current, make_script,
-                        make_video, open_episode, publish)
+from ..pipeline import (PAID_PROVIDERS, Episode, adopt_loose_scripts, load_current,
+                        make_script, make_video, open_episode, publish,
+                        resolve_script_provider)
 from ..db import Store
-from ..tts import effective_provider
+from ..tts import voice_status
 
 PANEL = Path(__file__).parent / "panel.html"
 FONT_DIR = ROOT / "assets" / "fonts"
@@ -190,7 +191,15 @@ def library_payload(store: Store, search: str = "") -> dict:
 def status_payload(cfg: Config) -> dict:
     secrets = cfg.secrets
     store = Store()
+    schrijver = resolve_script_provider(cfg)
+    stem = voice_status(cfg)
     return {
+        # Wat er straks werkelijk gebeurt als je op de knop drukt, en of daar
+        # iets voor afgeschreven wordt. Dat hoort op de pagina te staan
+        # voordat je klikt, niet in de rekening erna.
+        "writer": schrijver,
+        "voice": stem,
+        "free": schrijver not in PAID_PROVIDERS and stem["free"],
         "channel": cfg.channel["name"],
         "language": cfg.channel["language"],
         "target_minutes": cfg.video["target_duration_minutes"],
@@ -200,7 +209,7 @@ def status_payload(cfg: Config) -> dict:
             "elevenlabs": bool(secrets.elevenlabs_api_key),
             "youtube": secrets.can_upload(),
         },
-        "voice_provider": effective_provider(cfg),
+        "voice_provider": stem["provider"],
         "key_tests": {naam: bool(info.get("ok")) for naam, info in LAST_TEST.items()},
         "published_this_week": store.published_since(7),
         "max_per_week": cfg.publish.get("max_per_week", 4),
@@ -302,7 +311,7 @@ class Handler(BaseHTTPRequestHandler):
             hint = (body.get("hint") or "").strip() or None
 
             def work(job: Job) -> dict:
-                job.note("Claude bedenkt en schrijft de aflevering", 0.3)
+                job.note("de aflevering wordt bedacht en geschreven", 0.3)
                 episode = make_script(self.cfg, hint=hint)
                 job.note(f"script klaar: {episode.blueprint.title}", 1.0)
                 return {"key": episode.blueprint.key}
