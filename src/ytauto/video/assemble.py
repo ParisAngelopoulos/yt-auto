@@ -159,6 +159,65 @@ def _music_bed(cfg: Config, duration: float, seed: int, source: str) -> np.ndarr
 # ---------------------------------------------------------------------------
 
 
+def _run_ffmpeg(args: list[str]) -> None:
+    result = subprocess.run([ffmpeg_bin(), "-y", *args], capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"ffmpeg mislukt:\n{result.stderr[-2000:]}")
+
+
+def _encoder_args(cfg: Config) -> list[str]:
+    return [
+        "-c:v", "libx264",
+        "-preset", str(cfg.video.get("encoder_preset", "medium")),
+        "-crf", str(int(cfg.video.get("crf", 20))),
+        "-pix_fmt", "yuv420p",
+        "-r", str(cfg.fps),
+        "-an",
+    ]
+
+
+def plan_segments(holds: list[float], fade: float) -> list[tuple[str, int, float]]:
+    """Deelt de tijdlijn op in stukken die los gecodeerd kunnen worden.
+
+    Een beeld staat eerst stil ('hold') en vloeit daarna over in het volgende
+    ('xfade'). Het eerste en het laatste beeld staan langer stil, omdat daar
+    maar aan één kant een overgang zit.
+
+    Wat eruit komt is per stuk: wat het is, welke scene het betreft, en hoe
+    lang het duurt. De optelsom is precies sum(holds) + fade, net als
+    voorheen, zodat beeld en geluid gelijk blijven lopen.
+    """
+    aantal = len(holds)
+    if aantal == 1:
+        return [("hold", 0, holds[0] + fade)]
+
+    stukken: list[tuple[str, int, float]] = []
+    for index, hold in enumerate(holds):
+        stil = hold if index in (0, aantal - 1) else hold - fade
+        stukken.append(("hold", index, max(stil, 1 / 30)))
+        if index < aantal - 1:
+            stukken.append(("xfade", index, fade))
+    return stukken
+
+
+def _frame_counts(stukken: list[tuple[str, int, float]], fps: int) -> list[int]:
+    """Zet seconden om in hele beeldjes zonder dat de afrondingen oplopen.
+
+    Per stuk afronden zou bij zestig scenes een seconde kunnen schelen, en
+    dan loopt het beeld uit de pas met de stem. Daarom wordt de grens van
+    elk stuk afgerond, niet de lengte.
+    """
+    aantallen: list[int] = []
+    verstreken = 0.0
+    vorige = 0
+    for _, _, seconden in stukken:
+        verstreken += seconden
+        grens = round(verstreken * fps)
+        aantallen.append(max(1, grens - vorige))
+        vorige = grens
+    return aantallen
+
+
 def build_video(
     cfg: Config,
     timeline: Timeline,
@@ -169,53 +228,77 @@ def build_video(
 ) -> Path:
     """Vloeit de PNG's aan elkaar en encodeert samen met het audiospoor.
 
-    Elk beeld is een eigen ffmpeg-input die net iets langer loopt dan hij in
-    beeld staat; dat overschot is precies het materiaal waar de xfade
-    doorheen vloeit. De offsets lopen op met de vaste schermtijd, dus de
-    tijdlijn blijft gelijk aan die van het audiospoor.
+    Dit gebeurt in stukjes en niet in één aanroep. Eén ffmpeg-opdracht met
+    alle beelden tegelijk vraagt geheugen naar rato van het aantal scenes:
+    elk beeld is een eigen invoer die vanaf seconde nul staat te decoderen
+    terwijl de eerste overgang nog bezig is. Bij een verhaal van acht
+    minuten (ruim zestig beelden) liep dat op tot dertien gigabyte en werd
+    ffmpeg door het systeem afgeschoten, halverwege het encoderen.
+
+    Nu wordt elk stuk apart gecodeerd — nooit meer dan twee beelden tegelijk
+    in het geheugen — en worden de stukken daarna aan elkaar geplakt zonder
+    opnieuw te coderen. Het resultaat is beeld voor beeld hetzelfde; alleen
+    het geheugengebruik hangt niet meer af van de lengte van het verhaal.
     """
     fps = cfg.fps
     fade = float(cfg.video.get("crossfade_seconds", 0.6))
-    preset = cfg.video.get("encoder_preset", "medium")
-    crf = int(cfg.video.get("crf", 20))
     frames_dir = workdir / "frames"
+    deel_dir = workdir / "segments"
+    if deel_dir.exists():
+        shutil.rmtree(deel_dir)
+    deel_dir.mkdir(parents=True)
 
-    inputs: list[str] = []
-    chain: list[str] = []
-    for index, (scene, hold) in enumerate(zip(timeline.scenes, timeline.holds)):
-        png = frames_dir / f"{scene.id}.png"
-        inputs += ["-loop", "1", "-t", f"{hold + fade:.3f}", "-i", str(png)]
-        chain.append(f"[{index}:v]fps={fps},format=yuv420p,setsar=1[v{index}]")
+    stukken = plan_segments(list(timeline.holds), fade)
+    beeldjes = _frame_counts(stukken, fps)
+    encoder = _encoder_args(cfg)
+    filters = f"fps={fps},format=yuv420p,setsar=1"
 
-    label = "v0"
-    offset = 0.0
-    for index in range(1, len(timeline.scenes)):
-        offset += timeline.holds[index - 1]
-        chain.append(
-            f"[{label}][v{index}]xfade=transition=fade:"
-            f"duration={fade:.3f}:offset={offset:.3f}[x{index}]"
-        )
-        label = f"x{index}"
+    delen: list[Path] = []
+    for nummer, ((soort, index, seconden), aantal) in enumerate(zip(stukken, beeldjes)):
+        doel = deel_dir / f"{nummer:04d}.mp4"
+        eerste = frames_dir / f"{timeline.scenes[index].id}.png"
+        ruim = (aantal + 2) / fps          # iets langer invoeren dan we afnemen
 
+        if soort == "hold":
+            _run_ffmpeg([
+                "-loop", "1", "-t", f"{ruim:.3f}", "-i", str(eerste),
+                "-vf", filters, "-frames:v", str(aantal), *encoder, str(doel),
+            ])
+        else:
+            tweede = frames_dir / f"{timeline.scenes[index + 1].id}.png"
+            _run_ffmpeg([
+                "-loop", "1", "-t", f"{ruim:.3f}", "-i", str(eerste),
+                "-loop", "1", "-t", f"{ruim:.3f}", "-i", str(tweede),
+                "-filter_complex",
+                f"[0:v]{filters}[a];[1:v]{filters}[b];"
+                f"[a][b]xfade=transition=fade:duration={seconden:.3f}:offset=0[v]",
+                "-map", "[v]", "-frames:v", str(aantal), *encoder, str(doel),
+            ])
+
+        delen.append(doel)
+        progress("encoderen", 0.75 + 0.2 * (nummer + 1) / len(stukken))
+
+    lijst = deel_dir / "delen.txt"
+    lijst.write_text("".join(f"file '{deel.name}'\n" for deel in delen), encoding="utf-8")
+
+    # Alle stukken hebben dezelfde encoder-instellingen, dus aan elkaar
+    # plakken kan zonder opnieuw te coderen. Dat is bijna gratis.
+    beeldspoor = deel_dir / "beeld.mp4"
+    _run_ffmpeg(["-f", "concat", "-safe", "0", "-i", str(lijst),
+                 "-c", "copy", str(beeldspoor)])
+
+    progress("geluid eronder", 0.97)
     loudness = float(cfg.safety.get("loudness_lufs", -14))
-    command = (
-        [ffmpeg_bin(), "-y"] + inputs
-        + ["-i", str(audio_path),
-           "-filter_complex", ";".join(chain),
-           "-map", f"[{label}]", "-map", f"{len(timeline.scenes)}:a",
-           "-af", f"loudnorm=I={loudness}:TP=-1.5:LRA=11",
-           "-c:v", "libx264", "-preset", preset, "-crf", str(crf),
-           "-r", str(fps), "-pix_fmt", "yuv420p",
-           "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
-           "-movflags", "+faststart",
-           str(out_path)]
-    )
+    _run_ffmpeg([
+        "-i", str(beeldspoor), "-i", str(audio_path),
+        "-map", "0:v", "-map", "1:a",
+        "-af", f"loudnorm=I={loudness}:TP=-1.5:LRA=11",
+        "-c:v", "copy",
+        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+        "-movflags", "+faststart", str(out_path),
+    ])
 
-    progress("encoderen", 0.75)
-    result = subprocess.run(command, capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"ffmpeg mislukt:\n{result.stderr[-2000:]}")
-
+    shutil.rmtree(deel_dir, ignore_errors=True)
     progress("klaar", 1.0)
     return out_path
 
