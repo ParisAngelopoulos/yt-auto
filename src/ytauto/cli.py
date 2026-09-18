@@ -2,7 +2,7 @@
 
     ytauto setup      sleutels invoeren en meteen testen
     ytauto panel      bedieningspagina openen (twee knoppen)
-    ytauto script     laat Claude een aflevering schrijven
+    ytauto script     laat een aflevering schrijven
     ytauto video      maak de video van het laatste script
     ytauto publish    zet die video op YouTube
     ytauto run        alles achter elkaar, zonder tussenkomst
@@ -12,6 +12,7 @@
     ytauto sql "..."  een eigen SELECT op de database
     ytauto export     alles als JSON wegschrijven
     ytauto status     wat is er gemaakt en wat staat er klaar
+    ytauto voice      de gratis stem bekijken en testen
     ytauto check      controleer de sleutels en de omgeving
 """
 
@@ -99,11 +100,12 @@ def cmd_setup(args) -> int:
     cfg = load_config()
     huidig = cfg.secrets
 
-    print("\n  Sleutels instellen. Enter overslaan laat een bestaande sleutel staan.\n")
+    print("\n  Sleutels instellen. Enter overslaan laat een bestaande sleutel staan.")
+    print("  Alles is optioneel: zonder sleutels draait de studio gratis.\n")
     vragen = [
-        ("ANTHROPIC_API_KEY", "Claude (schrijft de scripts)",
+        ("ANTHROPIC_API_KEY", "Claude (schrijft de scripts; zonder sleutel doet de verteller het)",
          "console.anthropic.com/settings/keys", bool(huidig.anthropic_api_key)),
-        ("ELEVENLABS_API_KEY", "ElevenLabs (spreekt in)",
+        ("ELEVENLABS_API_KEY", "ElevenLabs (spreekt in; zonder sleutel doet Piper het)",
          "elevenlabs.io -> Settings -> API Keys", bool(huidig.elevenlabs_api_key)),
         ("YOUTUBE_CLIENT_ID", "YouTube client id",
          "python scripts/get_youtube_token.py", bool(huidig.youtube_client_id)),
@@ -233,14 +235,36 @@ def cmd_export(args) -> int:
 
 
 def cmd_check(args) -> int:
+    from .pipeline import PAID_PROVIDERS, resolve_script_provider, script_chain
+    from .tts import voice_status
+
     cfg = load_config()
     secrets = cfg.secrets
+
+    schrijver = resolve_script_provider(cfg)
+    stem = voice_status(cfg)
+    gratis = schrijver not in PAID_PROVIDERS and stem["free"]
+
+    ingesteld = cfg.script.get("provider", "auto")
+    keten = "" if schrijver == ingesteld else \
+        f"  (ingesteld: {ingesteld} — {' -> '.join(script_chain(cfg))})"
+
     print(f"  Kanaal      : {cfg.channel['name']} ({cfg.channel['language']})")
-    print(f"  Scripts     : {cfg.script.get('provider')} / {cfg.script.get('model')}")
-    print(f"  Stem        : {cfg.tts.get('provider')}")
-    print(f"  Anthropic   : {'gevonden' if secrets.anthropic_api_key else 'ONTBREEKT'}")
-    print(f"  ElevenLabs  : {'gevonden' if secrets.elevenlabs_api_key else 'ONTBREEKT'}")
-    print(f"  YouTube     : {'compleet' if secrets.can_upload() else 'ONTBREEKT'}")
+    print(f"  Scripts     : {schrijver}{keten}")
+    print(f"  Stem        : {stem['label']}"
+          f"{' — ' + stem['detail'] if stem.get('detail') else ''}")
+    if stem.get("reason"):
+        print(f"                {stem['reason']}")
+    print(f"  Kosten      : {'niets — alles draait lokaal' if gratis else 'er wordt een betaalde dienst gebruikt'}")
+    print()
+    print(f"  Anthropic   : {'gevonden' if secrets.anthropic_api_key else 'niet ingesteld (optioneel)'}")
+    print(f"  ElevenLabs  : {'gevonden' if secrets.elevenlabs_api_key else 'niet ingesteld (optioneel)'}")
+    print(f"  YouTube     : {'compleet' if secrets.can_upload() else 'ONTBREEKT — publiceren kan nog niet'}")
+
+    from .scripting.ollama_writer import check_credentials as ollama_check
+
+    info = ollama_check(cfg)
+    print(f"  Ollama      : {info.get('detail') or info['reason']}")
 
     if secrets.elevenlabs_api_key:
         from .tts.elevenlabs import check_credentials
@@ -264,6 +288,54 @@ def cmd_check(args) -> int:
         print(f"  ffmpeg      : {describe()}")
     except MediaError as exc:
         print(f"  ffmpeg      : ONTBREEKT — {exc}")
+
+    from .scripting.local_writer import available
+
+    bank = available()
+    print(f"  Verteller   : {len(bank['traditions'])} tradities x "
+          f"{len(bank['patterns'])} verhaalvormen, altijd beschikbaar")
+    return 0
+
+
+def cmd_voice(args) -> int:
+    """De gratis stem: staat hij klaar, en hoe klinkt hij."""
+    from .tts import piper, voice_status
+
+    cfg = load_config()
+    stem = voice_status(cfg)
+    print(f"\n  Stem in gebruik: {stem['label']}")
+    if stem.get("detail"):
+        print(f"  {stem['detail']}")
+    if stem.get("reason"):
+        print(f"  {stem['reason']}")
+
+    if args.download or args.test:
+        if stem["provider"] != "piper":
+            print("  Dit werkt alleen met de gratis stem (tts.provider: piper).")
+            return 1
+        naam = piper.model_name(cfg)
+        try:
+            piper.ensure_model(naam)
+        except piper.PiperUnavailable as exc:
+            print(f"  {exc}")
+            return 1
+
+    if args.test:
+        from .pipeline import OUT_DIR
+        from .tts import synthesize
+
+        doel = OUT_DIR / "stemtest.mp3"
+        zin = ("There was once a ferryman who knew the river better than he "
+               "knew his own hands.")
+        seconden = synthesize(cfg, zin, doel, cache_dir=OUT_DIR / "voice-cache")
+        print(f"  Proefzin ingesproken: {doel} ({seconden:.1f} seconden)")
+        return 0
+
+    print("\n  Andere stemmen (zet de naam bij tts.voice_model in channel.yaml):")
+    for naam, omschrijving in piper.SUGGESTED.items():
+        merk = "*" if naam == piper.model_name(cfg) else " "
+        print(f"   {merk} {naam:38} {omschrijving}")
+    print("\n  Alles beluisteren: https://rhasspy.github.io/piper-samples\n")
     return 0
 
 
@@ -277,7 +349,7 @@ def main() -> int:
     panel.add_argument("--no-browser", action="store_true")
     panel.set_defaults(func=cmd_panel)
 
-    script = subparsers.add_parser("script", help="laat Claude een aflevering schrijven")
+    script = subparsers.add_parser("script", help="laat een aflevering schrijven")
     script.add_argument("--hint", help="optionele wens voor het onderwerp")
     script.set_defaults(func=cmd_script)
 
@@ -311,6 +383,11 @@ def main() -> int:
     export = subparsers.add_parser("export", help="alles als JSON wegschrijven")
     export.add_argument("path", nargs="?", default="export.json")
     export.set_defaults(func=cmd_export)
+    voice = subparsers.add_parser("voice", help="de gratis stem bekijken en testen")
+    voice.add_argument("--download", action="store_true", help="stemmodel nu ophalen")
+    voice.add_argument("--test", action="store_true", help="een proefzin inspreken")
+    voice.set_defaults(func=cmd_voice)
+
     subparsers.add_parser("status", help="wat is er gemaakt").set_defaults(func=cmd_status)
     subparsers.add_parser("check", help="controleer sleutels en omgeving").set_defaults(func=cmd_check)
 

@@ -31,8 +31,13 @@ if [ ! -d .venv ]; then
   echo "  Eerste keer opstarten. Even installeren, dit duurt een paar minuten..."
   "$PY" -m venv .venv
   ./.venv/bin/python -m pip install --upgrade pip --quiet
-  ./.venv/bin/python -m pip install -e . --quiet
-  echo "  Klaar met installeren. ffmpeg is meegekomen; niets anders nodig."
+  # Eerst met de gratis stem erbij. Lukt dat niet (zeldzaam, maar het kan op
+  # een ongebruikelijk systeem), dan zonder: dan werkt alles behalve de stem.
+  if ! ./.venv/bin/python -m pip install -e ".[voice]" --quiet; then
+    echo "  De gratis stem kon niet geinstalleerd worden; de rest wel."
+    ./.venv/bin/python -m pip install -e . --quiet
+  fi
+  echo "  Klaar met installeren. ffmpeg en de stem zijn meegekomen."
   echo ""
 fi
 
@@ -40,8 +45,8 @@ fi
 if [ ! -f .env ]; then
   cp .env.example .env
   echo "  Er is een bestand .env aangemaakt."
-  echo "  Zet je sleutels daarin voor de echte stem en om te kunnen publiceren."
-  echo "  Zonder sleutels werkt alles ook, maar met een robotstem."
+  echo "  Sleutels zijn optioneel: script en stem zijn gratis."
+  echo "  Alleen voor het uploaden naar YouTube heb je ze nodig."
   echo ""
 fi
 

@@ -23,16 +23,21 @@ if not exist .venv (
   echo   Eerste keer opstarten. Even installeren, dit duurt een paar minuten...
   python -m venv .venv
   .venv\Scripts\python -m pip install --upgrade pip --quiet
-  .venv\Scripts\python -m pip install -e . --quiet
-  echo   Klaar met installeren. ffmpeg is meegekomen; niets anders nodig.
+  REM Eerst met de gratis stem erbij; lukt dat niet, dan zonder.
+  .venv\Scripts\python -m pip install -e ".[voice]" --quiet
+  if errorlevel 1 (
+    echo   De gratis stem kon niet geinstalleerd worden; de rest wel.
+    .venv\Scripts\python -m pip install -e . --quiet
+  )
+  echo   Klaar met installeren. ffmpeg en de stem zijn meegekomen.
   echo.
 )
 
 if not exist .env (
   copy .env.example .env >nul
   echo   Er is een bestand .env aangemaakt.
-  echo   Zet je sleutels daarin voor de echte stem en om te kunnen publiceren.
-  echo   Zonder sleutels werkt alles ook, maar met een robotstem.
+  echo   Sleutels zijn optioneel: script en stem zijn gratis.
+  echo   Alleen voor het uploaden naar YouTube heb je ze nodig.
   echo.
 )
 

@@ -91,6 +91,9 @@ h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;
 .pill.err i{opacity:1}
 
 /* ── melding ──────────────────────────────────────────────────── */
+.mode{font:500 12.5px/1.5 var(--mono);color:var(--muted);margin:0 0 14px}
+.mode.free{color:var(--go)}
+.mode strong{font-weight:600}
 .notice{display:flex;gap:11px;background:var(--warn-soft);
   border:1px solid color-mix(in srgb,var(--warn) 26%,transparent);
   border-radius:var(--r);padding:13px 16px;font-size:14px;margin-bottom:18px;
@@ -279,6 +282,8 @@ video{width:100%;border-radius:11px;background:#000;display:block}
 
 <div class="wrap">
 
+  <div class="mode" id="mode"></div>
+
   <div class="notice hidden" id="warn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
          stroke-linecap="round"><path d="M12 8v5"/><path d="M12 17h.01"/>
@@ -291,16 +296,18 @@ video{width:100%;border-radius:11px;background:#000;display:block}
     <div class="keybody">
       <div class="field">
         <label for="k-anthropic">Claude — schrijft de scripts</label>
-        <div class="help">Maak een sleutel op
-          <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>
-          en zet er wat tegoed op. Ongeveer 15 cent per script.</div>
+        <div class="help"><strong>Optioneel.</strong> Zonder sleutel schrijft de
+          ingebouwde verteller het verhaal, gratis. Wil je het beste resultaat:
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>,
+          ongeveer 15 cent per script.</div>
         <input type="password" id="k-anthropic" placeholder="sk-ant-…" autocomplete="off">
         <div class="result" id="r-anthropic"></div>
       </div>
 
       <div class="field">
         <label for="k-elevenlabs">ElevenLabs — spreekt de video in</label>
-        <div class="help">Te vinden op
+        <div class="help"><strong>Optioneel.</strong> Zonder sleutel spreekt Piper
+          de video in: gratis, op je eigen computer. Nog natuurlijker kan via
           <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener">elevenlabs.io</a>
           onder Settings, API Keys. Ongeveer 3.500 tekens per video.</div>
         <input type="password" id="k-elevenlabs" placeholder="sk_…" autocomplete="off">
@@ -327,7 +334,7 @@ video{width:100%;border-radius:11px;background:#000;display:block}
   <div class="steps">
     <section class="step">
       <div class="step-head"><span class="step-num">1</span><h2>Schrijf het script</h2></div>
-      <p>Claude bedenkt zelf het onderwerp en schrijft de hele aflevering. Je hoeft niets in te vullen.</p>
+      <p>De studio bedenkt zelf het onderwerp en schrijft de hele aflevering. Je hoeft niets in te vullen.</p>
       <input type="text" id="hint" placeholder="Optioneel: een wens, bijvoorbeeld 'iets met tellen'">
       <div class="spacer"></div>
       <button id="btn-script">Schrijf het script</button>
@@ -344,7 +351,7 @@ video{width:100%;border-radius:11px;background:#000;display:block}
 
     <section class="step">
       <div class="step-head"><span class="step-num">2</span><h2>Maak de video</h2></div>
-      <p>Zet het script om in een complete video: beeld, stem via ElevenLabs, muziek en thumbnail.</p>
+      <p>Zet het script om in een complete video: beeld, stem, muziek en thumbnail.</p>
       <div class="spacer"></div>
       <button id="btn-video" disabled>Maak de video</button>
       <div class="progress hidden" id="bar-video">
@@ -413,6 +420,10 @@ async function api(path, body){
 
 /* ── kop ──────────────────────────────────────────────────────── */
 
+// Wie het script geschreven heeft, in gewone woorden.
+const SCHRIJVERS = {claude:'Claude', ollama:'Ollama', local:'eigen verteller',
+                    template:'sjabloon'};
+
 function pill(label, aanwezig, getest){
   // Vier standen. Een groen bolletje bij een kapotte sleutel is misleidend.
   let cls = 'pill', titel = 'nog niet ingevuld';
@@ -434,12 +445,20 @@ function renderStatus(s){
     pill('ElevenLabs', s.keys.elevenlabs, t.elevenlabs) +
     pill('YouTube', s.keys.youtube, t.youtube);
 
-  const teststem = s.voice_provider === 'offline';
+  $('mode').innerHTML = s.free
+    ? `Gratis modus: <strong>${SCHRIJVERS[s.writer] || s.writer}</strong> schrijft, ` +
+      `<strong>${s.voice.label}</strong> spreekt in. Er wordt niets afgeschreven.`
+    : `<strong>${SCHRIJVERS[s.writer] || s.writer}</strong> schrijft, ` +
+      `<strong>${s.voice.label}</strong> spreekt in.`;
+  $('mode').classList.toggle('free', !!s.free);
+
+  // Alleen waarschuwen als de video er echt niet mee te publiceren is.
+  const teststem = s.voice.provider === 'offline';
   $('warn').classList.toggle('hidden', !teststem);
   if(teststem){
-    $('warn-text').innerHTML = 'Geen ElevenLabs-sleutel gevonden, dus de video krijgt de ' +
-      '<strong>teststem</strong>. Beeld en timing kloppen wel. Vul je sleutel hierboven in ' +
-      'bij <strong>Sleutels instellen</strong> voor de echte stem.';
+    $('warn-text').innerHTML = 'De gratis stem is niet geinstalleerd, dus de video krijgt de ' +
+      '<strong>robotstem</strong>. Beeld en timing kloppen wel. Herstellen met ' +
+      '<code>pip install -e ".[voice]"</code> in de projectmap.';
   }
 }
 
@@ -477,7 +496,7 @@ function renderEpisode(ep){
         <div><dt>woorden</dt><dd>${ep.word_count}</dd></div>
         <div><dt>lengte</dt><dd>${ep.estimated_minutes} min</dd></div>
         <div><dt>items</dt><dd>${ep.items.length}</dd></div>
-        <div><dt>schrijver</dt><dd>${ep.source === 'claude' ? 'Claude' : 'sjabloon'}</dd></div>
+        <div><dt>schrijver</dt><dd>${SCHRIJVERS[ep.source] || ep.source}</dd></div>
       </dl>
     </div>
     <div class="slab-body">

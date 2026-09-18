@@ -176,8 +176,25 @@ def test_geen_verhaal_wordt_twee_keer_gekozen(story_cfg):
         bp = tale_write(story_cfg, taken=gekozen)
         assert bp.key not in gekozen
         gekozen.add(bp.key)
-    with pytest.raises(NoTalesLeft, match="Voeg er een toe"):
+    with pytest.raises(NoTalesLeft, match="zijn gemaakt"):
         tale_write(story_cfg, taken=gekozen)
+
+
+def test_als_de_bank_op_is_schrijft_de_verteller_verder(story_cfg):
+    """Drie verhalen was vroeger het einde. Nu gaat het gewoon door."""
+    from ytauto.pipeline import _write_with
+
+    class NepStore:
+        def taken_keys(self):
+            return {tale["key"] for tale in load_tales()}
+
+        def all_episodes(self):
+            return []
+
+    bp = _write_with(story_cfg, "local", NepStore(), hint=None)
+    assert bp.source == "local"
+    assert bp.key not in NepStore().taken_keys()
+    assert check_blueprint(story_cfg, bp).ok
 
 
 def test_beats_in_dezelfde_scene_delen_hun_beeld(story_cfg):

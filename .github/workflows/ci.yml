@@ -17,5 +17,5 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - run: |
           python -m pip install --upgrade pip
-          pip install -e . pytest
+          pip install -e ".[voice]" pytest
       - run: pytest -q
