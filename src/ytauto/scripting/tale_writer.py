@@ -1,11 +1,11 @@
 """Haalt een volksverhaal uit config/tales.yaml.
 
-Dit is het vangnet voor de volksverhalen-vorm: geen sleutel, geen kosten.
 De verhalen staan al in de blueprint-vorm, dus er valt hier weinig te
 bouwen — alleen kiezen welk verhaal aan de beurt is en het omzetten.
 
-De echte variatie komt van Claude. Deze bank is er om de machine te kunnen
-draaien en om te laten zien hoe een aflevering eruit hoort te zien.
+Deze drie zijn met de hand geschreven en daarmee beter dan wat een machine
+ervan maakt; ze gaan daarom voor. Is de bank op, dan neemt de verteller in
+`local_writer.py` het over, en die raakt niet op.
 """
 
 from __future__ import annotations
@@ -68,6 +68,6 @@ def write_blueprint(cfg: Config, taken: set[str] | None = None) -> Blueprint:
 
     raise NoTalesLeft(
         f"Alle {len(verhalen)} verhalen uit config/tales.yaml zijn gemaakt. "
-        "Voeg er een toe, of zet een ANTHROPIC_API_KEY in .env zodat Claude "
-        "zelf verhalen kan schrijven."
+        "Bij script.provider 'auto' of 'local' schrijft de ingebouwde verteller "
+        "vanaf hier zelf verder; alleen bij 'template' stopt het hier."
     )

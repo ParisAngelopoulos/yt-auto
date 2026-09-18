@@ -1,9 +1,17 @@
 """Spraak: tekst naar audiobestand.
 
 De pipeline vraagt alleen om 'zeg deze zin en geef me het bestand'. Welke
-dienst dat doet staat in channel.yaml. Elke zin wordt gecachet op een hash
+stem dat doet staat in channel.yaml. Elke zin wordt gecachet op een hash
 van tekst en steminstellingen, zodat opnieuw renderen van dezelfde
 aflevering niets extra kost.
+
+Er zijn drie stemmen:
+
+    piper       gratis, draait op je eigen computer, goed genoeg om te
+                publiceren. Dit is de standaard.
+    elevenlabs  betaald, klinkt nog natuurlijker. Alleen met een sleutel.
+    offline     espeak: een robotstem, puur om de timing te controleren
+                als Piper er niet is.
 """
 
 from __future__ import annotations
@@ -14,6 +22,18 @@ from pathlib import Path
 
 from ..config import Config
 from ..media import duration as media_duration
+
+PROVIDERS = ("piper", "elevenlabs", "offline")
+
+LABELS = {
+    "piper": "Piper (gratis, lokaal)",
+    "elevenlabs": "ElevenLabs (betaald)",
+    "offline": "teststem (espeak, robotachtig)",
+}
+
+# Welke stemmen niets kosten. De bedieningspagina en 'ytauto check' gebruiken
+# dit om te laten zien dat er niets afgeschreven wordt.
+FREE = {"piper", "offline"}
 
 
 class TTSError(RuntimeError):
@@ -33,21 +53,54 @@ def _cache_key(text: str, settings: dict) -> str:
 def effective_provider(cfg: Config) -> str:
     """Welke stem er werkelijk gebruikt wordt.
 
-    Staat ElevenLabs ingesteld maar ontbreekt de sleutel, dan wordt het de
-    offline teststem. Een knop die niets doet is erger dan een knop die een
+    Staat ElevenLabs ingesteld maar ontbreekt de sleutel, dan wordt het
+    Piper: gratis en goed genoeg om mee te publiceren. Ontbreekt Piper ook,
+    dan de teststem. Een knop die niets doet is erger dan een knop die een
     robotstem oplevert met de melding erbij.
     """
-    provider = cfg.tts.get("provider", "elevenlabs")
+    from . import piper
+
+    provider = str(cfg.tts.get("provider", "piper"))
+
     if provider == "elevenlabs" and not cfg.secrets.elevenlabs_api_key:
-        return "offline"
+        provider = "piper"
+    if provider in ("piper", "auto"):
+        return "piper" if piper.is_installed() else "offline"
+    if provider not in PROVIDERS:
+        raise TTSError(f"Onbekende tts.provider: {provider!r}")
     return provider
+
+
+def provider_label(provider: str) -> str:
+    return LABELS.get(provider, provider)
+
+
+def voice_status(cfg: Config) -> dict:
+    """Korte samenvatting voor 'ytauto check' en de bedieningspagina."""
+    from . import piper
+
+    provider = effective_provider(cfg)
+    info: dict = {
+        "provider": provider,
+        "label": provider_label(provider),
+        "free": provider in FREE,
+        "publishable": provider != "offline",
+    }
+    if provider == "piper":
+        info.update(piper.check_voice(cfg))
+    elif provider == "offline":
+        info["reason"] = (
+            "piper-tts ontbreekt, dus de video krijgt de robotstem. "
+            "Herstellen met: pip install -r requirements.txt"
+        )
+    return info
 
 
 def synthesize(cfg: Config, text: str, out_path: Path, cache_dir: Path | None = None) -> float:
     """Spreekt één zin in en geeft de duur terug.
 
     Bestaat het bestand al met dezelfde tekst en instellingen, dan wordt de
-    cache gebruikt en gebeurt er geen enkele API-aanroep.
+    cache gebruikt en gebeurt er geen enkele aanroep.
     """
     provider = effective_provider(cfg)
     settings = dict(cfg.tts)
@@ -64,6 +117,8 @@ def synthesize(cfg: Config, text: str, out_path: Path, cache_dir: Path | None = 
 
     if provider == "elevenlabs":
         from .elevenlabs import speak
+    elif provider == "piper":
+        from .piper import speak
     elif provider == "offline":
         from .offline import speak
     else:

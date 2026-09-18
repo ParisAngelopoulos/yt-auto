@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ytauto"
 version = "1.0.0"
-description = "Volautomatische productie van educatieve kindervideo's voor YouTube"
+description = "Volautomatische productie van video's met volksverhalen voor YouTube"
 requires-python = ">=3.10"
 dependencies = [
     "Pillow>=10.0",
@@ -19,6 +19,13 @@ dependencies = [
     "google-auth-oauthlib>=1.1",
     "google-auth-httplib2>=0.1.1",
 ]
+
+# De gratis stem staat apart omdat hij onnxruntime meebrengt. Op elk gewoon
+# systeem installeert die zonder morren; gaat het toch mis, dan draait de
+# studio nog steeds, alleen met de teststem. start.command doet daarom eerst
+# een poging met [voice] en anders zonder.
+[project.optional-dependencies]
+voice = ["piper-tts>=1.6"]
 
 [project.scripts]
 ytauto = "ytauto.cli:main"

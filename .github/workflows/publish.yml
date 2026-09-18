@@ -39,7 +39,26 @@ jobs:
       - name: Afhankelijkheden installeren
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          pip install -e ".[voice]"
+
+      # Het stemmodel is zo'n 60 MB en verandert alleen als je in
+      # channel.yaml een andere stem kiest. Eén keer ophalen is genoeg.
+      - name: Stemmodel uit de cache
+        uses: actions/cache@v4
+        with:
+          path: assets/voices
+          key: piper-${{ hashFiles('config/channel.yaml') }}
+
+      # Zonder YouTube-sleutels wordt er wel gemaakt en niet geupload. Dan
+      # staat de video onder de downloads van deze run.
+      - name: Kan er geupload worden?
+        id: kan_uploaden
+        env:
+          TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then echo "ja=true" >> "$GITHUB_OUTPUT";
+          else echo "ja=false" >> "$GITHUB_OUTPUT";
+               echo "Geen YouTube-sleutels; de video wordt alleen gemaakt."; fi
 
       - name: Video maken en publiceren
         env:
@@ -49,7 +68,8 @@ jobs:
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
-          if [ "${{ inputs.publish }}" = "false" ]; then
+          if [ "${{ inputs.publish }}" = "false" ] || \
+             [ "${{ steps.kan_uploaden.outputs.ja }}" != "true" ]; then
             ytauto run --no-publish
           else
             ytauto run

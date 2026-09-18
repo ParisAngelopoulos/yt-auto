@@ -19,25 +19,44 @@ video:
   crf: 20                       # lager = betere kwaliteit, groter bestand
 
 # ------------------------------------------------------------
-#  STEM (ElevenLabs)
+#  STEM
+#  piper      gratis en lokaal. Het stemmodel wordt de eerste
+#             keer opgehaald (ongeveer 60 MB) en werkt daarna
+#             zonder internet. Hiermee kun je publiceren.
+#  elevenlabs klinkt natuurlijker, maar kost geld en heeft een
+#             sleutel nodig. Zonder sleutel wordt het piper.
+#  offline    espeak-robotstem, alleen om timing te testen.
+#
+#  Andere stemmen beluisteren: rhasspy.github.io/piper-samples
 # ------------------------------------------------------------
 tts:
-  provider: elevenlabs          # elevenlabs | offline
-  voice_id: "onwK4e9ZLuTAKqWW03F9"   # 'Daniel' - bedaarde Britse verteller
+  provider: piper               # piper | elevenlabs | offline
+  voice_model: en_GB-alan-medium     # alleen voor piper
+  voice_id: "onwK4e9ZLuTAKqWW03F9"   # alleen voor elevenlabs ('Daniel')
   model_id: "eleven_multilingual_v2"
   stability: 0.60               # hoger: een verteller hoort niet te schommelen
   similarity_boost: 0.80
   style: 0.20                   # laag: ingehouden, niet theatraal
-  speed: 0.94                   # rustig voorleestempo
+  speed: 0.94                   # rustig voorleestempo (geldt voor beide stemmen)
 
 # ------------------------------------------------------------
 #  SCRIPT
+#  auto     pakt wat er is: Claude als er een sleutel staat,
+#           anders een lokaal model, anders de ingebouwde
+#           verteller. Zonder sleutels is dit dus gratis.
+#  local    altijd gratis: eerst de verhalen uit tales.yaml,
+#           daarna schrijft de ingebouwde verteller er zelf.
+#  ollama   een taalmodel op je eigen computer (ollama.com):
+#           gratis, en beter dan de ingebouwde verteller.
+#  claude   het beste resultaat, ongeveer 15 cent per script.
+#  template alleen wat met de hand in de config staat.
 # ------------------------------------------------------------
 script:
-  provider: claude              # claude = Claude bedenkt en schrijft alles
-                                # template = gratis vangnet uit curriculum.yaml
-  model: claude-opus-5          # kosten: ongeveer 15 cent per script
+  provider: auto                # auto | local | ollama | claude | template
+  model: claude-opus-5          # alleen voor claude
                                 # goedkoper alternatief: claude-sonnet-5
+  ollama_model: qwen2.5:14b     # alleen voor ollama; eerst: ollama pull ...
+  ollama_host: http://127.0.0.1:11434
 
 # ------------------------------------------------------------
 #  MUZIEK

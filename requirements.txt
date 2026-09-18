@@ -14,5 +14,12 @@ google-auth>=2.23
 google-auth-oauthlib>=1.1
 google-auth-httplib2>=0.1.1
 
+# --- stem ---
+# Piper spreekt de video in op je eigen computer: gratis, geen sleutel, geen
+# limiet. Het stemmodel zelf wordt bij de eerste video opgehaald.
+piper-tts>=1.6
+
 # --- scriptschrijver ---
+# Alleen nodig als je Claude de scripts laat schrijven. Zonder sleutel
+# schrijft de ingebouwde verteller ze, en die kost niets.
 anthropic>=1.0

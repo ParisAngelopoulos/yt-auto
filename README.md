@@ -1,8 +1,14 @@
 # yt-auto
 
 Volautomatische productie van video's met volksverhalen, mythen en sagen.
-Claude kiest een verhaal en hertelt het, ElevenLabs vertelt het voor, de
+Een verhaal wordt gekozen en herteld, een stem vertelt het voor, de
 landschappen worden getekend, en YouTube krijgt de video binnen.
+
+**Alles werkt gratis.** Zonder sleutels schrijft de ingebouwde verteller het
+verhaal en spreekt Piper het in — allebei op je eigen computer, zonder
+account, zonder limiet. Een sleutel koopt kwaliteit, geen werking: met Claude
+worden de verhalen beter bedacht en met ElevenLabs klinkt de stem natuurlijker.
+Zie [Gratis draaien](#gratis-draaien).
 
 De pipeline kan twee niches aan. Welke er draait staat in één regel
 (`channel.format` in `config/channel.yaml`):
@@ -17,7 +23,7 @@ Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
 ```
    ┌─ Stap 1 ──────────────┐        ┌─ Stap 2 ──────────────┐
    │  Schrijf het script   │  ───►  │   Maak de video       │
-   │  Claude bedenkt alles │        │  beeld + stem + muziek│
+   │  hij bedenkt alles    │        │  beeld + stem + muziek│
    └───────────────────────┘        └───────────────────────┘
               │                                │
        jij leest het mee              mp4 + thumbnail, klaar
@@ -78,16 +84,89 @@ studio. De volgende keer: weer dubbelklikken.
 
 ### 4. Meteen proberen
 
-Klik op **Schrijf het script** en daarna op **Maak de video**. Zonder sleutels
-werkt dat ook: het script komt dan uit `config/curriculum.yaml` en de video
-krijgt een gratis robotstem. Beeld, muziek en timing zijn wel echt. Zo zie je
-de hele machine draaien voordat je iets uitgeeft.
+Klik op **Schrijf het script** en daarna op **Maak de video**. Je hoeft niets
+in te vullen en er wordt niets afgeschreven: de ingebouwde verteller schrijft
+het verhaal en Piper spreekt het in. Wat eruit komt is een complete video die
+je kunt uploaden.
+
+Bovenaan de pagina staat in één regel wie er schrijft, wie er inspreekt en of
+dat iets kost.
 
 Liever de opdrachtregel? `ytauto panel` doet hetzelfde.
 
 ---
 
-## De sleutels
+## Gratis draaien
+
+Er zijn twee dingen die bij dit soort projecten normaal geld kosten: iemand
+die het script schrijft en iemand die het voorleest. Hier kan allebei
+gratis, en dat is de stand waarin de studio wordt geleverd.
+
+### Het script
+
+`script.provider` in `config/channel.yaml` staat op `auto`. Dat betekent: pak
+het beste dat beschikbaar is, en eindig altijd bij iets dat werkt.
+
+| | | |
+|---|---|---|
+| `local` | **gratis** | de ingebouwde verteller. Acht tradities, zes verhaalvormen, en per verhaal andere mensen, plekken en wezens. Raakt niet op. |
+| `ollama` | **gratis** | een taalmodel op je eigen computer via [ollama.com](https://ollama.com). Meer variatie dan de ingebouwde verteller. |
+| `claude` | ± €0,15 per script | bedenkt zelf het onderwerp en schrijft het helemaal zelf. Het beste resultaat. |
+
+De ingebouwde verteller stelt verhalen samen uit vaste vormen — een afspraak
+bij het water, een geschenk met één voorwaarde, een weg waar je na donker
+niet hoort te lopen — en vult die met de namen, plekken en wezens van een
+traditie. Ze zijn correct, ze zijn lang genoeg en ze zijn van jou. Wat hij
+niet kan is verrassen: wie er twintig achter elkaar bekijkt, ziet het patroon.
+
+Wil je gratis én meer variatie, zet er dan Ollama naast:
+
+```bash
+ollama pull qwen2.5:14b      # eenmalig, een paar GB
+```
+
+Meer heb je niet te doen; de studio ziet het vanzelf. Draait Ollama niet, dan
+schrijft de ingebouwde verteller het verhaal en merk je er niets van.
+
+### De stem
+
+`tts.provider` staat op `piper`. [Piper](https://github.com/OHF-Voice/piper1-gpl)
+is een stemmodel dat op je eigen computer draait: geen sleutel, geen tegoed,
+geen limiet op het aantal tekens. Het model wordt bij de eerste video eenmalig
+opgehaald (ongeveer 60 MB) en werkt daarna zonder internet.
+
+```bash
+ytauto voice              # welke stem staat ingesteld, en welke er nog meer zijn
+ytauto voice --download   # het model nu alvast ophalen
+ytauto voice --test       # een proefzin inspreken en beluisteren
+```
+
+Een andere stem kiezen: zet de naam bij `tts.voice_model` in `channel.yaml`.
+Alle stemmen zijn eerst te beluisteren op
+[rhasspy.github.io/piper-samples](https://rhasspy.github.io/piper-samples).
+
+### Wat kost dan nog wel iets
+
+Niets, zolang je bij `auto` en `piper` blijft. Zet je een Anthropic-sleutel
+in `.env`, dan gebruikt `auto` die vanaf dat moment wel — dat is de enige
+manier waarop er iets afgeschreven kan worden. Wil je dat uitsluiten, zet
+`script.provider` dan op `local` of `ollama`.
+
+Publiceren op YouTube is sowieso gratis; daar heb je alleen een eenmalige
+koppeling voor nodig.
+
+---
+
+## De sleutels — allemaal optioneel
+
+Je hebt er geen één nodig om video's te maken. Wat je ermee koopt staat in de
+laatste kolom.
+
+| Waarvoor | Zonder sleutel gebeurt dit | Waar je hem haalt | Wat je ervoor krijgt |
+|---|---|---|---|
+| Claude — schrijft de scripts | de ingebouwde verteller schrijft | [console.anthropic.com](https://console.anthropic.com/settings/keys) | verhalen die echt bedacht zijn, ± €0,15 per stuk |
+| ElevenLabs — spreekt in | Piper spreekt in, lokaal | [elevenlabs.io](https://elevenlabs.io/app/settings/api-keys) → Settings → API Keys | een natuurlijkere stem, zie hieronder |
+| YouTube — publiceert | je zet de mp4 zelf op YouTube | `python scripts/get_youtube_token.py` | de studio uploadt zelf, gratis |
 
 Vul ze in op de pagina zelf, onder **Sleutels instellen**. Je plakt ze, klikt
 op *Opslaan en testen*, en ziet meteen of ze werken. Ze worden opgeslagen in
@@ -95,12 +174,6 @@ op *Opslaan en testen*, en ziet meteen of ze werken. Ze worden opgeslagen in
 GitHub terecht.
 
 Liever de terminal? `ytauto setup` vraagt hetzelfde en test het ook.
-
-| Waarvoor | Waar je hem haalt | Kosten |
-|---|---|---|
-| Claude — schrijft de scripts | [console.anthropic.com](https://console.anthropic.com/settings/keys) | ± €0,15 per script |
-| ElevenLabs — spreekt in | [elevenlabs.io](https://elevenlabs.io/app/settings/api-keys) → Settings → API Keys | zie hieronder |
-| YouTube — publiceert | `python scripts/get_youtube_token.py` | gratis |
 
 Het testen kost niets: het zijn gewone opvragingen zonder tokens.
 
@@ -196,8 +269,12 @@ Daarna kan de pipeline zonder jou uploaden.
 Drie bestanden, geen code:
 
 ### `config/brief.md` — de toon
-Dit leest Claude bij elk verhaal. Wil je rustiger vertellen, andere tradities,
-een korter slot? Schrijf het hierin op. Het volgende verhaal verandert mee.
+Dit leest Claude of het lokale model bij elk verhaal. Wil je rustiger
+vertellen, andere tradities, een korter slot? Schrijf het hierin op. Het
+volgende verhaal verandert mee.
+
+De ingebouwde verteller leest de briefing niet; die haalt zijn toon uit zijn
+eigen bank. Wil je hem bijsturen, dan pas je die bank aan — zie hieronder.
 
 ### `config/channel.yaml` — de knoppen
 Niche, kanaalnaam, taal, lengte, stem, publicatietempo. De regels die je
@@ -208,17 +285,30 @@ channel:
   format: folklore              # folklore | kids
 video:
   target_duration_minutes: 11   # 8 tot 15 werkt het best voor een verhaal
+script:
+  provider: auto                # auto | local | ollama | claude
+tts:
+  provider: piper               # piper (gratis) | elevenlabs | offline
+  voice_model: en_GB-alan-medium
 publish:
   privacy_status: public        # zet op 'unlisted' zolang je nog meekijkt
   max_per_week: 3               # rem tegen spamdetectie
 ```
 
-### `config/tales.yaml` — het vangnet
-Alleen in gebruik als Claude er niet is. Er staan drie complete
-hervertellingen in. Zelf een verhaal toevoegen kan: kopieer de opbouw,
-`scenes` zijn de plekken en `beats` verwijzen ernaar met hun index.
+### `config/tales.yaml` — de verhalen met de hand
+Drie complete hervertellingen, met de hand geschreven. Ze zijn beter dan wat
+de ingebouwde verteller maakt en gaan daarom voor: pas als ze alle drie
+gemaakt zijn, gaat de verteller zelf schrijven. Zelf een verhaal toevoegen
+kan: kopieer de opbouw, `scenes` zijn de plekken en `beats` verwijzen ernaar
+met hun index.
 
 Voor de kinderniche doet `config/curriculum.yaml` hetzelfde.
+
+De verteller zelf staat in `src/ytauto/scripting/`: de tradities en de
+namen in `folk_bank.py`, de verhaalvormen in `folk_patterns.py`. Een traditie
+of een vorm toevoegen is een kwestie van de opbouw kopiëren; de tests
+controleren daarna vanzelf of elke nieuwe combinatie een geldig verhaal
+oplevert.
 
 ---
 
@@ -227,8 +317,11 @@ Voor de kinderniche doet `config/curriculum.yaml` hetzelfde.
 `.github/workflows/publish.yml` draait maandag, woensdag, vrijdag en zondag om
 06:00 UTC en publiceert dan één video.
 
-Zet in je repository onder **Settings → Secrets and variables → Actions** dezelfde
-vijf waarden als in je `.env`. Daarna hoef je niets meer te doen.
+Hiervoor heb je alleen de drie YouTube-waarden nodig; zet ze in je repository
+onder **Settings → Secrets and variables → Actions**. De andere twee mogen
+leeg blijven: in GitHub Actions draait dezelfde gratis weg als op je eigen
+computer. Staan de YouTube-waarden er ook niet, dan wordt de video wel gemaakt
+en niet geüpload; je haalt hem dan op bij de downloads van die run.
 
 De boekhouding (`state/episodes.db`) wordt na elke run teruggeschreven naar de
 repo. Zonder dat zou de volgende run niet weten wat er al gemaakt is.
@@ -304,19 +397,21 @@ database wordt bijgewerkt zonder dat er een rij verloren gaat.
 ## Wat er onder de motorkap gebeurt
 
 ```
-config/brief.md ─┐
-                 ├─► Claude ──► blueprint ────────┬──► scenes ──► PNG's ──┐
-tales.yaml ──────┘   (verhaal, scenes, tekst)    │                       ├─► ffmpeg ──► video.mp4
-                                                 │   ElevenLabs ──► mp3 ─┤
-                                                 └── muzieksynth ──► wav ┘
+config/brief.md ─┐   Claude / Ollama / de eigen verteller
+                 ├─►         │                 ┌──► scenes ──► PNG's ──┐
+tales.yaml ──────┘         blueprint ──────────┤                       ├─► ffmpeg ──► video.mp4
+                  (verhaal, scenes, tekst)     ├── Piper / ElevenLabs ─┤
+                                               └── muzieksynth ──► wav ┘
 ```
 
-**Blueprint** is het contract. Claude levert het idee, de items en alle gesproken
-zinnen; de code bouwt daar het beeld bij. Daardoor kan een script nooit vragen om
-een figuur dat niet bestaat, terwijl Claude wel volledig vrij is in taal en
-onderwerp.
+**Blueprint** is het contract. De schrijver levert het idee, de items en alle
+gesproken zinnen; de code bouwt daar het beeld bij. Daardoor kan een script
+nooit vragen om een figuur dat niet bestaat, terwijl de schrijver volledig vrij
+is in taal en onderwerp. Alle drie de schrijvers leveren dezelfde blueprint op,
+dus de rest van de pipeline merkt niet welke het geschreven heeft.
 
-**Beelden** worden getekend, niet gegenereerd. Elk beeld is een gelaagd
+**Beelden** worden getekend, niet gegenereerd. Dat is meteen de derde
+kostenpost die er niet is: geen beeld-API, geen abonnement. Elk beeld is een gelaagd
 landschap: lucht, maan of zon, bergkammen en bossen die naar de kijker toe
 steeds donkerder worden, en daartussen silhouetten. Dat donkerder worden is de
 hele truc — verre bergen zijn bleek omdat er lucht tussen zit, en zonder dat
@@ -327,8 +422,9 @@ Tien landschappen, negen luchten, drie weertypen en 31 silhouetten
 een draak, staande stenen. Geen beeld-API, geen kosten, geen wisselende stijl
 tussen afleveringen.
 
-Het schema dwingt af dat Claude alleen plekken en figuren kiest die ook
-werkelijk getekend kunnen worden. Een verzonnen silhouet komt er niet doorheen.
+Het schema dwingt af dat de schrijver alleen plekken en figuren kiest die ook
+werkelijk getekend kunnen worden. Een verzonnen silhouet komt er niet doorheen,
+van wie het script ook komt.
 
 **Verhaalopbouw** volgt vaste beats: titelkaart, opening, het verhaal zelf,
 een wending waar het beeld verandert, de afloop, wat het verhaal wil zeggen,
@@ -343,7 +439,7 @@ plek verandert.
 ```bash
 ytauto setup       # sleutels invoeren en meteen testen
 ytauto panel       # bedieningspagina met de twee knoppen
-ytauto script      # laat Claude een aflevering schrijven en print hem
+ytauto script      # laat een aflevering schrijven en print hem
 ytauto video       # maak de video van het laatste script
 ytauto publish     # zet die video op YouTube
 ytauto run         # alles achter elkaar, zonder tussenkomst
@@ -353,7 +449,8 @@ ytauto find TEXT   # zoek in alle gesproken tekst
 ytauto sql "..."   # een eigen SELECT op de database
 ytauto export      # alles als JSON wegschrijven
 ytauto status      # wat is er gemaakt, wat staat er online
-ytauto check       # sleutels, tegoed en ffmpeg controleren
+ytauto voice       # de gratis stem bekijken, ophalen en testen
+ytauto check       # wie er schrijft, wie er inspreekt, en wat het kost
 ```
 
 ---
@@ -364,9 +461,10 @@ Dit is geen juridisch advies, maar het scheelt je een hoop gedoe.
 
 **De verhalen zijn vrij, vertalingen niet.** Volksverhalen van eeuwen oud
 kennen geen rechthebbende. Een specifieke vertaling of hervertelling uit de
-twintigste eeuw wel. Daarom schrijft Claude altijd in eigen woorden en neemt
-hij geen zinnen letterlijk over; dat staat in `config/brief.md` en daar moet
-het blijven staan.
+twintigste eeuw wel. Daarom wordt er altijd in eigen woorden geschreven en
+wordt er geen zin letterlijk overgenomen; dat staat in `config/brief.md` en
+daar moet het blijven staan. De ingebouwde verteller heeft hetzelfde probleem
+niet: elke zin die hij gebruikt is voor dit project geschreven.
 
 **Noem de herkomst, en noem hem juist.** De veiligheidscontrole waarschuwt als
 er geen traditie is vermeld of als de bronvermelding aan het eind ontbreekt.
@@ -399,13 +497,16 @@ kan.
 | `ffmpeg: ONTBREEKT` | `pip install imageio-ffmpeg`, of via brew, apt of winget |
 | macOS: "kan niet worden geopend" | Rechtermuisknop op `start.command` → Open → Open |
 | Windows: Python niet gevonden | Opnieuw installeren met het vinkje bij "Add Python to PATH" |
-| `Claude niet beschikbaar` | Geen `ANTHROPIC_API_KEY`; hij gebruikt nu het sjabloon |
+| `claude niet beschikbaar` | Geen `ANTHROPIC_API_KEY`. Dit is geen fout: de ingebouwde verteller neemt het over |
+| `ollama niet beschikbaar` | Ollama draait niet. Ook geen fout; het is optioneel |
+| De stem klinkt als een robot | `piper-tts` is niet geïnstalleerd. `pip install -e ".[voice]"` in de projectmap |
+| `De stem kon niet opgehaald worden` | Eenmalige download van het stemmodel; controleer je verbinding en probeer `ytauto voice --download` |
 | `ElevenLabs weigert de sleutel (401)` | Sleutel verlopen of verkeerd gekopieerd |
 | `Weeklimiet bereikt` | Werkt zoals bedoeld. Verhoog `publish.max_per_week` als je echt sneller wilt |
 | `Script afgekeurd door de veiligheidscontrole` | De melding noemt het woord. Pas `config/brief.md` aan |
 | `thumbnail niet geplaatst` | Een eigen thumbnail vereist een geverifieerd YouTube-kanaal |
 | Video duurt lang om te maken | Normaal is 8–15 minuten. Sneller: `encoder_preset: veryfast` |
-| `Alle verhalen zijn gemaakt` | De bank is op. Voeg er een toe in `config/tales.yaml`, of zet een Anthropic-sleutel in `.env` |
+| `Alle verhalen zijn gemaakt` | Kan alleen nog bij `provider: template`. Zet hem op `auto` of `local`; de verteller raakt niet op |
 
 Tests draaien: `pytest -q`
 
@@ -415,14 +516,15 @@ Tests draaien: `pytest -q`
 
 ```
 state/           episodes.db — al je scripts, in SQL
+assets/voices/   het stemmodel van Piper (niet in git, wordt opgehaald)
 start.command    dubbelklikken op macOS/Linux
 start.bat        dubbelklikken op Windows
 config/          brief.md, channel.yaml, tales.yaml  ← hier stuur je
 src/ytauto/
-  scripting/     Claude-schrijver, sjabloonschrijver, het blueprint-contract
+  scripting/     de drie schrijvers, de verhalenbank en het blueprint-contract
   render/        landschappen, 31 silhouetten, 52 kinderfiguren, thumbnail
   audio/         muzieksynthesizer
-  tts/           ElevenLabs en de offline teststem
+  tts/           Piper (gratis), ElevenLabs en de teststem
   video/         ffmpeg-montage
   youtube/       upload
   ui/            bedieningspagina

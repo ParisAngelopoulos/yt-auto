@@ -1,8 +1,9 @@
-"""Gratis stem via espeak-ng, voor testen zonder API-kosten.
+"""Laatste redmiddel: espeak-ng, of stilte van de juiste lengte.
 
-Klinkt robotachtig en is niet geschikt om te publiceren. Het doel is dat je
-de hele pipeline kunt doorlopen en de timing kunt controleren zonder een
-sleutel of tegoed te gebruiken.
+Klinkt robotachtig en is niet geschikt om te publiceren. Hiervoor wordt
+alleen gekozen als Piper er niet is — zie `piper.py`, dat is de gratis stem
+waar je wél mee kunt publiceren. Het doel van deze is dat je de hele pipeline
+kunt doorlopen en de timing kunt controleren, wat er ook ontbreekt.
 """
 
 from __future__ import annotations
