@@ -21,7 +21,7 @@ from urllib.parse import parse_qs, urlparse
 
 from ..config import ROOT, SECRET_KEYS, Config, Secrets, load_config, write_secrets
 from ..pipeline import (PAID_PROVIDERS, Episode, adopt_loose_scripts, load_current,
-                        make_script, make_video, open_episode, publish,
+                        make_script, make_short, make_video, open_episode, publish,
                         resolve_script_provider)
 from ..db import Store
 from ..tts import voice_status
@@ -317,6 +317,25 @@ class Handler(BaseHTTPRequestHandler):
                 return {"key": episode.blueprint.key}
 
             started = run_in_background("script", work)
+
+        elif route == "/api/short":
+            hint = (body.get("hint") or "").strip() or None
+
+            def work(job: Job) -> dict:
+                # Een Short is in een minuut klaar, dus schrijven en renderen
+                # gebeurt in één taak; wachten op een tussenknop heeft hier
+                # geen zin.
+                job.note("de Short wordt geschreven", 0.1)
+                staand, episode = make_short(self.cfg, hint=hint)
+                job.note(f"script klaar: {episode.blueprint.title}", 0.2)
+
+                def progress(bericht: str, deel: float) -> None:
+                    job.note(bericht, 0.2 + 0.8 * deel)
+
+                make_video(staand, episode, progress=progress)
+                return {"key": episode.blueprint.key}
+
+            started = run_in_background("short", work)
 
         elif route == "/api/video":
             episode = load_current(self.cfg)

@@ -142,10 +142,21 @@ def check_blueprint(cfg: Config, bp: Blueprint) -> SafetyReport:
             )
 
     minutes = bp.estimated_duration / 60
-    if minutes < 1.5:
-        report.issues.append(f"script is maar {minutes:.1f} minuten; te kort om te publiceren")
-    if minutes > 20:
-        report.warnings.append(f"script is {minutes:.0f} minuten, dat is lang voor deze leeftijd")
+    if bp.shorts:
+        # YouTube laat Shorts tot drie minuten toe; onder de twintig seconden
+        # is het geen verhaal meer maar een losse zin.
+        if minutes < 0.33:
+            report.issues.append(f"Short is maar {minutes * 60:.0f} seconden; te kort")
+        if minutes > 3:
+            report.issues.append(
+                f"Short is {minutes * 60:.0f} seconden; YouTube telt boven de drie "
+                "minuten niet meer als Short"
+            )
+    else:
+        if minutes < 1.5:
+            report.issues.append(f"script is maar {minutes:.1f} minuten; te kort om te publiceren")
+        if minutes > 20:
+            report.warnings.append(f"script is {minutes:.0f} minuten, dat is lang voor deze leeftijd")
 
     if vorm == "kids" and len(bp.items) < 3:
         report.warnings.append(f"maar {len(bp.items)} items; drie is het minimum voor een zoekronde")

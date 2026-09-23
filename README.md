@@ -29,6 +29,8 @@ Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
        jij leest het mee              mp4 + thumbnail, klaar
 ```
 
+Of één knop, als je een Short wilt: die schrijft en rendert in één keer.
+
 ---
 
 ## Beginnen
@@ -154,6 +156,101 @@ manier waarop er iets afgeschreven kan worden. Wil je dat uitsluiten, zet
 
 Publiceren op YouTube is sowieso gratis; daar heb je alleen een eenmalige
 koppeling voor nodig.
+
+---
+
+## Shorts
+
+Naast de lange verhalen maakt de studio staande video's van rond de minuut,
+voor YouTube Shorts, TikTok en Reels. Zelfde tekenwerk, zelfde stem, zelfde
+prijs — namelijk niets.
+
+```bash
+ytauto short                    # schrijven en renderen in één keer
+ytauto short --hint norse       # een wens meegeven
+ytauto short --script-only      # eerst lezen, later pas renderen
+```
+
+Op de bedieningspagina staat er een knop voor, onder de twee grote.
+
+**Wat er anders is aan een Short.** Niet de lengte alleen. Een verhaal van
+tien minuten mag rustig beginnen; een Short die rustig begint wordt
+weggeklikt. Daarom opent hij met een haak — wat er op het spel staat, of hoe
+het afloopt — en pas daarna met wie en waar. De zinnen komen uit hetzelfde
+patroon als het lange verhaal, maar er worden er tien gekozen in plaats van
+zeventig, en de stiltes ertussen zijn korter.
+
+**De tekst staat in beeld.** Het grootste deel van de Shorts wordt zonder
+geluid bekeken; een verhaal dat alleen verteld wordt is dan een reeks
+landschappen zonder betekenis. Elke zin wordt daarom in stukjes van een paar
+woorden geknipt — op de leestekens, want daar ademt de verteller — en die
+stukjes staan in beeld zolang ze ongeveer duren. Uitzetten kan met
+`captions: false` onder `shorts:`.
+
+Een Short is in ongeveer een halve minuut klaar. Het beeld wordt maar één
+keer per scene getekend en de stukken video worden naast elkaar gecodeerd;
+dat scheelt ook bij de lange video's.
+
+Het beeld is 1080×1920. Bijschriften staan hoger in beeld dan bij een lange
+video: onderin legt YouTube zijn eigen titel, kanaalnaam en knoppen neer, en
+wat daar staat leest niemand.
+
+Aanpassen kan in `config/channel.yaml` onder `shorts:` — formaat, overgangen
+en hoeveel stilte er voor en na een zin zit.
+
+Publiceren gaat voorlopig met de hand: `ytauto short` zet de mp4 in `out/`,
+en die sleep je naar YouTube. De automatische upload werkt alleen voor de
+lange video's.
+
+### De afdaling
+
+Een tweede vorm, en de enige die van begin tot eind beweegt:
+
+```bash
+ytauto descent --list           # welke reizen er zijn
+ytauto descent                  # maak er een
+```
+
+De camera zakt in één doorlopende beweging van het wateroppervlak naar het
+diepste punt van de oceaan, met alles wat je onderweg passeert op zijn echte
+diepte: een duiker op tien meter, de Titanic op drieduizend achthonderd, de
+Challenger Deep op tienduizend negenhonderdvijfendertig. Bovenin loopt een
+dieptemeter mee.
+
+Waarom deze vorm bestaat: een reeks stilstaande beelden leest binnen een
+halve seconde als diashow, en daar scrolt iedereen voorbij. Hier is er geen
+enkele snede. De camera houdt bij elke mijlpaal even in terwijl de regel
+erbij gesproken wordt en versnelt daarna weer, en die timing volgt de stem —
+niemand hoeft iets met de hand gelijk te zetten.
+
+Aanpassen doe je in `config/journeys.yaml`: `depth` in meters, `say` wat de
+verteller zegt, `draw` welk wezen erbij hoort (die staan in
+`src/ytauto/render/sea.py`). Zelf een reis toevoegen kan — de hoogte van
+gebouwen, de afstand tot de planeten — zolang het maar één as is waar je
+langs beweegt. De getallen moeten kloppen: dat is de hele kracht van de vorm.
+
+Eén afdaling duurt ongeveer een minuut en kost een minuut om te maken.
+
+Wil je alleen het beeld beoordelen, dan hoef je niet elke keer op de stem te
+wachten:
+
+```bash
+ytauto descent --preview        # 20 seconden, stil, het hele bereik
+ytauto descent --preview 8      # of korter
+```
+
+Dat perst de hele afdaling samen in die tijd, zonder in te spreken. Handig
+bij het sleutelen aan het beeld, want daar gaat het meeste tijd in zitten.
+
+**Waarom het eruitziet zoals het eruitziet.** Er komt geen beeldgenerator aan
+te pas; alles is getekend met polygonen en verlopen. Dat betekent dat het
+nooit fotorealistisch wordt, maar ook dat er geen kosten en geen
+rechtenvraag zijn. Wat het beeld draagt zijn vier dingen die niets kosten:
+de deeltjes komen op drie verschillende snelheden voorbij (daar leidt het oog
+diepte uit af, niet uit een kleurverloop), de camera drijft zacht heen en
+weer in plaats van zuiver verticaal te schuiven, vlak onder het oppervlak
+danst een golfpatroon van licht, en alles onder de vijfhonderd meter krijgt
+een gloed alsof het door je eigen lamp wordt aangeschenen.
 
 ---
 
@@ -287,6 +384,10 @@ video:
   target_duration_minutes: 11   # 8 tot 15 werkt het best voor een verhaal
 script:
   provider: auto                # auto | local | ollama | claude
+shorts:
+  width: 1080                   # staand formaat voor Shorts en Reels
+  height: 1920
+  captions: true                # tekst in beeld
 tts:
   provider: piper               # piper (gratis) | elevenlabs | offline
   voice_model: en_GB-alan-medium
@@ -439,7 +540,9 @@ plek verandert.
 ```bash
 ytauto setup       # sleutels invoeren en meteen testen
 ytauto panel       # bedieningspagina met de twee knoppen
-ytauto script      # laat een aflevering schrijven en print hem
+ytauto script      # laat een aflevering schrijven
+ytauto short       # maak een Short: staand beeld, rond de minuut
+ytauto descent     # maak een afdaling: doorlopende beweging, geen snedes en print hem
 ytauto video       # maak de video van het laatste script
 ytauto publish     # zet die video op YouTube
 ytauto run         # alles achter elkaar, zonder tussenkomst
@@ -506,6 +609,7 @@ kan.
 | `Script afgekeurd door de veiligheidscontrole` | De melding noemt het woord. Pas `config/brief.md` aan |
 | `thumbnail niet geplaatst` | Een eigen thumbnail vereist een geverifieerd YouTube-kanaal |
 | Video duurt lang om te maken | Normaal is 8–15 minuten. Sneller: `encoder_preset: veryfast` |
+| Tekst in beeld loopt niet gelijk met de stem | De stukjes krijgen tijd naar rato van hun lengte, niet op de stem uitgelijnd. Bij een gelijkmatige verteller valt dat weg; klopt het echt niet, zet `captions: false` |
 | `Alle verhalen zijn gemaakt` | Kan alleen nog bij `provider: template`. Zet hem op `auto` of `local`; de verteller raakt niet op |
 
 Tests draaien: `pytest -q`
@@ -519,10 +623,10 @@ state/           episodes.db — al je scripts, in SQL
 assets/voices/   het stemmodel van Piper (niet in git, wordt opgehaald)
 start.command    dubbelklikken op macOS/Linux
 start.bat        dubbelklikken op Windows
-config/          brief.md, channel.yaml, tales.yaml  ← hier stuur je
+config/          brief.md, channel.yaml, tales.yaml, journeys.yaml  ← hier stuur je
 src/ytauto/
   scripting/     de drie schrijvers, de verhalenbank en het blueprint-contract
-  render/        landschappen, 31 silhouetten, 52 kinderfiguren, thumbnail
+  render/        landschappen, silhouetten, zeewezens, de waterkolom, thumbnail
   audio/         muzieksynthesizer
   tts/           Piper (gratis), ElevenLabs en de teststem
   video/         ffmpeg-montage

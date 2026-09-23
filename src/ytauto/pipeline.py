@@ -200,6 +200,113 @@ def make_script(cfg: Config, hint: str | None = None, store: Store | None = None
 
 
 # ---------------------------------------------------------------------------
+#  Shorts
+# ---------------------------------------------------------------------------
+
+
+def shorts_config(cfg: Config) -> Config:
+    """Dezelfde config, maar staand en met een strakker tempo.
+
+    De rest van de pipeline hoeft niets van Shorts te weten: hij leest de
+    afmetingen uit `video`, en die worden hier vervangen door wat er in de
+    `shorts`-sectie staat.
+    """
+    import copy
+
+    raw = copy.deepcopy(cfg.raw)
+    shorts = raw.get("shorts", {})
+    raw["video"].update({
+        "width": int(shorts.get("width", 1080)),
+        "height": int(shorts.get("height", 1920)),
+        "crossfade_seconds": float(shorts.get("crossfade_seconds", 0.30)),
+        # De aanloop is even lang als de overgang, zodat de ondertiteling
+        # pas begint als het vorige beeld helemaal weg is.
+        "lead_in": float(shorts.get("lead_in", shorts.get("crossfade_seconds", 0.30))),
+        "captions": bool(shorts.get("captions", True)),
+        "tail": float(shorts.get("tail", 0.25)),
+        # Het beeld is vlak getekend werk; tussen 'medium' en 'veryfast' zit
+        # bij deze crf geen zichtbaar verschil, wel de helft van de tijd.
+        "encoder_preset": str(shorts.get("encoder_preset", "veryfast")),
+    })
+    return Config(raw=raw, curriculum=cfg.curriculum, secrets=cfg.secrets)
+
+
+def make_short(cfg: Config, hint: str | None = None,
+               store: Store | None = None) -> tuple[Config, Episode]:
+    """Schrijft een Short en geeft de config terug waarmee hij gerenderd wordt.
+
+    Alleen de ingebouwde verteller maakt Shorts. Claude en Ollama schrijven
+    lange verhalen; die in een minuut persen levert een samenvatting op, en
+    een samenvatting is geen Short.
+    """
+    from .scripting.local_writer import write_short
+
+    if cfg.channel.get("format", "kids") != "folklore":
+        raise ValueError(
+            "Shorts bestaan alleen voor de volksverhalen-vorm. "
+            "Zet channel.format op 'folklore' in config/channel.yaml."
+        )
+
+    store = store or Store()
+    staand = shorts_config(cfg)
+    blueprint = write_short(staand, taken=store.taken_keys(), hint=hint)
+
+    report = check_blueprint(staand, blueprint)
+    if not report.ok:
+        raise ValueError("Short afgekeurd door de veiligheidscontrole:\n" + report.summary())
+
+    workdir = OUT_DIR / blueprint.slug
+    workdir.mkdir(parents=True, exist_ok=True)
+    store.save_blueprint(blueprint)
+    blueprint.save(workdir / "blueprint.json")
+
+    set_current(blueprint.key)
+    return staand, Episode(blueprint=blueprint, workdir=workdir)
+
+
+# ---------------------------------------------------------------------------
+#  De afdaling
+# ---------------------------------------------------------------------------
+
+JOURNEYS = ROOT / "config" / "journeys.yaml"
+
+
+def load_journeys(path: Path | None = None) -> list[dict]:
+    """De reizen uit config/journeys.yaml."""
+    import yaml
+
+    pad = path or JOURNEYS
+    if not pad.exists():
+        return []
+    return yaml.safe_load(pad.read_text(encoding="utf-8")).get("journeys", [])
+
+
+def make_descent(cfg: Config, key: str = "", progress: Progress = _noop,
+                 preview_seconds: float = 0.0) -> Path:
+    """Maakt een afdaling: één doorlopende beweging van boven naar beneden.
+
+    Dit gaat bewust buiten de boekhouding om. Een afdaling heeft geen beats
+    en geen scenes; hem in het blueprint-model persen zou alleen maar een
+    model kapotmaken dat voor verhalen bedoeld is.
+    """
+    from .video.descent_video import render
+
+    reizen = load_journeys()
+    if not reizen:
+        raise ValueError("config/journeys.yaml bevat geen reizen.")
+
+    gekozen = next((r for r in reizen if r["key"] == key), None) if key else reizen[0]
+    if gekozen is None:
+        beschikbaar = ", ".join(r["key"] for r in reizen)
+        raise ValueError(f"Geen reis met sleutel {key!r}. Beschikbaar: {beschikbaar}")
+
+    staand = shorts_config(cfg)
+    workdir = OUT_DIR / f"{gekozen['key']}-descent"
+    return render(staand, gekozen, workdir, seed=episode_seed(gekozen["key"]),
+                  progress=progress, preview_seconds=preview_seconds)
+
+
+# ---------------------------------------------------------------------------
 #  Stap 2: video
 # ---------------------------------------------------------------------------
 

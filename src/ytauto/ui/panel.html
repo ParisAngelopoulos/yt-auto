@@ -126,6 +126,16 @@ input:focus-visible,button:focus-visible,summary:focus-visible{
 .field input+input{margin-top:8px}
 
 /* ── stappen ──────────────────────────────────────────────────── */
+.aside{display:flex;gap:16px;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;margin:18px 0 0;font-size:13.5px;color:var(--muted);line-height:1.55}
+.aside strong{color:var(--ink);font-weight:600}
+.aside > div{flex:1 1 auto;min-width:0}
+.aside button{flex:0 0 auto;width:auto;padding-left:22px;padding-right:22px}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.ghost:hover:not(:disabled){background:var(--wash)}
+@media (max-width:720px){.aside{flex-direction:column;align-items:stretch}
+  .aside button{width:100%}}
 .steps{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;
   gap:0;margin-bottom:22px}
 .link{width:46px;display:grid;place-items:center;position:relative}
@@ -367,6 +377,16 @@ video{width:100%;border-radius:11px;background:#000;display:block}
     </section>
   </div>
 
+  <div class="aside">
+    <div>
+      <strong>Of maak een Short.</strong>
+      Staand beeld, rond de minuut, met een haak vooraan &mdash; voor YouTube
+      Shorts, TikTok en Reels. Schrijven en renderen gebeurt in één keer.
+    </div>
+    <button id="btn-short" class="ghost">Maak een Short</button>
+  </div>
+  <div class="jobline" id="line-short"></div>
+
   <div class="slab" id="script-panel">
     <div class="empty">
       <span class="big">Nog geen script</span>
@@ -543,6 +563,10 @@ function stageFromMessage(message, fraction){
   return fraction >= 0.95 ? 3 : fraction >= 0.7 ? 2 : fraction >= 0.55 ? 1 : 0;
 }
 
+// Welke statusregel bij welke taak hoort.
+const LIJNEN = {script:'line-script', video:'line-video', short:'line-short',
+                publiceren:'line-publish'};
+
 function renderJob(job){
   ['script','video'].forEach(naam => {
     const actief = job.running && job.kind === naam;
@@ -560,9 +584,8 @@ function renderJob(job){
     });
   }
 
-  const doel = job.kind === 'publiceren' ? 'publish' : (job.kind || 'script');
-  const regel = $('line-' + (doel === 'video' ? 'video' : doel === 'publish' ? 'publish' : 'script'));
-  ['line-script','line-video','line-publish'].forEach(id => {
+  const regel = $(LIJNEN[job.kind] || 'line-script');
+  Object.values(LIJNEN).forEach(id => {
     if(id !== regel.id) $(id).textContent = '';
     $(id).classList.remove('err');
   });
@@ -581,11 +604,14 @@ function renderJob(job){
   const bezig = job.running;
   $('btn-script').disabled = bezig;
   $('btn-video').disabled = bezig || !state?.episode;
+  $('btn-short').disabled = bezig;
   $('btn-publish').disabled = bezig || !state?.keys.youtube;
   $('btn-script').textContent = (bezig && job.kind === 'script')
-    ? 'Claude schrijft…' : 'Schrijf het script';
+    ? 'Bezig met schrijven…' : 'Schrijf het script';
   $('btn-video').textContent = (bezig && job.kind === 'video')
     ? `Bezig… ${Math.round(job.fraction * 100)}%` : 'Maak de video';
+  $('btn-short').textContent = (bezig && job.kind === 'short')
+    ? `Bezig… ${Math.round(job.fraction * 100)}%` : 'Maak een Short';
 }
 
 /* ── archief ──────────────────────────────────────────────────── */
@@ -677,6 +703,10 @@ $('btn-script').onclick = async () => {
 $('btn-video').onclick = async () => {
   try{ await api('/api/video', {}); await refresh(); }
   catch(err){ fout('line-video', err); }
+};
+$('btn-short').onclick = async () => {
+  try{ await api('/api/short', {hint: $('hint').value}); await refresh(); }
+  catch(err){ fout('line-short', err); }
 };
 $('btn-publish').onclick = async () => {
   if(!confirm('De video wordt nu echt op je YouTube-kanaal gezet. Doorgaan?')) return;
