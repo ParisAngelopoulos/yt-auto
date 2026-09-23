@@ -1,5 +1,615 @@
 [
   {
+    "idea": "Iemand loopt na donker over een weg waar gewaarschuwd voor is (Ireland)",
+    "title": "Cormac and the Late Road",
+    "description": "Everybody at Inisheer knows which road not to take after dark, and Cormac takes it anyway, for the usual reason: it is shorter. Versions of it are told across Ireland. This retelling is our own.",
+    "tags": [
+      "folklore",
+      "myths and legends",
+      "folk tale retold",
+      "storytelling",
+      "irish folklore",
+      "ireland folk tale",
+      "folk tale",
+      "night road",
+      "ghost story",
+      "the old road"
+    ],
+    "lesson_kind": "irish",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "Cormac and the Late Road. A tale from the west of Ireland.",
+        "item": null,
+        "title": "Cormac and the Late Road",
+        "subtitle": "A tale from the west of Ireland",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "Nobody at Inisheer would tell you it was dangerous. They would only say they went the other way.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "Cormac was a fiddler there, young enough to find that funny.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The old road is older than the village. You can see where it was cut into the slope.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "There is a stone halfway along it with nothing written on it any more.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "Carts stopped using it when the new road went in, and after that it went to grass.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "In summer it is a pleasant walk. Everybody agrees about that too.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The difference between the two roads is an hour of daylight, and everybody at Inisheer has made that trade.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The road went up and did not come down again for an hour.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "There is more sky than land in that part of the country.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The walls run straight up the slope instead of across it, which tells you who made them and when.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "Everything at Inisheer is built out of what was already lying there.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "turn",
+        "narration": "It was the end of the summer, and the light was going faster every week, and he had stayed too long.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "For the first mile there was still enough light to see the ruts.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "He walked fast, the way you do when you have decided something you are not sure about.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "An old man at the last house called something after him. He did not hear it properly and did not go back.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The wind was behind him, which is the only good thing that can be said about that night.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "By the stone, the light had gone altogether.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The last of the daylight went while there was still an hour to walk.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "He had done the walk a hundred times and never once at that hour.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It is four hours on foot and there is no shelter in the middle of it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There is one place on that road where you can see where you are going and where you have been at the same time.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "Somewhere ahead, on a road where there was nobody, there were footsteps.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He stepped off the road to let them pass, which is only manners.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "There were a great many of them and they made almost no sound.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "They went by two and three at a time, and none of them looked at him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He knew one of the faces. He had carried that one to the churchyard the winter before.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He did not move. He could not have said afterwards whether that was courage or the other thing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The fire in the grate leaned away from nothing at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The birds went quiet before it, the way they do before a change.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "His own footsteps sounded as though somebody else were making them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The dogs at Inisheer would not settle that night, and nobody could say why.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "turn",
+        "narration": "One turned out of the line and stood in the road, and it was a rider on a white horse.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "speech",
+        "narration": "\"You should not be able to see us,\" it said. \"That is the trouble with this road.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It asked him where he was going, and he pointed, because he could not speak.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It looked at him for what felt like a long time.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It said he was to walk it without stopping and without looking behind him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "So he walked. The road went where it had never gone before, and he took it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Twice he heard his own name behind him, in a voice he knew, and did not turn.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The third time it was the voice of somebody who had been dead eleven years.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "He kept his eyes on the ground in front of his own feet and counted nothing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The light came up while he was still walking, which should not have been possible.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Nobody was on the road. At that hour nobody ever was.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Cormac walked with the light behind and the hills coming up slowly ahead.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The way ran along the lough for a mile and then turned up into the low hills.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "There is no shelter on that stretch and everybody who uses it knows the fact by heart.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "close",
+        "narration": "He came into Inisheer at first light, from the wrong direction, with his coat soaked through.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "He had been gone one night. The village had been looking for him for three days.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "His hair had gone white at one side and stayed that way.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "He never used the short road again, and never told anybody not to.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "When people asked, he said only that there had been a lot of them and they were not in a hurry.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "What is certain is that Cormac never spoke of it again, and never had to.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Somebody wrote it down eventually, which is how it comes to be here.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The house is gone now. The wall of it is still there, up to about knee height.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "They still point out the place. It is not marked, but everybody knows it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "The advice in this story is the kind that is only ever given once and never taken.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "This story comes from the west of Ireland, where it was gathered from tellers who had it from their own grandparents.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "The words here are ours; the tale is theirs.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "local",
+    "key": "cormac-and-the-late-road",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "village",
+        "time": "dusk",
+        "weather": "none",
+        "caption": "Inisheer",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.26,
+            "scale": 0.13,
+            "depth": 0.8
+          },
+          {
+            "draw": "signpost",
+            "x": 0.58,
+            "scale": 0.07,
+            "depth": 0.92
+          }
+        ]
+      },
+      {
+        "setting": "moor",
+        "time": "dusk",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "man",
+            "x": 0.3,
+            "scale": 0.11,
+            "depth": 0.92
+          },
+          {
+            "draw": "signpost",
+            "x": 0.66,
+            "scale": 0.06,
+            "depth": 0.88
+          }
+        ]
+      },
+      {
+        "setting": "moor",
+        "time": "moonlit",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "man",
+            "x": 0.24,
+            "scale": 0.11,
+            "depth": 0.93
+          },
+          {
+            "draw": "dead_tree",
+            "x": 0.7,
+            "scale": 0.19,
+            "depth": 0.84
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "night",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "rider",
+            "x": 0.48,
+            "scale": 0.14,
+            "depth": 0.8
+          },
+          {
+            "draw": "standing_stones",
+            "x": 0.14,
+            "scale": 0.12,
+            "depth": 0.7
+          }
+        ]
+      },
+      {
+        "setting": "moor",
+        "time": "night",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "man",
+            "x": 0.52,
+            "scale": 0.12,
+            "depth": 0.94
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "dawn",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.34,
+            "scale": 0.13,
+            "depth": 0.82
+          },
+          {
+            "draw": "church",
+            "x": 0.7,
+            "scale": 0.16,
+            "depth": 0.76
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-23T10:33:30+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Iemand loopt na donker over een weg waar gewaarschuwd voor is (Japan)",
     "title": "Hana and the Late Road",
     "description": "Everybody at Kurokawa knows which road not to take after dark, and Hana takes it anyway, for the usual reason: it is shorter. Versions of it are told across Japan. This retelling is our own.",
