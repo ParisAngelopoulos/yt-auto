@@ -19,6 +19,20 @@ video:
   crf: 20                       # lager = betere kwaliteit, groter bestand
 
 # ------------------------------------------------------------
+#  SHORTS
+#  Staand beeld voor YouTube Shorts, TikTok en Reels. Hetzelfde
+#  tekenwerk en dezelfde stem, maar een ander formaat en een
+#  strakker tempo: een Short opent met een haak en duurt rond
+#  de minuut. Maken met: ytauto short
+# ------------------------------------------------------------
+shorts:
+  width: 1080
+  height: 1920
+  crossfade_seconds: 0.35       # korter dan bij een lang verhaal
+  lead_in: 0.15                 # stilte voor de zin
+  tail: 0.25                    # stilte erna
+
+# ------------------------------------------------------------
 #  STEM
 #  piper      gratis en lokaal. Het stemmodel wordt de eerste
 #             keer opgehaald (ongeveer 60 MB) en werkt daarna

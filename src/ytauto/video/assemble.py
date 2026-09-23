@@ -78,7 +78,10 @@ def prepare_assets(
         scene.audio_path = str(mp3)
         scene.duration = spoken
 
-        hold = max(scene.min_duration, LEAD_IN + spoken + TAIL) + scene.pause_after
+        # Bij een Short is de adem voor en na de zin korter; daar is stilte
+        # geen rust maar dode tijd.
+        lucht = float(cfg.video.get("lead_in", LEAD_IN)) + float(cfg.video.get("tail", TAIL))
+        hold = max(scene.min_duration, lucht + spoken) + scene.pause_after
         hold = max(hold, float(cfg.safety.get("min_scene_seconds", 2.5)))
         holds.append(hold)
 

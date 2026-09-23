@@ -200,6 +200,65 @@ def make_script(cfg: Config, hint: str | None = None, store: Store | None = None
 
 
 # ---------------------------------------------------------------------------
+#  Shorts
+# ---------------------------------------------------------------------------
+
+
+def shorts_config(cfg: Config) -> Config:
+    """Dezelfde config, maar staand en met een strakker tempo.
+
+    De rest van de pipeline hoeft niets van Shorts te weten: hij leest de
+    afmetingen uit `video`, en die worden hier vervangen door wat er in de
+    `shorts`-sectie staat.
+    """
+    import copy
+
+    raw = copy.deepcopy(cfg.raw)
+    shorts = raw.get("shorts", {})
+    raw["video"].update({
+        "width": int(shorts.get("width", 1080)),
+        "height": int(shorts.get("height", 1920)),
+        "crossfade_seconds": float(shorts.get("crossfade_seconds", 0.35)),
+        "lead_in": float(shorts.get("lead_in", 0.15)),
+        "tail": float(shorts.get("tail", 0.25)),
+    })
+    return Config(raw=raw, curriculum=cfg.curriculum, secrets=cfg.secrets)
+
+
+def make_short(cfg: Config, hint: str | None = None,
+               store: Store | None = None) -> tuple[Config, Episode]:
+    """Schrijft een Short en geeft de config terug waarmee hij gerenderd wordt.
+
+    Alleen de ingebouwde verteller maakt Shorts. Claude en Ollama schrijven
+    lange verhalen; die in een minuut persen levert een samenvatting op, en
+    een samenvatting is geen Short.
+    """
+    from .scripting.local_writer import write_short
+
+    if cfg.channel.get("format", "kids") != "folklore":
+        raise ValueError(
+            "Shorts bestaan alleen voor de volksverhalen-vorm. "
+            "Zet channel.format op 'folklore' in config/channel.yaml."
+        )
+
+    store = store or Store()
+    staand = shorts_config(cfg)
+    blueprint = write_short(staand, taken=store.taken_keys(), hint=hint)
+
+    report = check_blueprint(staand, blueprint)
+    if not report.ok:
+        raise ValueError("Short afgekeurd door de veiligheidscontrole:\n" + report.summary())
+
+    workdir = OUT_DIR / blueprint.slug
+    workdir.mkdir(parents=True, exist_ok=True)
+    store.save_blueprint(blueprint)
+    blueprint.save(workdir / "blueprint.json")
+
+    set_current(blueprint.key)
+    return staand, Episode(blueprint=blueprint, workdir=workdir)
+
+
+# ---------------------------------------------------------------------------
 #  Stap 2: video
 # ---------------------------------------------------------------------------
 

@@ -29,6 +29,8 @@ Jij hebt twee knoppen. Of nul, als je hem op de planner zet.
        jij leest het mee              mp4 + thumbnail, klaar
 ```
 
+Of één knop, als je een Short wilt: die schrijft en rendert in één keer.
+
 ---
 
 ## Beginnen
@@ -154,6 +156,40 @@ manier waarop er iets afgeschreven kan worden. Wil je dat uitsluiten, zet
 
 Publiceren op YouTube is sowieso gratis; daar heb je alleen een eenmalige
 koppeling voor nodig.
+
+---
+
+## Shorts
+
+Naast de lange verhalen maakt de studio staande video's van rond de minuut,
+voor YouTube Shorts, TikTok en Reels. Zelfde tekenwerk, zelfde stem, zelfde
+prijs — namelijk niets.
+
+```bash
+ytauto short                    # schrijven en renderen in één keer
+ytauto short --hint norse       # een wens meegeven
+ytauto short --script-only      # eerst lezen, later pas renderen
+```
+
+Op de bedieningspagina staat er een knop voor, onder de twee grote.
+
+**Wat er anders is aan een Short.** Niet de lengte alleen. Een verhaal van
+tien minuten mag rustig beginnen; een Short die rustig begint wordt
+weggeklikt. Daarom opent hij met een haak — wat er op het spel staat, of hoe
+het afloopt — en pas daarna met wie en waar. De zinnen komen uit hetzelfde
+patroon als het lange verhaal, maar er worden er tien gekozen in plaats van
+zeventig, en de stiltes ertussen zijn korter.
+
+Het beeld is 1080×1920. Bijschriften staan hoger in beeld dan bij een lange
+video: onderin legt YouTube zijn eigen titel, kanaalnaam en knoppen neer, en
+wat daar staat leest niemand.
+
+Aanpassen kan in `config/channel.yaml` onder `shorts:` — formaat, overgangen
+en hoeveel stilte er voor en na een zin zit.
+
+Publiceren gaat voorlopig met de hand: `ytauto short` zet de mp4 in `out/`,
+en die sleep je naar YouTube. De automatische upload werkt alleen voor de
+lange video's.
 
 ---
 
@@ -287,6 +323,9 @@ video:
   target_duration_minutes: 11   # 8 tot 15 werkt het best voor een verhaal
 script:
   provider: auto                # auto | local | ollama | claude
+shorts:
+  width: 1080                   # staand formaat voor Shorts en Reels
+  height: 1920
 tts:
   provider: piper               # piper (gratis) | elevenlabs | offline
   voice_model: en_GB-alan-medium
@@ -439,7 +478,8 @@ plek verandert.
 ```bash
 ytauto setup       # sleutels invoeren en meteen testen
 ytauto panel       # bedieningspagina met de twee knoppen
-ytauto script      # laat een aflevering schrijven en print hem
+ytauto script      # laat een aflevering schrijven
+ytauto short       # maak een Short: staand beeld, rond de minuut en print hem
 ytauto video       # maak de video van het laatste script
 ytauto publish     # zet die video op YouTube
 ytauto run         # alles achter elkaar, zonder tussenkomst
