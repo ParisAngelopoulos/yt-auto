@@ -231,6 +231,27 @@ langs beweegt. De getallen moeten kloppen: dat is de hele kracht van de vorm.
 
 Eén afdaling duurt ongeveer een minuut en kost een minuut om te maken.
 
+Wil je alleen het beeld beoordelen, dan hoef je niet elke keer op de stem te
+wachten:
+
+```bash
+ytauto descent --preview        # 20 seconden, stil, het hele bereik
+ytauto descent --preview 8      # of korter
+```
+
+Dat perst de hele afdaling samen in die tijd, zonder in te spreken. Handig
+bij het sleutelen aan het beeld, want daar gaat het meeste tijd in zitten.
+
+**Waarom het eruitziet zoals het eruitziet.** Er komt geen beeldgenerator aan
+te pas; alles is getekend met polygonen en verlopen. Dat betekent dat het
+nooit fotorealistisch wordt, maar ook dat er geen kosten en geen
+rechtenvraag zijn. Wat het beeld draagt zijn vier dingen die niets kosten:
+de deeltjes komen op drie verschillende snelheden voorbij (daar leidt het oog
+diepte uit af, niet uit een kleurverloop), de camera drijft zacht heen en
+weer in plaats van zuiver verticaal te schuiven, vlak onder het oppervlak
+danst een golfpatroon van licht, en alles onder de vijfhonderd meter krijgt
+een gloed alsof het door je eigen lamp wordt aangeschenen.
+
 ---
 
 ## De sleutels — allemaal optioneel

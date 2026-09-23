@@ -281,7 +281,8 @@ def load_journeys(path: Path | None = None) -> list[dict]:
     return yaml.safe_load(pad.read_text(encoding="utf-8")).get("journeys", [])
 
 
-def make_descent(cfg: Config, key: str = "", progress: Progress = _noop) -> Path:
+def make_descent(cfg: Config, key: str = "", progress: Progress = _noop,
+                 preview_seconds: float = 0.0) -> Path:
     """Maakt een afdaling: één doorlopende beweging van boven naar beneden.
 
     Dit gaat bewust buiten de boekhouding om. Een afdaling heeft geen beats
@@ -301,8 +302,8 @@ def make_descent(cfg: Config, key: str = "", progress: Progress = _noop) -> Path
 
     staand = shorts_config(cfg)
     workdir = OUT_DIR / f"{gekozen['key']}-descent"
-    return render(staand, gekozen, workdir,
-                  seed=episode_seed(gekozen["key"]), progress=progress)
+    return render(staand, gekozen, workdir, seed=episode_seed(gekozen["key"]),
+                  progress=progress, preview_seconds=preview_seconds)
 
 
 # ---------------------------------------------------------------------------

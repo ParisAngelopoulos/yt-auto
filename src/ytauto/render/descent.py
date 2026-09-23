@@ -92,6 +92,41 @@ def _light_rays(laag: Image.Image, width: int, tot_y: int, seed: int) -> None:
     laag.alpha_composite(licht, (0, 0))
 
 
+def _caustics(laag: Image.Image, width: int, tot_y: int, seed: int) -> None:
+    """Het golfpatroon dat vlak onder het oppervlak over alles danst.
+
+    Dit is wat ondiep water er ondiep uit laat zien. Zonder dit is de
+    bovenkant een vlak blauw verloop, en een vlak verloop leest als papier.
+    """
+    if tot_y < 40:
+        return
+    rng = random.Random(seed + 41)
+    patroon = Image.new("L", (width, tot_y), 0)
+    d = ImageDraw.Draw(patroon)
+    # Dunne, lange lijnen met een flauwe golf erin. Dik en sterk vervaagd
+    # lopen ze in elkaar en wordt het camouflage in plaats van licht.
+    for _ in range(int(tot_y / 11) + 24):
+        y = rng.uniform(0, tot_y)
+        dikte = rng.uniform(width * 0.0018, width * 0.0055)
+        golf = rng.uniform(width * 0.015, width * 0.045)
+        frequentie = rng.uniform(3, 7)
+        fase = rng.random() * 6.28
+        punten = [(x, y + golf * math.sin(x / width * frequentie + fase))
+                  for x in range(0, width + 30, 30)]
+        d.line(punten, fill=rng.randint(45, 105), width=max(1, int(dikte)))
+    patroon = patroon.filter(ImageFilter.GaussianBlur(width * 0.005))
+
+    verloop = Image.new("L", (width, tot_y))
+    vd = ImageDraw.Draw(verloop)
+    for y in range(tot_y):
+        vd.line([(0, y), (width, y)], fill=int(255 * (1.0 - y / tot_y) ** 2.0))
+    patroon = Image.composite(patroon, Image.new("L", patroon.size, 0), verloop)
+
+    licht = Image.new("RGBA", (width, tot_y), (214, 244, 255, 0))
+    licht.putalpha(patroon)
+    laag.alpha_composite(licht, (0, 0))
+
+
 def _marine_snow(laag: Image.Image, width: int, height: int, seed: int) -> None:
     """Zwevende deeltjes. Dit is wat de beweging zichtbaar maakt.
 
@@ -167,8 +202,8 @@ def water_column(width: int, scale: DepthScale, seed: int = 0,
         _sky(kolom, width, top_px)
 
     water = Image.new("RGBA", (width, height - top_px), (0, 0, 0, 0))
-    _light_rays(water, width, int(scale.y(120)), seed)
-    _marine_snow(water, width, height - top_px, seed)
+    _caustics(water, width, int(scale.y(45)), seed)
+    _light_rays(water, width, int(scale.y(160)), seed)
     kolom.alpha_composite(water, (0, top_px))
 
     if floor_px:
@@ -223,7 +258,22 @@ def place_milestones(plaats: "Column", milestones: list[dict], seed: int = 0) ->
             hoogte = max(12, int(breed * proef.height / max(1, proef.width)))
             beeld = render_creature(naam, hoogte, kleur)
             x = int(width * (0.09 if links else 0.91)) - (0 if links else beeld.width)
-            kolom.alpha_composite(beeld, (x, y - beeld.height - int(width * 0.03)))
+            boven = y - beeld.height - int(width * 0.03)
+
+            # In het donker licht alles wat je ziet zelf op, of wordt het door
+            # jouw lamp aangeschenen. Een harde rand tegen zwart water leest
+            # als een sticker; een zachte gloed eromheen leest als diepte.
+            if diepte > 500:
+                straal = max(6, int(hoogte * 0.16))
+                gloed = Image.new("RGBA", (beeld.width + straal * 4,
+                                           beeld.height + straal * 4), (0, 0, 0, 0))
+                gloed.alpha_composite(beeld, (straal * 2, straal * 2))
+                gloed = gloed.filter(ImageFilter.GaussianBlur(straal))
+                verf = Image.new("RGBA", gloed.size, (90, 170, 210, 0))
+                verf.putalpha(gloed.getchannel("A").point(lambda v: int(v * 0.55)))
+                kolom.alpha_composite(verf, (x - straal * 2, boven - straal * 2))
+
+            kolom.alpha_composite(beeld, (x, boven))
 
         _rule(kolom, y, width, 60 if not steen.get("label") else 105)
 
@@ -272,3 +322,59 @@ def build_column(width: int, journey: dict, seed: int = 0) -> Column:
     plaats = Column(image=kolom, scale=scale, top_px=top_px)
     place_milestones(plaats, journey["milestones"], seed=seed)
     return plaats
+
+
+# ---------------------------------------------------------------------------
+#  Zwevende deeltjes, in lagen
+# ---------------------------------------------------------------------------
+
+
+class ParticleField:
+    """Deeltjes op drie afstanden, die dus niet even snel voorbijkomen.
+
+    Dit is het verschil tussen 'een plaat schuift omhoog' en 'ik zak ergens
+    doorheen'. Alles met dezelfde snelheid laten bewegen is precies wat een
+    beeld plat maakt: het oog leidt diepte af uit snelheidsverschil, niet uit
+    een kleurverloop. De verste laag beweegt op zes tiende van de camera, de
+    dichtste op anderhalf — en die laatste is groter en waziger, zoals iets
+    dat vlak voor je lens langsdrijft.
+    """
+
+    SPEEDS = (0.55, 1.0, 1.55)
+    SIZES = (1.1, 2.0, 4.6)
+    ALPHAS = (0.45, 0.8, 0.30)
+
+    def __init__(self, width: int, column_height: int, view_height: int,
+                 seed: int = 0, density: float = 1.0) -> None:
+        import numpy as np
+
+        self.width = width
+        self.lagen = []
+        rng = random.Random(seed + 77)
+        for index, snelheid in enumerate(self.SPEEDS):
+            bereik = column_height * snelheid + view_height
+            aantal = int(bereik * width / 62000 * density)
+            ys = sorted(rng.uniform(0, bereik) for _ in range(aantal))
+            xs = [rng.uniform(0, width) for _ in range(aantal)]
+            radii = [rng.uniform(0.6, 1.6) * self.SIZES[index] * width / 1080
+                     for _ in range(aantal)]
+            alphas = [rng.uniform(0.4, 1.0) * self.ALPHAS[index] for _ in range(aantal)]
+            self.lagen.append((np.array(ys), xs, radii, alphas))
+
+    def draw(self, frame: Image.Image, camera_y: float, view_height: int,
+             fade: float = 1.0) -> None:
+        import numpy as np
+
+        d = ImageDraw.Draw(frame, "RGBA")
+        for (ys, xs, radii, alphas), snelheid in zip(self.lagen, self.SPEEDS):
+            boven = camera_y * snelheid
+            eerste = int(np.searchsorted(ys, boven))
+            laatste = int(np.searchsorted(ys, boven + view_height))
+            for index in range(eerste, laatste):
+                y = ys[index] - boven
+                r = radii[index]
+                a = int(255 * alphas[index] * fade)
+                if a <= 2:
+                    continue
+                x = xs[index]
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(206, 230, 246, a))

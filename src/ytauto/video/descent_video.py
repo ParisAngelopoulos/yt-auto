@@ -15,6 +15,7 @@ sneller of langzamer blijkt te lezen dan gedacht.
 
 from __future__ import annotations
 
+import math
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -26,7 +27,7 @@ from PIL import Image, ImageDraw
 from ..audio.music import SAMPLE_RATE, bed_for, write_wav
 from ..config import Config
 from ..media import ffmpeg_bin
-from ..render.descent import Column, build_column
+from ..render.descent import Column, ParticleField, build_column
 from ..render.story_scene import load_font
 from ..tts import synthesize
 from .assemble import decode_audio
@@ -34,6 +35,7 @@ from .assemble import decode_audio
 Progress = Callable[[str, float], None]
 
 GAP = 0.28              # stilte tussen twee regels
+SWAY = 0.055            # hoeveel breder de kolom is dan het beeld, voor drift
 HOOK_HOLD = 2.2         # hoe lang de openingsvraag blijft staan
 FOCUS = 0.55            # waar in beeld een mijlpaal staat als hij genoemd wordt
 
@@ -165,25 +167,56 @@ def build_audio(cfg: Config, lijnen: list[Line], workdir: Path,
     return doel
 
 
+def sweep_path(column: Column, height: int, seconds: float, fps: int) -> np.ndarray:
+    """Van boven naar beneden in één beweging, zonder stem.
+
+    Voor het uitproberen van het beeld: je ziet het hele bereik in twintig
+    seconden in plaats van in vijfenzeventig, en er hoeft niets ingesproken
+    te worden.
+    """
+    max_y = column.image.height - height
+    frames = max(2, int(round(seconds * fps)))
+    deel = np.linspace(0.0, 1.0, frames)
+    zacht = deel * deel * (3 - 2 * deel)
+    return zacht * max_y
+
+
 def render(cfg: Config, journey: dict, workdir: Path, seed: int = 0,
-           progress: Progress = _noop) -> Path:
-    """Maakt de complete video en geeft het pad terug."""
+           progress: Progress = _noop, preview_seconds: float = 0.0) -> Path:
+    """Maakt de complete video en geeft het pad terug.
+
+    Met `preview_seconds` komt er een stille proefversie uit die in die tijd
+    het hele bereik doorloopt. Bedoeld om het beeld te beoordelen zonder
+    elke keer anderhalve minuut te wachten.
+    """
     width, height = cfg.resolution
     fps = cfg.fps
     workdir.mkdir(parents=True, exist_ok=True)
 
     progress("de kolom tekenen", 0.02)
-    column = build_column(width, journey, seed=seed)
+    # De kolom is breder dan het beeld, zodat de camera zacht heen en weer
+    # kan drijven. Zuiver verticaal schuiven leest als een scrollbalk; een
+    # beetje zijwaartse beweging maakt er een camera van.
+    kolom_breed = int(width * (1.0 + SWAY))
+    column = build_column(kolom_breed, journey, seed=seed)
     totaal_m = float(journey["total"])
 
-    lijnen = build_lines(cfg, journey, column, workdir, progress=progress)
-    totaal = lijnen[-1].start + lijnen[-1].duration + 1.1
+    if preview_seconds > 0:
+        lijnen, audio = [], None
+        totaal = preview_seconds
+        pad = sweep_path(column, height, preview_seconds, fps)
+    else:
+        lijnen = build_lines(cfg, journey, column, workdir, progress=progress)
+        totaal = lijnen[-1].start + lijnen[-1].duration + 1.1
 
-    progress("geluid", 0.42)
-    audio = build_audio(cfg, lijnen, workdir, totaal, seed=seed)
-    pad = camera_path(lijnen, column, height, totaal, fps)
+        progress("geluid", 0.42)
+        audio = build_audio(cfg, lijnen, workdir, totaal, seed=seed)
+        pad = camera_path(lijnen, column, height, totaal, fps)
 
     kolom = np.asarray(column.image.convert("RGB"))
+    deeltjes = ParticleField(width, column.image.height, height, seed=seed)
+    vignet = _vignette(width, height)
+    speling = kolom_breed - width
     teller_font = load_font(int(width * 0.105), "IBMPlexSans", 700)
     eenheid_font = load_font(int(width * 0.040), "IBMPlexSans", 500)
     haak_font = load_font(int(width * 0.082), "IBMPlexSans", 700)
@@ -193,32 +226,45 @@ def render(cfg: Config, journey: dict, workdir: Path, seed: int = 0,
     # er netjes achter weg.
     scrim_h = int(height * 0.19)
     scrim = Image.new("RGBA", (width, scrim_h), (0, 0, 0, 0))
-    sluier = ImageDraw.Draw(scrim)
+    scrim_d = ImageDraw.Draw(scrim)
     for rij in range(scrim_h):
         deel = 1.0 - rij / scrim_h
-        sluier.line([(0, rij), (width, rij)], fill=(2, 14, 26, int(205 * deel ** 1.4)))
+        scrim_d.line([(0, rij), (width, rij)], fill=(2, 14, 26, int(205 * deel ** 1.4)))
 
-    uit = workdir / "video.mp4"
+    uit = workdir / ("preview.mp4" if preview_seconds > 0 else "video.mp4")
     opdracht = [
         ffmpeg_bin(), "-y",
         "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{width}x{height}",
         "-r", str(fps), "-i", "-",
-        "-i", str(audio),
-        "-map", "0:v", "-map", "1:a",
-        "-af", f"loudnorm=I={float(cfg.safety.get('loudness_lufs', -14))}:TP=-1.5:LRA=11",
+    ]
+    if audio is not None:
+        opdracht += [
+            "-i", str(audio), "-map", "0:v", "-map", "1:a",
+            "-af", f"loudnorm=I={float(cfg.safety.get('loudness_lufs', -14))}:TP=-1.5:LRA=11",
+            "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+        ]
+    opdracht += [
         "-c:v", "libx264", "-preset", str(cfg.video.get("encoder_preset", "veryfast")),
         "-crf", str(int(cfg.video.get("crf", 21))), "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
         "-movflags", "+faststart", str(uit),
     ]
     proces = subprocess.Popen(opdracht, stdin=subprocess.PIPE,
                               stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
-    haak_einde = lijnen[0].start + lijnen[0].duration + 0.7
+    haak_einde = (lijnen[0].start + lijnen[0].duration + 0.7) if lijnen else 0.0
     try:
         for index, y in enumerate(pad):
+            t = index / fps
             boven = int(y)
-            beeld = Image.fromarray(kolom[boven:boven + height])
+            zijwaarts = int(speling * 0.5 * (1.0 + math.sin(t * 0.21)))
+            beeld = Image.fromarray(
+                kolom[boven:boven + height, zijwaarts:zijwaarts + width])
+
+            # Deeltjes staan los van de kolom: ze komen op drie snelheden
+            # voorbij en maken zo het verschil tussen zakken en scrollen.
+            zicht = column.depth_at(boven + height * 0.5)
+            deeltjes.draw(beeld, y, height, fade=min(1.0, max(0.0, zicht / 6.0)))
+            beeld.paste(vignet, (0, 0), vignet)
             d = ImageDraw.Draw(beeld, "RGBA")
 
             # De teller leest op dezelfde lijn waar een mijlpaal staat als hij
@@ -235,7 +281,6 @@ def render(cfg: Config, journey: dict, workdir: Path, seed: int = 0,
                 d.text((width / 2, height * 0.133), journey.get("unit", "m"),
                        font=eenheid_font, anchor="mm", fill=(170, 210, 234, 215))
 
-            t = index / fps
             if t < haak_einde:
                 vervaag = min(1.0, (haak_einde - t) / 0.6)
                 _hook(d, journey["hook"], haak_font, width, height, vervaag)
@@ -275,3 +320,23 @@ def _hook(d: ImageDraw.ImageDraw, tekst: str, font, width: int, height: int,
                fill=(255, 255, 255, int(255 * alpha)),
                stroke_width=max(3, width // 170),
                stroke_fill=(0, 26, 44, int(215 * alpha)))
+
+
+def _vignette(width: int, height: int) -> Image.Image:
+    """Donkere randen. Houdt de blik in het midden en maakt het beeld dieper.
+
+    Wordt één keer gemaakt en daarna op elk beeldje geplakt; dat kost minder
+    dan een milliseconde omdat het plakken met een masker in C gebeurt.
+    """
+    from PIL import ImageDraw, ImageFilter
+
+    masker = Image.new("L", (width, height), 0)
+    ImageDraw.Draw(masker).ellipse(
+        [-width * 0.42, -height * 0.26, width * 1.42, height * 1.26], fill=255)
+    masker = masker.filter(ImageFilter.GaussianBlur(min(width, height) * 0.16))
+
+    # Zacht gehouden: bovenin ligt al een donkere sluier voor de dieptemeter,
+    # en twee donkere lagen over elkaar maken de bovenkant modderig.
+    laag = Image.new("RGBA", (width, height), (0, 6, 14, 0))
+    laag.putalpha(masker.point(lambda v: int((255 - v) * 0.40)))
+    return laag

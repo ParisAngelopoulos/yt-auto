@@ -90,7 +90,8 @@ def cmd_descent(args) -> int:
             print(f"  {reis['key']:12} {reis['title']}")
         return 0
 
-    video = make_descent(cfg, key=args.key or "", progress=_progress)
+    video = make_descent(cfg, key=args.key or "", progress=_progress,
+                         preview_seconds=args.preview or 0.0)
     print(f"  Klaar: {video}")
     return 0
 
@@ -401,6 +402,8 @@ def main() -> int:
     descent = subparsers.add_parser("descent", help="maak een afdaling (staand, doorlopend)")
     descent.add_argument("--key", help="welke reis uit config/journeys.yaml")
     descent.add_argument("--list", action="store_true", help="toon de beschikbare reizen")
+    descent.add_argument("--preview", type=float, nargs="?", const=20.0, metavar="SEC",
+                         help="stille proefversie van zoveel seconden (standaard 20)")
     descent.set_defaults(func=cmd_descent)
 
     subparsers.add_parser("video", help="maak de video").set_defaults(func=cmd_video)
