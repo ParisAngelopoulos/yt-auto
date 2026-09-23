@@ -28,8 +28,10 @@ video:
 shorts:
   width: 1080
   height: 1920
-  crossfade_seconds: 0.35       # korter dan bij een lang verhaal
-  lead_in: 0.15                 # stilte voor de zin
+  captions: true                # tekst in beeld; de meesten kijken zonder geluid
+  crossfade_seconds: 0.30       # korter dan bij een lang verhaal
+  encoder_preset: veryfast      # vlak beeld; sneller zonder zichtbaar verlies
+  lead_in: 0.30                 # stilte voor de zin; even lang als de overgang
   tail: 0.25                    # stilte erna
 
 # ------------------------------------------------------------

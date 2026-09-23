@@ -180,6 +180,17 @@ het afloopt — en pas daarna met wie en waar. De zinnen komen uit hetzelfde
 patroon als het lange verhaal, maar er worden er tien gekozen in plaats van
 zeventig, en de stiltes ertussen zijn korter.
 
+**De tekst staat in beeld.** Het grootste deel van de Shorts wordt zonder
+geluid bekeken; een verhaal dat alleen verteld wordt is dan een reeks
+landschappen zonder betekenis. Elke zin wordt daarom in stukjes van een paar
+woorden geknipt — op de leestekens, want daar ademt de verteller — en die
+stukjes staan in beeld zolang ze ongeveer duren. Uitzetten kan met
+`captions: false` onder `shorts:`.
+
+Een Short is in ongeveer een halve minuut klaar. Het beeld wordt maar één
+keer per scene getekend en de stukken video worden naast elkaar gecodeerd;
+dat scheelt ook bij de lange video's.
+
 Het beeld is 1080×1920. Bijschriften staan hoger in beeld dan bij een lange
 video: onderin legt YouTube zijn eigen titel, kanaalnaam en knoppen neer, en
 wat daar staat leest niemand.
@@ -326,6 +337,7 @@ script:
 shorts:
   width: 1080                   # staand formaat voor Shorts en Reels
   height: 1920
+  captions: true                # tekst in beeld
 tts:
   provider: piper               # piper (gratis) | elevenlabs | offline
   voice_model: en_GB-alan-medium
@@ -546,6 +558,7 @@ kan.
 | `Script afgekeurd door de veiligheidscontrole` | De melding noemt het woord. Pas `config/brief.md` aan |
 | `thumbnail niet geplaatst` | Een eigen thumbnail vereist een geverifieerd YouTube-kanaal |
 | Video duurt lang om te maken | Normaal is 8–15 minuten. Sneller: `encoder_preset: veryfast` |
+| Tekst in beeld loopt niet gelijk met de stem | De stukjes krijgen tijd naar rato van hun lengte, niet op de stem uitgelijnd. Bij een gelijkmatige verteller valt dat weg; klopt het echt niet, zet `captions: false` |
 | `Alle verhalen zijn gemaakt` | Kan alleen nog bij `provider: template`. Zet hem op `auto` of `local`; de verteller raakt niet op |
 
 Tests draaien: `pytest -q`

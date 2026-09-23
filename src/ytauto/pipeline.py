@@ -218,9 +218,15 @@ def shorts_config(cfg: Config) -> Config:
     raw["video"].update({
         "width": int(shorts.get("width", 1080)),
         "height": int(shorts.get("height", 1920)),
-        "crossfade_seconds": float(shorts.get("crossfade_seconds", 0.35)),
-        "lead_in": float(shorts.get("lead_in", 0.15)),
+        "crossfade_seconds": float(shorts.get("crossfade_seconds", 0.30)),
+        # De aanloop is even lang als de overgang, zodat de ondertiteling
+        # pas begint als het vorige beeld helemaal weg is.
+        "lead_in": float(shorts.get("lead_in", shorts.get("crossfade_seconds", 0.30))),
+        "captions": bool(shorts.get("captions", True)),
         "tail": float(shorts.get("tail", 0.25)),
+        # Het beeld is vlak getekend werk; tussen 'medium' en 'veryfast' zit
+        # bij deze crf geen zichtbaar verschil, wel de helft van de tijd.
+        "encoder_preset": str(shorts.get("encoder_preset", "veryfast")),
     })
     return Config(raw=raw, curriculum=cfg.curriculum, secrets=cfg.secrets)
 

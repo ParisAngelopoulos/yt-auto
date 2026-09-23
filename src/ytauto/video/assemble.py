@@ -12,8 +12,11 @@ zodat beeld en geluid niet uit elkaar kunnen lopen bij een lange video.
 
 from __future__ import annotations
 
+import json
+import os
 import shutil
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -68,10 +71,21 @@ def prepare_assets(
     resolution = cfg.resolution
     holds: list[float] = []
 
+    # Opeenvolgende beats delen meestal hetzelfde beeld. Dat beeld twee keer
+    # tekenen kost bij een lang verhaal tientallen seconden voor een bestand
+    # dat er al is; de bytes kopiëren kost een milliseconde.
+    getekend: dict[str, Path] = {}
+
     for index, scene in enumerate(scenes):
         png = frames_dir / f"{scene.id}.png"
         if not png.exists():
-            render_frame(scene.visual, resolution, seed=seed + index).save(png, optimize=False)
+            stempel = json.dumps(scene.visual, sort_keys=True)
+            eerder = getekend.get(stempel)
+            if eerder is not None and eerder.exists():
+                png.write_bytes(eerder.read_bytes())
+            else:
+                render_frame(scene.visual, resolution, seed=seed + index).save(png, optimize=False)
+                getekend[stempel] = png
 
         mp3 = voice_dir / f"{scene.id}.mp3"
         spoken = synthesize(cfg, scene.narration, mp3, cache_dir=workdir.parent / "voice-cache")
@@ -124,7 +138,10 @@ def build_audio_track(
         if not scene.audio_path:
             continue
         samples = decode_audio(Path(scene.audio_path))
-        offset = int((start + LEAD_IN) * SAMPLE_RATE)
+        # Dezelfde aanloop als waarmee de schermtijd berekend is. Stond hier
+        # de vaste LEAD_IN, dan zou een Short zijn eigen kortere aanloop niet
+        # terugzien en zou de staart korter uitvallen dan bedoeld.
+        offset = int((start + float(cfg.video.get("lead_in", LEAD_IN))) * SAMPLE_RATE)
         end = min(total_samples, offset + len(samples))
         if end > offset:
             voice[offset:end] += samples[:end - offset]
@@ -203,7 +220,96 @@ def plan_segments(holds: list[float], fade: float) -> list[tuple[str, int, float
     return stukken
 
 
-def _frame_counts(stukken: list[tuple[str, int, float]], fps: int) -> list[int]:
+@dataclass
+class Shot:
+    """Eén stuk video: welk beeld, hoe lang, en welk bestand het gebruikt."""
+
+    kind: str                   # hold | xfade
+    scene: int
+    seconds: float
+    image: Path | None = None   # afwijkend beeld, bijvoorbeeld met tekst erin
+
+
+def caption_plan(cfg: Config, timeline: Timeline) -> list[list]:
+    """Per beat de stukjes tekst met hun tijd op de tijdlijn."""
+    from .captions import time_chunks
+
+    lead = float(cfg.video.get("lead_in", LEAD_IN))
+    plan = []
+    for scene, start in zip(timeline.scenes, timeline.starts):
+        plan.append(time_chunks(scene.narration, start + lead, scene.duration))
+    return plan
+
+
+def with_captions(cfg: Config, timeline: Timeline, stukken: list[tuple[str, int, float]],
+                  fade: float, frames_dir: Path, deel_dir: Path) -> list[Shot]:
+    """Knipt de stilstaande stukken op waar de ondertiteling wisselt.
+
+    Elk stukje krijgt zijn eigen beeld met de tekst er al in gebrand. Dat is
+    bewust: zo blijft elk stuk een stilstaand beeld en verandert er niets aan
+    de manier waarop er gecodeerd wordt.
+    """
+    from PIL import Image
+
+    from .captions import burn_in
+
+    if not cfg.video.get("captions"):
+        return [Shot(kind=k, scene=i, seconds=s) for k, i, s in stukken]
+
+    plan = caption_plan(cfg, timeline)
+    minimum = 2.0 / cfg.fps
+    shots: list[Shot] = []
+    verstreken = 0.0
+    teller = 0
+
+    for soort, index, seconden in stukken:
+        begin, eind = verstreken, verstreken + seconden
+        verstreken = eind
+
+        if soort != "hold":
+            shots.append(Shot(kind=soort, scene=index, seconds=seconden))
+            continue
+
+        # De grenzen binnen dit stuk: waar tekst begint en waar hij ophoudt.
+        stukjes = [c for c in plan[index] if c.end > begin and c.start < eind]
+        grenzen: list[tuple[float, float, str]] = []
+        loop = begin
+        for chunk in stukjes:
+            start = max(chunk.start, begin)
+            stop = min(chunk.end, eind)
+            if start > loop:
+                grenzen.append((loop, start, ""))
+            grenzen.append((start, stop, chunk.text))
+            loop = stop
+        if loop < eind:
+            grenzen.append((loop, eind, ""))
+        if not grenzen:
+            grenzen = [(begin, eind, "")]
+
+        # Snippers van minder dan twee beeldjes zijn niet te zien en
+        # verstoren alleen de afrondingen; die gaan bij de buurman.
+        samengevoegd: list[list] = []
+        for start, stop, tekst in grenzen:
+            if samengevoegd and stop - start < minimum:
+                samengevoegd[-1][1] = stop
+            else:
+                samengevoegd.append([start, stop, tekst])
+
+        basis = frames_dir / f"{timeline.scenes[index].id}.png"
+        for start, stop, tekst in samengevoegd:
+            beeld = None
+            if tekst:
+                beeld = deel_dir / f"cap-{teller:04d}.png"
+                teller += 1
+                with Image.open(basis) as origineel:
+                    burn_in(origineel, tekst).save(beeld, optimize=False)
+            shots.append(Shot(kind="hold", scene=index,
+                              seconds=stop - start, image=beeld))
+
+    return shots
+
+
+def _frame_counts(seconden: list[float], fps: int) -> list[int]:
     """Zet seconden om in hele beeldjes zonder dat de afrondingen oplopen.
 
     Per stuk afronden zou bij zestig scenes een seconde kunnen schelen, en
@@ -213,7 +319,7 @@ def _frame_counts(stukken: list[tuple[str, int, float]], fps: int) -> list[int]:
     aantallen: list[int] = []
     verstreken = 0.0
     vorige = 0
-    for _, _, seconden in stukken:
+    for seconden in seconden:
         verstreken += seconden
         grens = round(verstreken * fps)
         aantallen.append(max(1, grens - vorige))
@@ -252,34 +358,40 @@ def build_video(
     deel_dir.mkdir(parents=True)
 
     stukken = plan_segments(list(timeline.holds), fade)
-    beeldjes = _frame_counts(stukken, fps)
+    shots = with_captions(cfg, timeline, stukken, fade, frames_dir, deel_dir)
+    beeldjes = _frame_counts([shot.seconds for shot in shots], fps)
     encoder = _encoder_args(cfg)
     filters = f"fps={fps},format=yuv420p,setsar=1"
 
-    delen: list[Path] = []
-    for nummer, ((soort, index, seconden), aantal) in enumerate(zip(stukken, beeldjes)):
+    def opdracht(nummer: int, shot: Shot, aantal: int) -> list[str]:
         doel = deel_dir / f"{nummer:04d}.mp4"
-        eerste = frames_dir / f"{timeline.scenes[index].id}.png"
+        eerste = shot.image or frames_dir / f"{timeline.scenes[shot.scene].id}.png"
         ruim = (aantal + 2) / fps          # iets langer invoeren dan we afnemen
 
-        if soort == "hold":
-            _run_ffmpeg([
-                "-loop", "1", "-t", f"{ruim:.3f}", "-i", str(eerste),
-                "-vf", filters, "-frames:v", str(aantal), *encoder, str(doel),
-            ])
-        else:
-            tweede = frames_dir / f"{timeline.scenes[index + 1].id}.png"
-            _run_ffmpeg([
-                "-loop", "1", "-t", f"{ruim:.3f}", "-i", str(eerste),
+        if shot.kind == "hold":
+            return ["-loop", "1", "-t", f"{ruim:.3f}", "-i", str(eerste),
+                    "-vf", filters, "-frames:v", str(aantal), *encoder, str(doel)]
+
+        tweede = frames_dir / f"{timeline.scenes[shot.scene + 1].id}.png"
+        return ["-loop", "1", "-t", f"{ruim:.3f}", "-i", str(eerste),
                 "-loop", "1", "-t", f"{ruim:.3f}", "-i", str(tweede),
                 "-filter_complex",
                 f"[0:v]{filters}[a];[1:v]{filters}[b];"
-                f"[a][b]xfade=transition=fade:duration={seconden:.3f}:offset=0[v]",
-                "-map", "[v]", "-frames:v", str(aantal), *encoder, str(doel),
-            ])
+                f"[a][b]xfade=transition=fade:duration={shot.seconds:.3f}:offset=0[v]",
+                "-map", "[v]", "-frames:v", str(aantal), *encoder, str(doel)]
 
-        delen.append(doel)
-        progress("encoderen", 0.75 + 0.2 * (nummer + 1) / len(stukken))
+    delen = [deel_dir / f"{nummer:04d}.mp4" for nummer in range(len(shots))]
+    opdrachten = [opdracht(n, shot, aantal)
+                  for n, (shot, aantal) in enumerate(zip(shots, beeldjes))]
+
+    # De stukken weten niets van elkaar, dus ze kunnen naast elkaar. Eén stuk
+    # van een paar seconden houdt één kern nauwelijks bezig; vier tegelijk
+    # scheelt het meeste van de wachttijd.
+    klaar = 0
+    with ThreadPoolExecutor(max_workers=min(4, (os.cpu_count() or 2))) as pool:
+        for _ in pool.map(_run_ffmpeg, opdrachten):
+            klaar += 1
+            progress("encoderen", 0.75 + 0.2 * klaar / len(opdrachten))
 
     lijst = deel_dir / "delen.txt"
     lijst.write_text("".join(f"file '{deel.name}'\n" for deel in delen), encoding="utf-8")
@@ -319,6 +431,12 @@ def assemble(
     progress: Progress = _noop,
 ) -> tuple[Path, float]:
     workdir.mkdir(parents=True, exist_ok=True)
+
+    if cfg.video.get("captions"):
+        # Twee soorten tekst tegelijk in beeld is er één te veel: de
+        # plaatsnaam staat toch al in de zin die erbij gesproken wordt.
+        for scene in blueprint.scenes:
+            scene.caption = None
 
     timeline = prepare_assets(cfg, blueprint, workdir, seed=seed, progress=progress)
     audio = build_audio_track(cfg, timeline, workdir / "mix.wav", seed=seed, progress=progress)
