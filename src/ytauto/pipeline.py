@@ -265,6 +265,47 @@ def make_short(cfg: Config, hint: str | None = None,
 
 
 # ---------------------------------------------------------------------------
+#  De afdaling
+# ---------------------------------------------------------------------------
+
+JOURNEYS = ROOT / "config" / "journeys.yaml"
+
+
+def load_journeys(path: Path | None = None) -> list[dict]:
+    """De reizen uit config/journeys.yaml."""
+    import yaml
+
+    pad = path or JOURNEYS
+    if not pad.exists():
+        return []
+    return yaml.safe_load(pad.read_text(encoding="utf-8")).get("journeys", [])
+
+
+def make_descent(cfg: Config, key: str = "", progress: Progress = _noop) -> Path:
+    """Maakt een afdaling: één doorlopende beweging van boven naar beneden.
+
+    Dit gaat bewust buiten de boekhouding om. Een afdaling heeft geen beats
+    en geen scenes; hem in het blueprint-model persen zou alleen maar een
+    model kapotmaken dat voor verhalen bedoeld is.
+    """
+    from .video.descent_video import render
+
+    reizen = load_journeys()
+    if not reizen:
+        raise ValueError("config/journeys.yaml bevat geen reizen.")
+
+    gekozen = next((r for r in reizen if r["key"] == key), None) if key else reizen[0]
+    if gekozen is None:
+        beschikbaar = ", ".join(r["key"] for r in reizen)
+        raise ValueError(f"Geen reis met sleutel {key!r}. Beschikbaar: {beschikbaar}")
+
+    staand = shorts_config(cfg)
+    workdir = OUT_DIR / f"{gekozen['key']}-descent"
+    return render(staand, gekozen, workdir,
+                  seed=episode_seed(gekozen["key"]), progress=progress)
+
+
+# ---------------------------------------------------------------------------
 #  Stap 2: video
 # ---------------------------------------------------------------------------
 

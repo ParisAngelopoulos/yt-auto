@@ -202,6 +202,35 @@ Publiceren gaat voorlopig met de hand: `ytauto short` zet de mp4 in `out/`,
 en die sleep je naar YouTube. De automatische upload werkt alleen voor de
 lange video's.
 
+### De afdaling
+
+Een tweede vorm, en de enige die van begin tot eind beweegt:
+
+```bash
+ytauto descent --list           # welke reizen er zijn
+ytauto descent                  # maak er een
+```
+
+De camera zakt in één doorlopende beweging van het wateroppervlak naar het
+diepste punt van de oceaan, met alles wat je onderweg passeert op zijn echte
+diepte: een duiker op tien meter, de Titanic op drieduizend achthonderd, de
+Challenger Deep op tienduizend negenhonderdvijfendertig. Bovenin loopt een
+dieptemeter mee.
+
+Waarom deze vorm bestaat: een reeks stilstaande beelden leest binnen een
+halve seconde als diashow, en daar scrolt iedereen voorbij. Hier is er geen
+enkele snede. De camera houdt bij elke mijlpaal even in terwijl de regel
+erbij gesproken wordt en versnelt daarna weer, en die timing volgt de stem —
+niemand hoeft iets met de hand gelijk te zetten.
+
+Aanpassen doe je in `config/journeys.yaml`: `depth` in meters, `say` wat de
+verteller zegt, `draw` welk wezen erbij hoort (die staan in
+`src/ytauto/render/sea.py`). Zelf een reis toevoegen kan — de hoogte van
+gebouwen, de afstand tot de planeten — zolang het maar één as is waar je
+langs beweegt. De getallen moeten kloppen: dat is de hele kracht van de vorm.
+
+Eén afdaling duurt ongeveer een minuut en kost een minuut om te maken.
+
 ---
 
 ## De sleutels — allemaal optioneel
@@ -491,7 +520,8 @@ plek verandert.
 ytauto setup       # sleutels invoeren en meteen testen
 ytauto panel       # bedieningspagina met de twee knoppen
 ytauto script      # laat een aflevering schrijven
-ytauto short       # maak een Short: staand beeld, rond de minuut en print hem
+ytauto short       # maak een Short: staand beeld, rond de minuut
+ytauto descent     # maak een afdaling: doorlopende beweging, geen snedes en print hem
 ytauto video       # maak de video van het laatste script
 ytauto publish     # zet die video op YouTube
 ytauto run         # alles achter elkaar, zonder tussenkomst
@@ -572,10 +602,10 @@ state/           episodes.db — al je scripts, in SQL
 assets/voices/   het stemmodel van Piper (niet in git, wordt opgehaald)
 start.command    dubbelklikken op macOS/Linux
 start.bat        dubbelklikken op Windows
-config/          brief.md, channel.yaml, tales.yaml  ← hier stuur je
+config/          brief.md, channel.yaml, tales.yaml, journeys.yaml  ← hier stuur je
 src/ytauto/
   scripting/     de drie schrijvers, de verhalenbank en het blueprint-contract
-  render/        landschappen, 31 silhouetten, 52 kinderfiguren, thumbnail
+  render/        landschappen, silhouetten, zeewezens, de waterkolom, thumbnail
   audio/         muzieksynthesizer
   tts/           Piper (gratis), ElevenLabs en de teststem
   video/         ffmpeg-montage

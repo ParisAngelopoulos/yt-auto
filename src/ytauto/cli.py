@@ -4,6 +4,7 @@
     ytauto panel      bedieningspagina openen (twee knoppen)
     ytauto script     laat een aflevering schrijven
     ytauto short      maak een Short: staand beeld, rond de minuut
+    ytauto descent    maak een afdaling: doorlopende beweging
     ytauto video      maak de video van het laatste script
     ytauto publish    zet die video op YouTube
     ytauto run        alles achter elkaar, zonder tussenkomst
@@ -76,6 +77,21 @@ def cmd_short(args) -> int:
     print()
     make_video(staand, episode, progress=_progress)
     print(f"  Klaar: {episode.video_path}")
+    return 0
+
+
+def cmd_descent(args) -> int:
+    """Een afdaling: doorlopende beweging, geen diashow."""
+    from .pipeline import load_journeys, make_descent
+
+    cfg = load_config()
+    if args.list:
+        for reis in load_journeys():
+            print(f"  {reis['key']:12} {reis['title']}")
+        return 0
+
+    video = make_descent(cfg, key=args.key or "", progress=_progress)
+    print(f"  Klaar: {video}")
     return 0
 
 
@@ -381,6 +397,11 @@ def main() -> int:
     short.add_argument("--script-only", action="store_true",
                        help="alleen schrijven, nog niet renderen")
     short.set_defaults(func=cmd_short)
+
+    descent = subparsers.add_parser("descent", help="maak een afdaling (staand, doorlopend)")
+    descent.add_argument("--key", help="welke reis uit config/journeys.yaml")
+    descent.add_argument("--list", action="store_true", help="toon de beschikbare reizen")
+    descent.set_defaults(func=cmd_descent)
 
     subparsers.add_parser("video", help="maak de video").set_defaults(func=cmd_video)
     subparsers.add_parser("publish", help="publiceer op YouTube").set_defaults(func=cmd_publish)
