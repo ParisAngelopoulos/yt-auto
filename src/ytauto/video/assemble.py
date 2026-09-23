@@ -193,6 +193,10 @@ def _encoder_args(cfg: Config) -> list[str]:
         "-pix_fmt", "yuv420p",
         "-r", str(cfg.fps),
         "-an",
+        # Eén thread per stuk. De stukken draaien al naast elkaar, en x264 er
+        # binnen ook nog eens laten threaden levert alleen wisselwerk op:
+        # gemeten scheelt dit ruim een tiende van de montagetijd.
+        "-threads", "1",
     ]
 
 
@@ -257,6 +261,7 @@ def with_captions(cfg: Config, timeline: Timeline, stukken: list[tuple[str, int,
         return [Shot(kind=k, scene=i, seconds=s) for k, i, s in stukken]
 
     plan = caption_plan(cfg, timeline)
+    geopend: dict[int, Image.Image] = {}       # elk beeld één keer inlezen
     minimum = 2.0 / cfg.fps
     shots: list[Shot] = []
     verstreken = 0.0
@@ -296,13 +301,19 @@ def with_captions(cfg: Config, timeline: Timeline, stukken: list[tuple[str, int,
                 samengevoegd.append([start, stop, tekst])
 
         basis = frames_dir / f"{timeline.scenes[index].id}.png"
+        if index not in geopend:
+            with Image.open(basis) as origineel:
+                geopend[index] = origineel.convert("RGB")
+
         for start, stop, tekst in samengevoegd:
             beeld = None
             if tekst:
                 beeld = deel_dir / f"cap-{teller:04d}.png"
                 teller += 1
-                with Image.open(basis) as origineel:
-                    burn_in(origineel, tekst).save(beeld, optimize=False)
+                # compress_level=1: deze bestanden leven een halve minuut en
+                # worden daarna weggegooid. Comprimeren is hier tijd weggooien.
+                burn_in(geopend[index], tekst).save(
+                    beeld, optimize=False, compress_level=1)
             shots.append(Shot(kind="hold", scene=index,
                               seconds=stop - start, image=beeld))
 
