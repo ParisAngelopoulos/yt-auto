@@ -1,5 +1,629 @@
 [
   {
+    "idea": "Iemand gaat één nacht mee naar binnen en komt honderd jaar later buiten (the Carpathians)",
+    "title": "The Piper Who Went Inside",
+    "description": "Zofia goes up the hill at Rakhiv to play one night for one fee, and comes down into a village that has had a hundred years to forget her. Versions of it are told across the Carpathians. Retold here in our own words.",
+    "tags": [
+      "folklore",
+      "myths and legends",
+      "folk tale retold",
+      "storytelling",
+      "carpathian folklore",
+      "the carpathians folk tale",
+      "folk tale",
+      "fairy hill",
+      "lost time",
+      "music"
+    ],
+    "lesson_kind": "slavic",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "The Piper Who Went Inside. A tale from the Carpathian villages.",
+        "item": null,
+        "title": "The Piper Who Went Inside",
+        "subtitle": "A tale from the Carpathian villages",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "Zofia was a piper at Rakhiv, and played at every wedding between there and the coast.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "She was the one they sent for when there was dancing to be done properly.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "She had no land and no trade beyond it, and it kept her in boots.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "There was a hill above Rakhiv that people walked round rather than over, out of habit.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "She was walking home from a wedding, before it was properly light, with the fee in her pocket.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "It had been a long night already and she had been paid in drink for half of it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The way home went past the foot of the hill, as it always had.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "There was music coming off the hill, and it was not music from the village.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "She stopped to listen, which is what anybody would do, and that is the whole mistake.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The season decided what she did, and she did not argue with the season.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "It is skilled work that looks like no work at all, which is why it was badly paid.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not a living that made anybody rich. It was a living that kept the roof on.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "There is a way of doing that work that looks slow and is not, and Zofia had it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "turn",
+        "narration": "There was a light on the hill where there was no house, and somebody standing in it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The stranger was dressed for a wedding, but not for any wedding Zofia had played at.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "He offered a night's work, and named a fee three times what anybody at Rakhiv would pay.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Zofia asked whose wedding it was. The answer was polite and told her nothing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not fear exactly. It was the feeling of standing in a room somebody has just left.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards she could not say how long it had lasted. It had been either a moment or most of the night.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards Zofia could not say what had been wrong with the light, only that something had been.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Her own footsteps sounded as though somebody else were making them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The birds went quiet before it, the way they do before a change.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "speech",
+        "narration": "\"One night,\" said the forest man. \"You will be back before they miss you.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Zofia said yes. She was young, and the fee was real, and she could hear the tune already.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The hillside opened where there had been nothing but grass and a gate post.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Inside it was warm and full of people and there was no smoke from the fire.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "She remembered the part about eating nothing, and kept to it, and that is why there is a story.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "They danced the whole night and did not tire, and nobody asked for the same tune twice.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Food came round, and drink, and she took none of it, and they did not press her.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "There was no window in that room and no way of telling how long anything took.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Once she thought she recognised a face from Rakhiv, from a long time before.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "When she put the instrument down, her hands were not tired, and that frightened her more than the rest.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "speech",
+        "narration": "\"That will do,\" said the forest man, and counted the fee into her hand.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "turn",
+        "narration": "She came out onto the hillside and it was morning, and the wrong morning.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The wall along the track was gone. There was a new wall, in a different line.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "There were trees on the slope that had not been there, and they were not young trees.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "She walked down into Rakhiv with the fee still in her hand.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The road was where it had been, which was the only thing that was.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The walls run straight up the slope instead of across it, which tells you who made them and when.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "There is more sky than land in that part of the country.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Everything at Rakhiv is built out of what was already lying there.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "In that country the weather comes from one direction and everybody builds with their back to it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The mill pond freezes at the edges first and in the middle last, and the middle never quite.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The house she had grown up in was a wall with grass on top of it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "tell",
+        "narration": "She asked after her own family and they had to think about the name.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "tell",
+        "narration": "An old woman said her grandmother had known a piper who went up the hill and did not come back.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "tell",
+        "narration": "That had been, she said, before the church was rebuilt, and the church was not new.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "She opened her hand, and what was in it was not money any more.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "She sat down on the wall and did not get up again for a long while.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "They were decent to her at Rakhiv. There was a room, and work of a sort.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "She never played again. People asked, and she said she had forgotten how, which was not true.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "People at Rakhiv told it afterwards in different ways, and every way had the same end.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Two versions were still being told in that valley within living memory.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Zofia lived a long time after, and worked, and was not strange about it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The story got out, as stories do, and came back changed.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "One night is one night, unless it is somebody else's night.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "This story was told in the villages of the Carpathian mountains, where the same tale is found under a dozen different names.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "We have retold it in our own words.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "local",
+    "key": "the-piper-who-went-inside",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "village",
+        "time": "overcast",
+        "weather": "none",
+        "caption": "Rakhiv",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.28,
+            "scale": 0.13,
+            "depth": 0.82
+          },
+          {
+            "draw": "woman",
+            "x": 0.6,
+            "scale": 0.1,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "dusk",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.34,
+            "scale": 0.11,
+            "depth": 0.92
+          },
+          {
+            "draw": "standing_stones",
+            "x": 0.66,
+            "scale": 0.13,
+            "depth": 0.78
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "moonlit",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "giant",
+            "x": 0.44,
+            "scale": 0.2,
+            "depth": 0.82
+          },
+          {
+            "draw": "gate",
+            "x": 0.72,
+            "scale": 0.1,
+            "depth": 0.74
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "underworld",
+        "weather": "none",
+        "caption": "Inside the hill",
+        "subjects": [
+          {
+            "draw": "campfire",
+            "x": 0.5,
+            "scale": 0.07,
+            "depth": 0.88
+          },
+          {
+            "draw": "giant",
+            "x": 0.26,
+            "scale": 0.2,
+            "depth": 0.8
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "dawn",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.44,
+            "scale": 0.11,
+            "depth": 0.93
+          },
+          {
+            "draw": "standing_stones",
+            "x": 0.18,
+            "scale": 0.12,
+            "depth": 0.76
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "church",
+            "x": 0.36,
+            "scale": 0.17,
+            "depth": 0.78
+          },
+          {
+            "draw": "ruin",
+            "x": 0.72,
+            "scale": 0.12,
+            "depth": 0.86
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-25T10:54:40+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Iemand loopt na donker over een weg waar gewaarschuwd voor is (Ireland)",
     "title": "Cormac and the Late Road",
     "description": "Everybody at Inisheer knows which road not to take after dark, and Cormac takes it anyway, for the usual reason: it is shorter. Versions of it are told across Ireland. This retelling is our own.",
