@@ -1,5 +1,585 @@
 [
   {
+    "idea": "Een verdronken dorp onder het water, en een klok die nog luidt (Norway)",
+    "title": "The Night the Water Came to Storfjord",
+    "description": "There was a village where the sound is now, and on certain nights you can still hear its bell. Sigurd went out to find out why. Versions of it are told across Norway. Retold here in our own words.",
+    "tags": [
+      "folklore",
+      "myths and legends",
+      "folk tale retold",
+      "storytelling",
+      "norwegian folklore",
+      "norway folk tale",
+      "folk tale",
+      "drowned village",
+      "bell",
+      "lake legend"
+    ],
+    "lesson_kind": "norse",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "The Night the Water Came to Storfjord. A tale from the Norwegian fjords.",
+        "item": null,
+        "title": "The Night the Water Came to Storfjord",
+        "subtitle": "A tale from the Norwegian fjords",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "They will point at a flat place in the middle and say the church was there.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "On still evenings in the end of the summer, people at Storfjord say you can hear a bell out on the water.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "It is always somebody's grandfather who heard it, and always on a night like tonight.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The story is that there was a village there, and it was a rich one, and it stopped being careful.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There was a spring in the middle of it that had to be covered every night, and one night it was not.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The water came up through the floors before anybody was properly awake.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Some got out. They went up the slope and stood there and watched their own roofs go under.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "By morning there was water where there had been a street, and it has been there since.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Nothing grew tall there. What grew, grew sideways.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The path to the pine woods was worn to bare rock in the middle and grass at the edges.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "In that country the weather comes from one direction and everybody builds with their back to it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There was one tree on that slope and it leaned away from the wind like a person walking into it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "That was a long time ago and the details have been argued about ever since.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The people at Storfjord now are descended from the ones who got up the slope, or they say they are.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Nobody builds on the low ground, and nobody can tell you exactly why not.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The story could have ended there, and for a long while it looked as though it had.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Two winters went by in the ordinary way.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The season turned. The work changed with it, as work does.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "For a time it seemed that it had been nothing after all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "He was busy, and being busy is the best forgetting there is.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "Then there was a the end of the summer when the water dropped further than anyone living had seen.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "There were stones showing out in the middle that were too square to be stones.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Sigurd rowed out to look at them, because somebody was going to.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He found a wall, and a corner, and a step going down into the water.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He came back and said nothing, and went out again the next night, alone.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He took a key with no lock with him, which his mother had made him carry since he was small.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "turn",
+        "narration": "It came up through the bottom of the boat before it came through the air.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not a sound that moved. It was underneath him and it stayed underneath him.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It rang the hour, and then it rang it again, and the second time it was slower.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The water was flat. There was nothing on it in any direction.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "He sat with the oars up and let it ring and did not once think of rowing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The fire in the grate leaned away from nothing at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards he could not say how long it had lasted. It had been either a moment or most of the night.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The dogs at Storfjord would not settle that night, and nobody could say why.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not fear exactly. It was the feeling of standing in a room somebody has just left.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "There was a stillness on the sound that does not belong to any weather.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It was a grey shape no taller than a child, and it looked at him the way you look at somebody who is late.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Sigurd said that it was. It asked whether the spring was still covered.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "He said that he did not know, and that was the wrong answer, and he knew it while he was saying it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "speech",
+        "narration": "\"Tell them what it sounds like from out here,\" it said. \"They will not listen, but tell them.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "He rowed back with the light coming up behind him and did not look down once.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "He was at the spring above Storfjord before he had dried off.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "close",
+        "narration": "The cover on the spring at Storfjord was rotten through, and had been for years.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "He put a new one on it that week, in oak, and the village paid for it without being asked twice.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "It is checked every the end of the summer now, by whoever holds the office, and there is an office for it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Sigurd went out on the water for another forty years and never heard the bell again.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "He said that was the point, and people who had not been there thought he was being modest.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "They still point out the place. It is not marked, but everybody knows it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "People at Storfjord told it afterwards in different ways, and every way had the same end.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The house is gone now. The wall of it is still there, up to about knee height.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The story got out, as stories do, and came back changed.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "Most of what the old stories warn about is maintenance.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "This story belongs to the farms and fishing stations of western Norway, where versions of it were collected in the eighteen hundreds.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "It has been retold here in our own words.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "local",
+    "key": "the-night-the-water-came-to-storfjord",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "lake",
+        "time": "day",
+        "weather": "none",
+        "caption": "Storfjord",
+        "subjects": [
+          {
+            "draw": "church",
+            "x": 0.3,
+            "scale": 0.15,
+            "depth": 0.78
+          },
+          {
+            "draw": "rowboat",
+            "x": 0.68,
+            "scale": 0.06,
+            "depth": 0.92
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.26,
+            "scale": 0.13,
+            "depth": 0.82
+          },
+          {
+            "draw": "well",
+            "x": 0.58,
+            "scale": 0.08,
+            "depth": 0.9
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "dusk",
+        "weather": "rain",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "church",
+            "x": 0.42,
+            "scale": 0.13,
+            "depth": 0.76
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "moonlit",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "rowboat",
+            "x": 0.46,
+            "scale": 0.07,
+            "depth": 0.72
+          },
+          {
+            "draw": "man",
+            "x": 0.46,
+            "scale": 0.05,
+            "depth": 0.7
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "underworld",
+        "weather": "none",
+        "caption": "Under the water",
+        "subjects": [
+          {
+            "draw": "child",
+            "x": 0.5,
+            "scale": 0.1,
+            "depth": 0.8
+          },
+          {
+            "draw": "ruin",
+            "x": 0.2,
+            "scale": 0.12,
+            "depth": 0.86
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "dawn",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "rowboat",
+            "x": 0.52,
+            "scale": 0.06,
+            "depth": 0.88
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-27T11:07:09+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Iemand gaat één nacht mee naar binnen en komt honderd jaar later buiten (the Carpathians)",
     "title": "The Piper Who Went Inside",
     "description": "Zofia goes up the hill at Rakhiv to play one night for one fee, and comes down into a village that has had a hundred years to forget her. Versions of it are told across the Carpathians. Retold here in our own words.",
