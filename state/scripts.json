@@ -1,5 +1,690 @@
 [
   {
+    "idea": "Een geschenk met één voorwaarde, en de voorwaarde wordt gebroken (Norway)",
+    "title": "What Solveig Was Told Not to Do",
+    "description": "Something is given to a boat builder at Aurland on one condition, and the condition holds for exactly as long as anybody can bear it. Versions of it are told across Norway. Retold here in our own words.",
+    "tags": [
+      "folklore",
+      "myths and legends",
+      "folk tale retold",
+      "storytelling",
+      "norwegian folklore",
+      "norway folk tale",
+      "folk tale",
+      "the one rule",
+      "broken promise"
+    ],
+    "lesson_kind": "norse",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "What Solveig Was Told Not to Do. A tale from the Norwegian fjords.",
+        "item": null,
+        "title": "What Solveig Was Told Not to Do",
+        "subtitle": "A tale from the Norwegian fjords",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "She worked the high pasture in the season for it and took what work there was in between.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "There were three of them in the house and food for two, most weeks.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "She went up into the high pasture before it was light and came down again with what she could carry.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The work was hard in the way that does not get easier with practice.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "In the last week of the harvest the ground turns and everything takes twice as long.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "She was not idle and she was not stupid. She was only unlucky, which is worse.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "Whatever she put by went on something that broke.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not a living that made anybody rich. It was a living that kept the roof on.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "The season decided what she did, and she did not argue with the season.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "Solveig was up before the house and back after dark, and that was every day and not only the good ones.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "There is a way of doing that work that looks slow and is not, and Solveig had it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "turn",
+        "narration": "She took a way home she had never taken, and that is where she met a troll.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It knew her name, and that was the first thing wrong with it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It asked her for something small, and she gave it, because it cost nothing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards she could not remember what it had looked like, only what it had said.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Nothing in the high pasture made a sound the whole time it spoke.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There is a quiet that comes before weather and a quiet that does not, and this was the other one.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Her own footsteps sounded as though somebody else were making them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The fire in the grate leaned away from nothing at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not fear exactly. It was the feeling of standing in a room somebody has just left.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "speech",
+        "narration": "\"Take this,\" it said, \"and your house will not be cold again.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It gave her a ring of grey iron, and told her what it would do.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Then it told her the one rule, and it said the rule only once.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "She was never to count what came of it. Not out loud, not in her head, not on paper.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "She said that was easy. It said that everybody says so.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "What it promised, it did, and it did it quietly.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "There was always a little more in the store than there had been the day before.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Not a great deal. Never enough to be talked about. Only never less.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "She mended the roof, and then the wall, and then bought the field behind the house.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The children grew up in a warm room, which she had not done herself.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "People at Aurland said she had finally had a turn of luck, and she agreed with them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "For eleven years she did not count anything.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Nobody at Aurland did one thing only. There was not the work for it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "People came from the far side of the black lake because the work was done properly and the price did not change.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "She was known for it as far as the next valley, in the small way people are known.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "In the good months there was more than could be finished. In the bad ones there was the mending.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "It is a strange thing to live beside and not look at.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Somebody asked her once how much there was. She said she did not know, which was true.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "A rule you keep every day stops feeling like a rule and starts feeling like a habit.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "And a habit is a thing you can break without meaning to.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Nothing happened for a long while, and that is the part of the story people leave out.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Two winters went by in the ordinary way.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "She was busy, and being busy is the best forgetting there is.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The story could have ended there, and for a long while it looked as though it had.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "turn",
+        "narration": "Then a man came from the town about a tax, and wanted a figure.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Solveig stood in the store with a lamp and said it would only be a look.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "She got as far as the third row before she heard her own voice saying the numbers.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "She stopped straight away. Stopping straight away is not the same as not starting.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The lamp went out. It had oil in it and no wind on it, and it went out.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The birds went quiet before it, the way they do before a change.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The cold that came off it was not the cold of the season.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards she could not say how long it had lasted. It had been either a moment or most of the night.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The dogs at Aurland would not settle that night, and nobody could say why.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards Solveig could not say what had been wrong with the light, only that something had been.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "speech",
+        "narration": "\"You counted,\" said a voice from the door, which was shut. \"I asked one thing.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Nothing was taken back. Nothing more was given, and that turned out to be the same thing.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "She went up into the high pasture every evening for a month and found nobody to talk to.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "close",
+        "narration": "They lived on what was there, and it lasted a long time, and then it did not.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Solveig went back to the old work in the end, and was better at it than she had been.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "She told the story herself, later, which is how it is known at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "She said the worst of it was that she had not even wanted the number.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Somebody wrote it down eventually, which is how it comes to be here.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "For years after, nobody at Aurland would go that way alone after dark.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The story got out, as stories do, and came back changed.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Solveig lived a long time after, and worked, and was not strange about it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "A gift with a condition is a loan, and this one was called in the first time it was tested.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "This story belongs to the farms and fishing stations of western Norway, where versions of it were collected in the eighteen hundreds.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "It has been retold here in our own words.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "local",
+    "key": "what-solveig-was-told-not-to-do",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "mountains",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.34,
+            "scale": 0.11,
+            "depth": 0.92
+          },
+          {
+            "draw": "dead_tree",
+            "x": 0.74,
+            "scale": 0.18,
+            "depth": 0.86
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "dusk",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "giant",
+            "x": 0.52,
+            "scale": 0.24,
+            "depth": 0.82
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "day",
+        "weather": "none",
+        "caption": "Aurland",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.4,
+            "scale": 0.14,
+            "depth": 0.82
+          },
+          {
+            "draw": "woman",
+            "x": 0.68,
+            "scale": 0.1,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.3,
+            "scale": 0.13,
+            "depth": 0.78
+          },
+          {
+            "draw": "well",
+            "x": 0.62,
+            "scale": 0.08,
+            "depth": 0.9
+          }
+        ]
+      },
+      {
+        "setting": "mountains",
+        "time": "dusk",
+        "weather": "rain",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.42,
+            "scale": 0.12,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "coast",
+        "time": "dusk",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.36,
+            "scale": 0.12,
+            "depth": 0.86
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-28T12:32:11+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Een verdronken dorp onder het water, en een klok die nog luidt (Norway)",
     "title": "The Night the Water Came to Storfjord",
     "description": "There was a village where the sound is now, and on certain nights you can still hear its bell. Sigurd went out to find out why. Versions of it are told across Norway. Retold here in our own words.",
