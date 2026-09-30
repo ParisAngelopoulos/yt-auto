@@ -1,0 +1,81 @@
+# ============================================================
+#  REIZEN  --  de afdaling
+#
+#  Eén doorlopende beweging van boven naar beneden, met de
+#  mijlpalen op hun echte diepte. De camera zakt continu; bij
+#  elke mijlpaal houdt hij even in terwijl de regel erbij
+#  gesproken wordt, en versnelt daarna weer.
+#
+#  Zelf iets toevoegen? Kopieer de opbouw. `depth` is in meters,
+#  `draw` moet bestaan in src/ytauto/render/sea.py, en `say` is
+#  wat de verteller zegt. Laat `draw` weg voor een mijlpaal die
+#  alleen tekst is.
+#
+#  De getallen hieronder zijn gangbare, goed gedocumenteerde
+#  waarden. Verzin er geen bij: de hele kracht van deze vorm is
+#  dat het klopt.
+# ============================================================
+
+journeys:
+
+  - key: ocean
+    title: "How deep does the ocean actually go?"
+    hook: "How deep does the ocean actually go?"
+    unit: m
+    total: 10935
+    description: >-
+      A continuous descent from the surface to the deepest known point on
+      Earth, with everything you pass on the way at its real depth.
+    tags: ["ocean", "how deep is the ocean", "mariana trench", "deep sea",
+           "challenger deep", "science", "shorts", "titanic", "ocean depth"]
+
+    milestones:
+      - depth: 10
+        draw: diver
+        label: "A diver"
+        say: "Ten metres. Most people never go deeper than this."
+      - depth: 40
+        label: "Recreational diving limit"
+        say: "Forty. Recreational diving stops here."
+      - depth: 100
+        draw: whale
+        label: "Blue whale"
+        say: "A hundred metres. The largest animal that ever lived feeds down here."
+      - depth: 200
+        label: "Sunlight ends"
+        say: "Two hundred, and sunlight gives up."
+      - depth: 332
+        draw: submersible
+        label: "Deepest scuba dive · 332 m"
+        say: "Three hundred and thirty-two: the deepest scuba dive ever made. Coming back up took fifteen hours."
+      - depth: 730
+        draw: squid
+        label: "Giant squid"
+        say: "Seven hundred and thirty. Nobody filmed a living giant squid until two thousand and four."
+      - depth: 1000
+        label: "No light at all"
+        say: "One thousand. No light at all. Everything down here makes its own."
+      - depth: 1500
+        draw: anglerfish
+        label: "Anglerfish"
+        say: "Fifteen hundred. The anglerfish carries the only light there is."
+      - depth: 2000
+        draw: sperm_whale
+        label: "Sperm whale, hunting"
+        say: "Two kilometres. A sperm whale is hunting, on one breath."
+      - depth: 2500
+        draw: tube_worms
+        label: "Hydrothermal vents"
+        say: "Hot springs on the sea floor, and creatures that never needed the sun."
+      - depth: 3800
+        draw: wreck
+        label: "The Titanic"
+        say: "Three thousand eight hundred. The Titanic. It took seventy-three years to find it."
+      - depth: 8336
+        label: "Deepest fish ever filmed"
+        say: "Eight thousand three hundred: the deepest a fish has ever been filmed."
+      - depth: 10935
+        label: "Challenger Deep"
+        say: "Ten thousand nine hundred and thirty-five metres. The bottom."
+
+    closing: "More people have walked on the moon than have been down here."

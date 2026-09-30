@@ -56,6 +56,22 @@ STORY_MODES = {
 }
 
 
+# Dezelfde beats, maar strakker. Een Short van een minuut heeft geen ruimte
+# voor de stiltes die een verhaal van tien minuten juist dragen: daar is de
+# stilte rust, hier is het iemand die wegklikt. `hook` bestaat alleen hier;
+# dat is de eerste zin, die de kijker moet vasthouden.
+SHORT_MODES = {
+    "hook":   {"pause": 0.25, "min": 2.6},
+    "open":   {"pause": 0.30, "min": 2.4},
+    "tell":   {"pause": 0.25, "min": 2.2},
+    "turn":   {"pause": 0.45, "min": 2.6},
+    "speech": {"pause": 0.35, "min": 2.2},
+    "close":  {"pause": 0.50, "min": 2.6},
+    "moral":  {"pause": 0.60, "min": 2.8},
+    "source": {"pause": 0.30, "min": 2.4},
+}
+
+
 @dataclass
 class Item:
     """Wat er in een leervideo geleerd wordt."""
@@ -109,6 +125,7 @@ class Blueprint:
     source: str = "claude"          # claude | template
     key: str = ""                   # unieke sleutel voor de boekhouding
     format: str = "kids"            # kids | folklore
+    shorts: bool = False            # staand beeld, kort, eigen tempo
     scenes: list[StoryScene] = field(default_factory=list)
 
     # -- opslag --
@@ -131,6 +148,7 @@ class Blueprint:
             source=data.get("source", "claude"),
             key=data.get("key", ""),
             format=data.get("format", "kids"),
+            shorts=bool(data.get("shorts", False)),
             scenes=[StoryScene(**sc) for sc in data.get("scenes", [])],
         )
 
@@ -156,8 +174,15 @@ class Blueprint:
         return sum(len(b.narration.split()) for b in self.beats)
 
     @property
+    def modes(self) -> dict[str, dict]:
+        """Welke tempo-tabel voor deze aflevering geldt."""
+        if not self.is_story:
+            return MODES
+        return SHORT_MODES if self.shorts else STORY_MODES
+
+    @property
     def estimated_duration(self) -> float:
-        tabel = STORY_MODES if self.is_story else MODES
+        tabel = self.modes
         standaard = tabel["tell"] if self.is_story else tabel["reveal"]
         total = 0.0
         for beat in self.beats:
@@ -257,8 +282,9 @@ def _validate_story(bp: Blueprint) -> Blueprint:
                     f"scene {i}, figuur {j}: {naam!r} bestaat niet als silhouet"
                 )
 
+    toegestaan = bp.modes
     for i, beat in enumerate(bp.beats):
-        if beat.mode not in STORY_MODES:
+        if beat.mode not in toegestaan:
             raise BlueprintError(f"beat {i} heeft onbekende mode {beat.mode!r}")
         if beat.scene is None:
             raise BlueprintError(f"beat {i} verwijst niet naar een scene")
@@ -296,6 +322,7 @@ def _story_scenes(bp: Blueprint, seed: int = 0) -> list[Scene]:
     de bedoeling: bij een verhaal hoort het beeld te blijven staan terwijl er
     verteld wordt, en pas te veranderen als het verhaal van plek verandert.
     """
+    tabel = bp.modes
     scenes: list[Scene] = []
     for index, beat in enumerate(bp.beats):
         plek = bp.scenes[beat.scene or 0]
@@ -317,7 +344,7 @@ def _story_scenes(bp: Blueprint, seed: int = 0) -> list[Scene]:
             # Een plaatsnaam hoort één keer in beeld, bij aankomst.
             visual["caption"] = plek.caption
 
-        mode = STORY_MODES[beat.mode]
+        mode = tabel[beat.mode]
         scenes.append(Scene(
             id=f"{index:03d}-{beat.mode}",
             narration=beat.narration,

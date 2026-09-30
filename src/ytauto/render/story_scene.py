@@ -110,11 +110,17 @@ def draw_title(img: Image.Image, titel: str, ondertitel: str = "") -> None:
 
 
 def draw_caption(img: Image.Image, tekst: str) -> None:
-    """Korte regel onderin, voor een plaatsnaam of een tijdsaanduiding."""
+    """Korte regel onderin, voor een plaatsnaam of een tijdsaanduiding.
+
+    Bij een staand beeld staat hij hoger. Onderin een Short leggen YouTube
+    en TikTok hun eigen titel, kanaalnaam en knoppen neer; wat daar staat is
+    onleesbaar, hoe mooi het ook gezet is.
+    """
     w, h = img.size
+    staand = h > w
     d = ImageDraw.Draw(img, "RGBA")
-    font = load_font(int(h * 0.040), "EBGaramond-Italic", 400)
-    y = h * 0.90
+    font = load_font(int(min(h * 0.040, w * 0.055)), "EBGaramond-Italic", 400)
+    y = h * (0.78 if staand else 0.90)
     d.text((w / 2, y + 2), tekst, font=font, fill=(0, 0, 0, 130), anchor="mm")
     d.text((w / 2, y), tekst, font=font, fill=(226, 220, 206, 225), anchor="mm")
 

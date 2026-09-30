@@ -70,7 +70,7 @@ def test_afrondingen_lopen_niet_op_bij_een_lang_verhaal():
     holds = [3.7, 4.1, 5.3, 6.9, 4.4] * 16          # 80 scenes
     fade, fps = 0.6, 30
     stukken = plan_segments(holds, fade)
-    beeldjes = _frame_counts(stukken, fps)
+    beeldjes = _frame_counts([s[2] for s in stukken], fps)
     assert sum(beeldjes) == round((sum(holds) + fade) * fps)
     assert all(aantal >= 1 for aantal in beeldjes)
 

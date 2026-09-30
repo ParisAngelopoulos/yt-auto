@@ -34,6 +34,11 @@ from __future__ import annotations
 
 BARGAIN = {
     "key": "bargain",
+    "hooks": [
+        "He made a promise to something in the water. It waited seven years to collect.",
+        "Nothing in {water} asks for much at first. That is how it gets you.",
+        "{Hero} said one word out loud on {water}, and paid for it for the rest of {his} life.",
+    ],
     "role_kind": "water",
     "idea": "Iemand krijgt hulp van een wezen bij het water en belooft er iets voor terug",
     "titles": [
@@ -144,7 +149,7 @@ BARGAIN = {
             "The word {he} had said got smaller every year until it was a word {he} had almost not said.",
         ]},
         {"mode": "turn", "scene": 4, "count": 1, "lines": [
-            "Then one night in {season}, the weather turned, and {he} came home late.",
+            "Then, {season}, the weather turned, and {he} came home late.",
             "It was seven years to the day when {he} came up from {water} in the dark.",
             "The night it came due, the rain was coming across {water} in sheets.",
         ]},
@@ -186,6 +191,11 @@ BARGAIN = {
 
 ONE_RULE = {
     "key": "one-rule",
+    "hooks": [
+        "The gift came with one rule. {He} kept it for eleven years.",
+        "One rule, said out loud only once. That is where it ended.",
+        "Everything {he} had came from a promise not to count it.",
+    ],
     "being_kinds": ["woman", "man", "monk", "traveller", "rider", "child", "giant"],
     "idea": "Een geschenk met één voorwaarde, en de voorwaarde wordt gebroken",
     "titles": [
@@ -231,7 +241,7 @@ ONE_RULE = {
         {"mode": "tell", "scene": 0, "count": 3, "grow": True, "pool": "work", "lines": [
             "{He} went up into {wild} before it was light and came down again with what {he} could carry.",
             "The work was hard in the way that does not get easier with practice.",
-            "In {season} the ground turns and everything takes twice as long.",
+            "Come {season}, the ground turns and everything takes twice as long.",
             "{He} was not idle and {he} was not stupid. {He} was only unlucky, which is worse.",
             "Whatever {he} put by went on something that broke.",
         ]},
@@ -276,7 +286,7 @@ ONE_RULE = {
         ]},
         {"mode": "turn", "scene": 4, "count": 1, "lines": [
             "Then a man came from the town about a tax, and wanted a figure.",
-            "In {season} the question came up in a way {he} could not walk around.",
+            "Come {season}, the question came up in a way {he} could not walk around.",
             "It was a small thing that did it, as it always is.",
         ]},
         {"mode": "tell", "scene": 4, "count": 3, "grow": True, "pool": "dread", "lines": [
@@ -315,6 +325,11 @@ ONE_RULE = {
 
 NIGHT_ROAD = {
     "key": "night-road",
+    "hooks": [
+        "Everybody at {place} goes the long way round. Nobody will tell you why.",
+        "There is a road there that nobody walks after dark, and one night {hero} did.",
+        "{He} was gone one night. They had been looking for {him} for three days.",
+    ],
     "being_kinds": ["woman", "man", "monk", "traveller", "rider", "child", "giant"],
     "idea": "Iemand loopt na donker over een weg waar gewaarschuwd voor is",
     "titles": [
@@ -432,6 +447,11 @@ NIGHT_ROAD = {
 
 BEAST_SPARED = {
     "key": "beast-spared",
+    "hooks": [
+        "{He} had one clear shot that winter and did not take it. Six years later it saved {his} life.",
+        "There was a house behind {him} with people in it who had not eaten in a month. {He} still lowered the gun.",
+        "What you do not do can be repaid the same as what you do.",
+    ],
     "role_kind": "land",
     "idea": "Een dier wordt gespaard en betaalt dat jaren later terug",
     "titles": [
@@ -546,6 +566,11 @@ BEAST_SPARED = {
 
 HOLLOW_HILL = {
     "key": "hollow-hill",
+    "hooks": [
+        "{He} played one night under the hill. When {he} came out, everybody {he} knew was dead.",
+        "One night's work for three times the fee. It cost {him} a hundred years.",
+        "The hill opened where there was nothing but grass, and {hero} walked in.",
+    ],
     "role_from": "musicians",
     "being_kinds": ["woman", "man", "monk", "traveller", "rider", "child", "giant"],
     "idea": "Iemand gaat één nacht mee naar binnen en komt honderd jaar later buiten",
@@ -664,6 +689,11 @@ HOLLOW_HILL = {
 
 DROWNED_BELL = {
     "key": "drowned-bell",
+    "hooks": [
+        "There is a village under that water. On some nights you can still hear its bell.",
+        "They still cover the spring at {place}, every year, without fail. This is why.",
+        "{He} rowed out to prove there was nothing there, and something asked {him} a question.",
+    ],
     "role_kind": "water",
     "being_kinds": ["woman", "man", "monk", "traveller", "rider", "child", "giant"],
     "idea": "Een verdronken dorp onder het water, en een klok die nog luidt",
@@ -703,7 +733,7 @@ DROWNED_BELL = {
         {"mode": "open", "scene": 0, "count": 2, "grow": True, "lines": [
             "There is a village under {water} at {place}. Everybody there will tell you so.",
             "They will point at a flat place in the middle and say the church was there.",
-            "On still evenings in {season}, people at {place} say you can hear a bell out on the water.",
+            "On still evenings, people at {place} say you can hear a bell out on the water.",
             "It is always somebody's grandfather who heard it, and always on a night like tonight.",
         ]},
         {"mode": "tell", "scene": 1, "count": 3, "grow": True, "pool": "land", "lines": [
@@ -720,7 +750,7 @@ DROWNED_BELL = {
         ]},
         {"mode": "turn", "scene": 2, "count": 1, "lines": [
             "{Hero} was {a_role} at {place}, and did not believe a word of it.",
-            "Then there was a {season} when the water dropped further than anyone living had seen.",
+            "Then came {season}, when the water dropped further than anyone living had seen.",
         ]},
         {"mode": "tell", "scene": 2, "count": 3, "grow": True, "lines": [
             "There were stones showing out in the middle that were too square to be stones.",
@@ -758,7 +788,7 @@ DROWNED_BELL = {
         {"mode": "close", "scene": 5, "count": 3, "grow": True, "pool": "aftermath", "lines": [
             "The cover on the spring at {place} was rotten through, and had been for years.",
             "{He} put a new one on it that week, in oak, and the village paid for it without being asked twice.",
-            "It is checked every {season} now, by whoever holds the office, and there is an office for it.",
+            "It is checked every year now, by whoever holds the office, and there is an office for it.",
             "{Hero} went out on the water for another forty years and never heard the bell again.",
             "{He} said that was the point, and people who had not been there thought {he} was being modest.",
         ]},

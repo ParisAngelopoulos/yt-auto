@@ -500,3 +500,147 @@ def available() -> dict:
         "patterns": [p["key"] for p in PATTERNS],
         "combinations": len(TRADITIONS) * len(PATTERNS),
     }
+
+
+# ---------------------------------------------------------------------------
+#  Shorts
+# ---------------------------------------------------------------------------
+#
+#  Een Short is geen ingekort verhaal. Een verhaal van acht minuten mag
+#  rustig beginnen; een Short moet in de eerste seconde iets beloven, anders
+#  is de kijker al weg. Daarom begint hij met een haak — de afloop, of wat er
+#  op het spel staat — en pas daarna met wie en waar.
+#
+#  De zinnen komen uit hetzelfde patroon als het lange verhaal. Er wordt dus
+#  niets apart geschreven: er wordt anders gekozen.
+
+# Hoeveel beats een Short per soort meeneemt. De volgorde waarin ze op het
+# scherm komen is niet deze volgorde, maar die van het patroon zelf: anders
+# spreekt er iemand voordat hij er is.
+SHORT_QUOTA = {"open": 1, "tell": 2, "turn": 2, "speech": 1, "close": 1, "moral": 1}
+
+
+def _spread(indices: list[int], aantal: int) -> list[int]:
+    """Kiest er `aantal` uit, zo ver mogelijk uit elkaar.
+
+    Drie `tell`-stappen pakken zou anders drie keer het begin opleveren,
+    terwijl het middenstuk juist het verhaal draagt.
+    """
+    if aantal >= len(indices):
+        return list(indices)
+    if aantal == 1:
+        return [indices[0]]
+    stap = (len(indices) - 1) / (aantal - 1)
+    return sorted({indices[round(i * stap)] for i in range(aantal)})
+
+
+def _overlap(een: str, twee: str) -> int:
+    """Hoeveel inhoudelijke woorden twee zinnen delen."""
+    klein = {"the", "a", "an", "and", "that", "it", "is", "was", "of", "to",
+             "in", "at", "on", "for", "you", "they", "not", "but", "would"}
+    def woorden(tekst: str) -> set[str]:
+        return {w.strip(".,\"'").lower() for w in tekst.split()} - klein
+    return len(woorden(een) & woorden(twee))
+
+
+def _short_beats(rng: random.Random, pattern: dict, slots: dict,
+                 haak: str) -> list[Beat]:
+    """Kiest de zinnen voor een Short, op de volgorde van het patroon zelf."""
+    per_mode: dict[str, list[int]] = {}
+    for positie, entry in enumerate(pattern["arc"]):
+        per_mode.setdefault(entry["mode"], []).append(positie)
+
+    gekozen: list[int] = []
+    for mode, aantal in SHORT_QUOTA.items():
+        if mode in per_mode:
+            gekozen += _spread(per_mode[mode], aantal)
+
+    beats: list[Beat] = []
+    gebruikt: set[str] = set()
+    for positie in sorted(gekozen):
+        entry = pattern["arc"][positie]
+        regels = [fill(t, slots) for t in entry["lines"] if fill(t, slots) not in gebruikt]
+        if not regels:
+            continue
+        if entry["mode"] == "open":
+            # De haak heeft de premisse al gegeven; kies de openingszin die
+            # daar het minst overheen doet.
+            regel = min(regels, key=lambda r: (_overlap(r, haak), rng.random()))
+        else:
+            regel = rng.choice(regels)
+        gebruikt.add(regel)
+        beats.append(Beat(mode=entry["mode"], narration=regel, scene=entry["scene"]))
+
+    return beats
+
+
+def compose_short(cfg: Config, tradition: dict, pattern: dict, seed: int) -> Blueprint:
+    """Bouwt één Short: staand beeld, tien à twaalf zinnen, één minuut."""
+    rng = random.Random(seed)
+    slots = bind_slots(rng, tradition, pattern)
+    scenes = build_scenes(rng, tradition, pattern, slots)
+
+    haak = fill(rng.choice(pattern["hooks"]), slots)
+    beats = [Beat(mode="hook", narration=haak, scene=0)]
+    beats += _short_beats(rng, pattern, slots, haak)
+    beats.append(Beat(mode="source", narration=f"{tradition['label']}.",
+                      scene=beats[-1].scene if beats else 0))
+
+    # De volgorde waarin de beelden langskomen, zodat de helderheid tussen
+    # twee opeenvolgende beelden binnen de grens blijft.
+    bezocht: list[int] = []
+    for beat in beats:
+        if not bezocht or bezocht[-1] != beat.scene:
+            bezocht.append(beat.scene)
+    grens = float(cfg.safety.get("max_luminance_delta", 0.45))
+    smooth_times(scenes, bezocht, min(MAX_BRIGHTNESS_STEP, grens * 0.66))
+
+    titel = fill(rng.choice(pattern["titles"]), slots)
+    beschrijving = " ".join(fill(rng.choice(pattern["description"]), slots).split())
+    labels = ["shorts", "folklore", "myths and legends", "folk tale",
+              f"{tradition['adjective'].lower()} folklore", "storytelling"]
+    labels += pattern["tags"]
+
+    return validate(Blueprint(
+        idea=f"{pattern['idea']} ({tradition['origin']}) — Short",
+        title=titel[:100],
+        description=f"{beschrijving} #Shorts",
+        tags=list(dict.fromkeys(labels))[:12],
+        lesson_kind=tradition["key"],
+        backdrop_top="#0B1026",
+        backdrop_bottom="#2A2B52",
+        items=[],
+        beats=beats,
+        source="local",
+        key=f"{make_key(titel)}-short",
+        format="folklore",
+        shorts=True,
+        scenes=scenes,
+    ))
+
+
+def write_short(cfg: Config, taken: set[str] | None = None,
+                hint: str | None = None, seed: int | None = None) -> Blueprint:
+    """Schrijft een Short die nog niet eerder gemaakt is."""
+    taken = taken or set()
+    basis = random.Random(seed if seed is not None else random.randrange(1 << 30))
+
+    paren = [(t, p) for t in TRADITIONS for p in PATTERNS]
+    if hint:
+        paren = [(t, p) for t, p in paren if _matches_hint(hint, t, p)] or paren
+
+    laatste: Blueprint | None = None
+    for _ in range(MAX_ATTEMPTS):
+        tradition, pattern = basis.choice(paren)
+        blueprint = compose_short(cfg, tradition, pattern, basis.randrange(1 << 30))
+        if blueprint.key not in taken:
+            return blueprint
+        laatste = blueprint
+
+    if laatste is None:                                         # pragma: no cover
+        raise LocalWriterError("geen enkel patroon kon een Short opleveren")
+    nummer = 2
+    while f"{laatste.key}-{nummer}" in taken:
+        nummer += 1
+    laatste.key = f"{laatste.key}-{nummer}"
+    return laatste

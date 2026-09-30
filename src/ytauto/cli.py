@@ -3,6 +3,8 @@
     ytauto setup      sleutels invoeren en meteen testen
     ytauto panel      bedieningspagina openen (twee knoppen)
     ytauto script     laat een aflevering schrijven
+    ytauto short      maak een Short: staand beeld, rond de minuut
+    ytauto descent    maak een afdaling: doorlopende beweging
     ytauto video      maak de video van het laatste script
     ytauto publish    zet die video op YouTube
     ytauto run        alles achter elkaar, zonder tussenkomst
@@ -53,6 +55,44 @@ def cmd_script(args) -> int:
           f"ongeveer {bp.estimated_duration / 60:.1f} minuten\n")
     print(bp.transcript())
     print(f"\n  Opgeslagen in {episode.workdir / 'blueprint.json'}")
+    return 0
+
+
+def cmd_short(args) -> int:
+    """Schrijft en maakt een Short in één keer: staand, rond de minuut."""
+    from .pipeline import make_short
+
+    cfg = load_config()
+    staand, episode = make_short(cfg, hint=args.hint)
+    bp = episode.blueprint
+    print(f"\n  {bp.title}")
+    print(f"  {len(bp.beats)} beats, {bp.word_count} woorden, "
+          f"ongeveer {bp.estimated_duration:.0f} seconden\n")
+    print(bp.transcript())
+
+    if args.script_only:
+        print(f"\n  Opgeslagen. Video maken met: ytauto video")
+        return 0
+
+    print()
+    make_video(staand, episode, progress=_progress)
+    print(f"  Klaar: {episode.video_path}")
+    return 0
+
+
+def cmd_descent(args) -> int:
+    """Een afdaling: doorlopende beweging, geen diashow."""
+    from .pipeline import load_journeys, make_descent
+
+    cfg = load_config()
+    if args.list:
+        for reis in load_journeys():
+            print(f"  {reis['key']:12} {reis['title']}")
+        return 0
+
+    video = make_descent(cfg, key=args.key or "", progress=_progress,
+                         preview_seconds=args.preview or 0.0)
+    print(f"  Klaar: {video}")
     return 0
 
 
@@ -352,6 +392,19 @@ def main() -> int:
     script = subparsers.add_parser("script", help="laat een aflevering schrijven")
     script.add_argument("--hint", help="optionele wens voor het onderwerp")
     script.set_defaults(func=cmd_script)
+
+    short = subparsers.add_parser("short", help="maak een Short (staand, ~1 minuut)")
+    short.add_argument("--hint", help="optionele wens voor het onderwerp")
+    short.add_argument("--script-only", action="store_true",
+                       help="alleen schrijven, nog niet renderen")
+    short.set_defaults(func=cmd_short)
+
+    descent = subparsers.add_parser("descent", help="maak een afdaling (staand, doorlopend)")
+    descent.add_argument("--key", help="welke reis uit config/journeys.yaml")
+    descent.add_argument("--list", action="store_true", help="toon de beschikbare reizen")
+    descent.add_argument("--preview", type=float, nargs="?", const=20.0, metavar="SEC",
+                         help="stille proefversie van zoveel seconden (standaard 20)")
+    descent.set_defaults(func=cmd_descent)
 
     subparsers.add_parser("video", help="maak de video").set_defaults(func=cmd_video)
     subparsers.add_parser("publish", help="publiceer op YouTube").set_defaults(func=cmd_publish)
