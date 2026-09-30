@@ -415,8 +415,15 @@ oplevert.
 
 ## Volautomatisch draaien
 
-`.github/workflows/publish.yml` draait maandag, woensdag, vrijdag en zondag om
-06:00 UTC en publiceert dan één video.
+`.github/workflows/publish.yml` kan maandag, woensdag, vrijdag en zondag om
+06:00 UTC één video maken en publiceren. **Het schema staat uit.** Zolang dat
+zo is draait hij alleen als je hem zelf start, via **Actions → Nieuwe video
+publiceren → Run workflow**.
+
+Aanzetten doe je door de twee regels met `cron` in dat bestand van hun `#` te
+ontdoen. Doe dat pas als je de video's die eruit komen ook echt wilt hebben:
+hij maakt er een per keer en schrijft de boekhouding terug naar de repo, of
+je nu kijkt of niet.
 
 Hiervoor heb je alleen de drie YouTube-waarden nodig; zet ze in je repository
 onder **Settings → Secrets and variables → Actions**. De andere twee mogen

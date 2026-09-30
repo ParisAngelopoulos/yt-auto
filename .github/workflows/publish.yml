@@ -1,10 +1,16 @@
 name: Nieuwe video publiceren
 
-# Dit is de knop die je nooit meer hoeft in te drukken.
+# Deze workflow draait alleen nog als je hem zelf start:
+# Actions -> Nieuwe video publiceren -> Run workflow.
+#
+# Het schema staat uit. Aanzetten doe je door de twee regels hieronder
+# van hun # te ontdoen; dan draait hij weer maandag, woensdag, vrijdag en
+# zondag om 06:00 UTC. Doe dat pas als je de video's die eruit komen ook
+# echt wilt hebben: hij maakt er een per keer en schrijft de boekhouding
+# terug naar de repo, of je nu kijkt of niet.
 on:
-  schedule:
-    # maandag, woensdag, vrijdag en zondag om 06:00 UTC
-    - cron: "0 6 * * 1,3,5,0"
+  # schedule:
+  #   - cron: "0 6 * * 1,3,5,0"
   workflow_dispatch:
     inputs:
       publish:
