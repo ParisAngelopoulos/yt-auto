@@ -1,5 +1,768 @@
 [
   {
+    "idea": "Iemand krijgt hulp van een wezen bij het water en belooft er iets voor terug (Ireland)",
+    "title": "The Boatman and the Woman In Green",
+    "description": "A boatman at Dooagh is helped out of a bad season by something that speaks to him from the grey sea, and pays for the help with a promise made too quickly. Versions of it are told across Ireland. This is a retelling in our own words, not a translation of any single version.",
+    "tags": [
+      "folklore",
+      "myths and legends",
+      "folk tale retold",
+      "storytelling",
+      "irish folklore",
+      "ireland folk tale",
+      "bargain",
+      "folk tale",
+      "water spirit"
+    ],
+    "lesson_kind": "irish",
+    "backdrop_top": "#0B1026",
+    "backdrop_bottom": "#2A2B52",
+    "items": [],
+    "beats": [
+      {
+        "mode": "title",
+        "narration": "The Boatman and the Woman In Green. A tale from the west of Ireland.",
+        "item": null,
+        "title": "The Boatman and the Woman In Green",
+        "subtitle": "A tale from the west of Ireland",
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "The house stood where the track ran out, with the grey sea in front of it and the hill behind.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "open",
+        "narration": "It was not a poor living, but it was the kind that goes wrong all at once.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 0
+      },
+      {
+        "mode": "tell",
+        "narration": "Every morning Cormac went down to the grey sea before the light and came back when it went.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The season had been wrong from the start: too much weather early, and then none at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "By that autumn there was nothing coming in, and what was put by was going out.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "He went further out than he should have, on days he should not have gone at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Other people at Dooagh were having the same year, which is a comfort and no help.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The mending got done because there was nothing else to do.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not a living that made anybody rich. It was a living that kept the roof on.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Cormac was up before the house and back after dark, and that was every day and not only the good ones.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "Nobody at Dooagh did one thing only. There was not the work for it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The grey sea at that time of year goes the colour of slate and stays that way for weeks.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "You can see the bottom in the shallows and nothing at all ten yards out.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There is a place where the water turns back on itself, and everyone at Dooagh keeps off it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The wind comes down off the low hills in the afternoon, every afternoon, and stops at dark.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The walls run straight up the slope instead of across it, which tells you who made them and when.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There was one tree on that slope and it leaned away from the wind like a person walking into it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "The road went up and did not come down again for an hour.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "tell",
+        "narration": "There were three houses at Dooagh and a fourth that nobody had lived in since before anyone could remember.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 1
+      },
+      {
+        "mode": "turn",
+        "narration": "He was alone on the grey sea when a voice asked him what he was looking for.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Cormac did not answer at first. There is no good answer to a voice with nobody under it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "When he looked, there was a woman in a green cloak standing where no one could stand.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "It did not come closer and it did not go away.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He had heard of such things at Dooagh, the way everybody has, and had not believed it on a fine day.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "It was not fear exactly. It was the feeling of standing in a room somebody has just left.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The dogs at Dooagh would not settle that night, and nobody could say why.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "Afterwards Cormac could not say what had been wrong with the light, only that something had been.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The fire in the grate leaned away from nothing at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "speech",
+        "narration": "\"There is nothing wrong with you that I cannot mend,\" it said. \"Only ask.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "It named its price, and the price sounded like nothing at all.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "He was to give up the first thing that greeted him at his own door.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "speech",
+        "narration": "\"Then say the word,\" it said, \"and go home, and sleep.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "tell",
+        "narration": "The water closed. There was nothing standing on it any more.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 2
+      },
+      {
+        "mode": "turn",
+        "narration": "The luck came in like weather, and it did not go out again.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The nets came up full when other people's came up empty.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "He put a new roof on the house of two rooms and a half door, and then a second room under it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "People at Dooagh said he had found a run of fish that nobody else knew about, and he let them say it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "In three years he had more than his father had in thirty.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "He married, and there was a child in the house, and the house was warm.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Nothing was asked of him in all that time.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "He kept a length of red thread from that night in a box, and did not look at it often.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "People came from the far side of the grey sea because the work was done properly and the price did not change.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Cormac kept the tools better than the house.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It is skilled work that looks like no work at all, which is why it was badly paid.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "It is possible to stop thinking about a thing if the thing does not remind you.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "He came to believe, in the way people do, that it had been a bad evening and nothing more.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The word he had said got smaller every year until it was a word he had almost not said.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "He was busy, and being busy is the best forgetting there is.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "A week went by. Then another.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Nothing happened for a long while, and that is the part of the story people leave out.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "Cormac thought about it in the evenings and not at all during the day.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "tell",
+        "narration": "The days closed over it the way water closes over a stone.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 3
+      },
+      {
+        "mode": "turn",
+        "narration": "The night it came due, the rain was coming across the grey sea in sheets.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The door of the house of two rooms and a half door opened before he reached it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "It was the child who came out to meet him, running, glad, calling his name.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Cormac stopped where he was, in the rain, and understood what he had said, and to whom.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "Behind him, out on the water, something was waiting that had waited seven years already.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "He did not turn round. Not turning round was all he had.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "There was a stillness on the grey sea that does not belong to any weather.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "His own footsteps sounded as though somebody else were making them.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The birds went quiet before it, the way they do before a change.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "There is a quiet that comes before weather and a quiet that does not, and this was the other one.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "speech",
+        "narration": "\"You said the word,\" the voice said, from the water. \"I have not been in a hurry.\"",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "The voice was not interested in any of it, and said so plainly.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "So he did the only thing that was left, and went down to the water himself.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "tell",
+        "narration": "What was agreed was one who greeted him, and he greeted it first, and out loud.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 4
+      },
+      {
+        "mode": "close",
+        "narration": "In the morning the boat was drawn up where it always was, and the house was warm, and Cormac was not in it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The child grew up at Dooagh and had the house and never knew what it had cost.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "The luck stayed. That is the part people find hardest to believe.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "They say the water at Dooagh has been quiet ever since, and quiet in that place is not the same as calm.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "Somebody wrote it down eventually, which is how it comes to be here.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "People at Dooagh told it afterwards in different ways, and every way had the same end.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "They still point out the place. It is not marked, but everybody knows it.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "close",
+        "narration": "What is certain is that Cormac never spoke of it again, and never had to.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "moral",
+        "narration": "What is given for nothing is not given for nothing. It is only given before the price is read out.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "This story comes from the west of Ireland, where it was gathered from tellers who had it from their own grandparents.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      },
+      {
+        "mode": "source",
+        "narration": "The words here are ours; the tale is theirs.",
+        "item": null,
+        "title": null,
+        "subtitle": null,
+        "scene": 5
+      }
+    ],
+    "source": "local",
+    "key": "the-boatman-and-the-woman-in-green",
+    "format": "folklore",
+    "scenes": [
+      {
+        "setting": "village",
+        "time": "day",
+        "weather": "none",
+        "caption": "Dooagh",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.24,
+            "scale": 0.11,
+            "depth": 0.88
+          },
+          {
+            "draw": "man",
+            "x": 0.62,
+            "scale": 0.1,
+            "depth": 0.94
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "day",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "rowboat",
+            "x": 0.46,
+            "scale": 0.07,
+            "depth": 0.62
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "dusk",
+        "weather": "mist",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.38,
+            "scale": 0.13,
+            "depth": 0.8
+          },
+          {
+            "draw": "man",
+            "x": 0.7,
+            "scale": 0.11,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "day",
+        "weather": "none",
+        "caption": "The good years",
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.44,
+            "scale": 0.15,
+            "depth": 0.75
+          },
+          {
+            "draw": "oak",
+            "x": 0.78,
+            "scale": 0.2,
+            "depth": 0.93
+          }
+        ]
+      },
+      {
+        "setting": "lake",
+        "time": "dusk",
+        "weather": "rain",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "woman",
+            "x": 0.44,
+            "scale": 0.13,
+            "depth": 0.78
+          },
+          {
+            "draw": "man",
+            "x": 0.24,
+            "scale": 0.11,
+            "depth": 0.94
+          }
+        ]
+      },
+      {
+        "setting": "village",
+        "time": "dawn",
+        "weather": "none",
+        "caption": null,
+        "subjects": [
+          {
+            "draw": "cottage",
+            "x": 0.3,
+            "scale": 0.1,
+            "depth": 0.9
+          }
+        ]
+      }
+    ],
+    "status": "produced",
+    "video_id": null,
+    "created_at": "2026-09-30T11:41:20+00:00",
+    "published_at": null
+  },
+  {
     "idea": "Een geschenk met één voorwaarde, en de voorwaarde wordt gebroken (Norway)",
     "title": "What Solveig Was Told Not to Do",
     "description": "Something is given to a boat builder at Aurland on one condition, and the condition holds for exactly as long as anybody can bear it. Versions of it are told across Norway. Retold here in our own words.",
